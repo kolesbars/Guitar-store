@@ -2,6 +2,12 @@ export enum APIRoute {
   Guitars = '/guitars'
 }
 
+export enum AppRoute {
+  Navigation = '/',
+  Main = '/main',
+  Guitar = '/guitar'
+}
+
 export const emptyGuitar = {
   'id': 0,
   'name': '',

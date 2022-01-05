@@ -1,12 +1,28 @@
+import RatingStars from './rating-star';
+import { useState, useEffect } from 'react';
+import { AxiosInstance } from 'axios';
+import { APIRoute } from '../../const';
 import { GuitarType } from '../../types/guitar';
 
 type GuitarCardProps = {
+  api: AxiosInstance
   guitar: GuitarType
 }
 
-function GuitarCard({guitar}: GuitarCardProps):JSX.Element {
+function GuitarCard({guitar, api}: GuitarCardProps):JSX.Element {
 
-  const {previewImg, name, price, rating} = guitar;
+  const {previewImg, name, price, rating, id} = guitar;
+
+  const [commentsCount, setCommentsCount] = useState(0);
+
+  const loadGuitarComments = async () => {
+    const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}/${id}/comments`);
+    setCommentsCount(data.length);
+  };
+
+  useEffect(() => {
+    loadGuitarComments();
+  }, []);
 
   return (
     <div className="product-card">
@@ -19,22 +35,8 @@ function GuitarCard({guitar}: GuitarCardProps):JSX.Element {
       <div className="product-card__info">
         <div className="rate product-card__rate" aria-hidden="true">
           <span className="visually-hidden">Рейтинг:</span>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-star"></use>
-          </svg>
-          <span className="rate__count">{rating}</span>
+          <RatingStars rating={rating}/>
+          <span className="rate__count">{commentsCount}</span>
           <span className="rate__message"></span>
         </div>
         <p className="product-card__title">
