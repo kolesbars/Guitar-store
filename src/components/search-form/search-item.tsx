@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import {GuitarType} from '../../types/guitar';
 
@@ -7,7 +7,7 @@ type SearchItemProps = {
 }
 
 function SearchItem({guitar}: SearchItemProps): JSX.Element {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <li
@@ -15,7 +15,7 @@ function SearchItem({guitar}: SearchItemProps): JSX.Element {
       tab-index="0"
       onClick={(evt) => {
         evt.preventDefault();
-        history.push(`${AppRoute.Guitar}/${guitar.id}`);
+        navigate(`${AppRoute.Guitar}/${guitar.id}`);
       }}
     >
       {guitar.name}

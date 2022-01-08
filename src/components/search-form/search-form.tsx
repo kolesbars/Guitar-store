@@ -2,18 +2,40 @@ import SearchItem from './search-item';
 import { useState, useEffect } from 'react';
 import { emptyGuitar } from '../../const';
 import {GuitarType} from '../../types/guitar';
+import {useSearchParams} from 'react-router-dom';
+import {ChangeEvent} from 'react';
+import {AxiosInstance} from 'axios';
 
 type SearchFormProps = {
-guitars: GuitarType[]
+  api: AxiosInstance,
+  guitars: GuitarType[]
 }
 
-function SearchForm({guitars}: SearchFormProps): JSX.Element {
+function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [searchValue, setSearchValue] = useState('');
+  const searchText = searchParams.get('name_like') || '';
+
+  const [searchValue, setSearchValue] = useState(searchText);
   const [similarGuitars, setSimilarGuitars] = useState([emptyGuitar]);
 
+  const param = {
+    'name_like': searchValue,
+  };
+
+  const handleChangeSearchForm = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setSearchValue(evt.target.value);
+    setSearchParams(param);
+  };
+
+  // const searchSimilarGuitars = async () => {
+  //   const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}?${searchParams}`);
+  //   setSimilarGuitars(data);
+  // };
+
   useEffect(() => {
-    setSimilarGuitars(guitars.filter((guitar) => guitar.name.toLowerCase().includes(searchValue)));
+    setSimilarGuitars(guitars.filter((guitar) => guitar.name.toLowerCase().includes(searchValue.toLowerCase())));
   }, [searchValue]);
 
   return (
@@ -36,10 +58,7 @@ function SearchForm({guitars}: SearchFormProps): JSX.Element {
           type="text"
           autoComplete="off"
           placeholder="что вы ищите?"
-          onChange={(evt) => {
-            evt.preventDefault();
-            setSearchValue(evt.target.value);
-          }}
+          onChange={handleChangeSearchForm}
         />
         <label className="visually-hidden" htmlFor="search">
                   Поиск

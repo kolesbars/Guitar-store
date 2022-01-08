@@ -1,19 +1,20 @@
 import {AxiosInstance} from 'axios';
 import { useEffect} from 'react';
 import { GuitarType } from '../../types/guitar';
-import GuitarCatalog from '../guitars-catalog/guitars-catalog';
-import Sorting from '../sorting/sorting';
-import Header from '../header/header';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateGuitarsList } from '../../store/action';
 import { getGuitars } from '../../store/guitars-data/selectors';
 import {APIRoute} from '../../const';
+import GuitarCatalog from '../guitars-catalog/guitars-catalog';
+import FiltersForm from '../filters-form/filters-form';
+import Sorting from '../sorting/sorting';
+import Header from '../header/header';
 
 type MainProps = {
   api: AxiosInstance
 }
 
-function Main({api}: MainProps): JSX.Element {
+function Catalog({api}: MainProps): JSX.Element {
   const guitars = useSelector(getGuitars);
 
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ function Main({api}: MainProps): JSX.Element {
       <div className="visually-hidden"></div>
       <div className="wrapper">
         <Header
+          api={api}
           guitars={guitars}
         />
         <main className="page-content">
@@ -50,119 +52,10 @@ function Main({api}: MainProps): JSX.Element {
               </li>
             </ul>
             <div className="catalog">
-              <form className="catalog-filter">
-                <h2 className="title title--bigger catalog-filter__title">
-                  Фильтр
-                </h2>
-                <fieldset className="catalog-filter__block">
-                  <legend className="catalog-filter__block-title">
-                    Цена, ₽
-                  </legend>
-                  <div className="catalog-filter__price-range">
-                    <div className="form-input">
-                      <label className="visually-hidden">
-                        Минимальная цена
-                      </label>
-                      <input
-                        type="number"
-                        placeholder="1 000"
-                        id="priceMin"
-                        name="от"
-                      />
-                    </div>
-                    <div className="form-input">
-                      <label className="visually-hidden">
-                        Максимальная цена
-                      </label>
-                      <input
-                        type="number"
-                        placeholder="30 000"
-                        id="priceMax"
-                        name="до"
-                      />
-                    </div>
-                  </div>
-                </fieldset>
-                <fieldset className="catalog-filter__block">
-                  <legend className="catalog-filter__block-title">
-                    Тип гитар
-                  </legend>
-                  <div className="form-checkbox catalog-filter__block-item">
-                    <input
-                      className="visually-hidden"
-                      type="checkbox"
-                      id="acoustic"
-                      name="acoustic"
-                    />
-                    <label htmlFor="acoustic">Акустические гитары</label>
-                  </div>
-                  <div className="form-checkbox catalog-filter__block-item">
-                    <input
-                      className="visually-hidden"
-                      type="checkbox"
-                      id="electric"
-                      name="electric"
-                      checked
-                    />
-                    <label htmlFor="electric">Электрогитары</label>
-                  </div>
-                  <div className="form-checkbox catalog-filter__block-item">
-                    <input
-                      className="visually-hidden"
-                      type="checkbox"
-                      id="ukulele"
-                      name="ukulele"
-                      checked
-                    />
-                    <label htmlFor="ukulele">Укулеле</label>
-                  </div>
-                </fieldset>
-                <fieldset className="catalog-filter__block">
-                  <legend className="catalog-filter__block-title">
-                    Количество струн
-                  </legend>
-                  <div className="form-checkbox catalog-filter__block-item">
-                    <input
-                      className="visually-hidden"
-                      type="checkbox"
-                      id="4-strings"
-                      name="4-strings"
-                      checked
-                    />
-                    <label htmlFor="4-strings">4</label>
-                  </div>
-                  <div className="form-checkbox catalog-filter__block-item">
-                    <input
-                      className="visually-hidden"
-                      type="checkbox"
-                      id="6-strings"
-                      name="6-strings"
-                      checked
-                    />
-                    <label htmlFor="6-strings">6</label>
-                  </div>
-                  <div className="form-checkbox catalog-filter__block-item">
-                    <input
-                      className="visually-hidden"
-                      type="checkbox"
-                      id="7-strings"
-                      name="7-strings"
-                    />
-                    <label htmlFor="7-strings">7</label>
-                  </div>
-                  <div className="form-checkbox catalog-filter__block-item">
-                    <input
-                      className="visually-hidden"
-                      type="checkbox"
-                      id="12-strings"
-                      name="12-strings"
-                      disabled
-                    />
-                    <label htmlFor="12-strings">12</label>
-                  </div>
-                </fieldset>
-              </form>
-              <Sorting/>
+              <FiltersForm
+                api={api}
+              />
+              <Sorting api={api}/>
               <GuitarCatalog
                 api={api}
                 guitars={guitars}
@@ -346,4 +239,4 @@ function Main({api}: MainProps): JSX.Element {
   );
 }
 
-export default Main;
+export default Catalog;

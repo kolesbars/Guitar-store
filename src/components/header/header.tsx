@@ -1,11 +1,13 @@
 import { GuitarType } from '../../types/guitar';
 import SearchForm from '../search-form/search-form';
+import {AxiosInstance} from 'axios';
 
 type HeaderProps = {
+  api: AxiosInstance,
   guitars: GuitarType[]
 }
 
-function Header({guitars}: HeaderProps):JSX.Element {
+function Header({guitars, api}: HeaderProps):JSX.Element {
   return(
     <header className="header" id="header">
       <div className="container header__wrapper">
@@ -37,7 +39,10 @@ function Header({guitars}: HeaderProps):JSX.Element {
             </li>
           </ul>
         </nav>
-        <SearchForm guitars={guitars}/>
+        <SearchForm
+          guitars={guitars}
+          api={api}
+        />
         <a className="header__cart-link" href="#" aria-label="Корзина">
           <svg
             className="header__cart-icon"

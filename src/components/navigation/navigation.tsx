@@ -5,7 +5,7 @@ function Navigation(): JSX.Element {
       <h1>Список страниц</h1>
       <ol>
         <li><a href="ui-kit.html">UI-kit — ui-kit.html</a></li>
-        <li><a href="main">Каталог — main.html</a></li>
+        <li><a href="catalog">Каталог — main.html</a></li>
         <li><a href="cart.html">Корзина — cart.html</a></li>
         <li><a href="guitar/:id">Товар — product.html</a></li>
       </ol>
