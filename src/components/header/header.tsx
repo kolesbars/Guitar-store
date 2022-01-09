@@ -1,6 +1,7 @@
 import { GuitarType } from '../../types/guitar';
 import SearchForm from '../search-form/search-form';
 import {AxiosInstance} from 'axios';
+import { Link } from 'react-router-dom';
 
 type HeaderProps = {
   api: AxiosInstance,
@@ -11,7 +12,7 @@ function Header({guitars, api}: HeaderProps):JSX.Element {
   return(
     <header className="header" id="header">
       <div className="container header__wrapper">
-        <a className="header__logo logo">
+        <Link className="header__logo logo" to='#'>
           <img
             className="logo__img"
             width="70"
@@ -19,23 +20,23 @@ function Header({guitars, api}: HeaderProps):JSX.Element {
             src="./img/svg/logo.svg"
             alt="Логотип"
           />
-        </a>
+        </Link>
         <nav className="main-nav">
           <ul className="main-nav__list">
             <li>
-              <a className="link main-nav__link link--current" href="#">
+              <Link className="link main-nav__link link--current" to="#">
                     Каталог
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="link main-nav__link" href="#">
+              <Link className="link main-nav__link" to="#">
                     Где купить?
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="link main-nav__link" href="#">
+              <Link className="link main-nav__link" to="#">
                     О компании
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
@@ -43,7 +44,7 @@ function Header({guitars, api}: HeaderProps):JSX.Element {
           guitars={guitars}
           api={api}
         />
-        <a className="header__cart-link" href="#" aria-label="Корзина">
+        <Link className="header__cart-link" to="#" aria-label="Корзина">
           <svg
             className="header__cart-icon"
             width="14"
@@ -54,7 +55,7 @@ function Header({guitars, api}: HeaderProps):JSX.Element {
           </svg>
           <span className="visually-hidden">Перейти в корзину</span>
           <span className="header__cart-count">2</span>
-        </a>
+        </Link>
       </div>
     </header>
   );

@@ -1,5 +1,6 @@
 import {AxiosInstance} from 'axios';
 import { useEffect} from 'react';
+import { Link } from 'react-router-dom';
 import { GuitarType } from '../../types/guitar';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateGuitarsList } from '../../store/action';
@@ -8,6 +9,7 @@ import {APIRoute} from '../../const';
 import GuitarCatalog from '../guitars-catalog/guitars-catalog';
 import FiltersForm from '../filters-form/filters-form';
 import Sorting from '../sorting/sorting';
+import Pagination from '../pagination/pagination';
 import Header from '../header/header';
 
 type MainProps = {
@@ -43,12 +45,12 @@ function Catalog({api}: MainProps): JSX.Element {
             </h1>
             <ul className="breadcrumbs page-content__breadcrumbs">
               <li className="breadcrumbs__item">
-                <a className="link" href="./main.html">
+                <Link className="link" to="./main.html">
                   Главная
-                </a>
+                </Link>
               </li>
               <li className="breadcrumbs__item">
-                <a className="link">Каталог</a>
+                <Link className="link" to='#'>Каталог</Link>
               </li>
             </ul>
             <div className="catalog">
@@ -60,39 +62,13 @@ function Catalog({api}: MainProps): JSX.Element {
                 api={api}
                 guitars={guitars}
               />
-              <div className="pagination page-content__pagination">
-                <ul className="pagination__list">
-                  <li className="pagination__page pagination__page--active">
-                    <a className="link pagination__page-link" href="1">
-                      1
-                    </a>
-                  </li>
-                  <li className="pagination__page">
-                    <a className="link pagination__page-link" href="2">
-                      2
-                    </a>
-                  </li>
-                  <li className="pagination__page">
-                    <a className="link pagination__page-link" href="3">
-                      3
-                    </a>
-                  </li>
-                  <li
-                    className="pagination__page pagination__page--next"
-                    id="next"
-                  >
-                    <a className="link pagination__page-link" href="2">
-                      Далее
-                    </a>
-                  </li>
-                </ul>
-              </div>
+              <Pagination/>
             </div>
           </div>
         </main>
         <footer className="footer">
           <div className="footer__container container">
-            <a className="footer__logo logo">
+            <Link className="footer__logo logo" to='#'>
               <img
                 className="logo__img"
                 width="70"
@@ -100,13 +76,13 @@ function Catalog({api}: MainProps): JSX.Element {
                 src="./img/svg/logo.svg"
                 alt="Логотип"
               />
-            </a>
+            </Link>
             <div className="socials footer__socials">
               <ul className="socials__list">
                 <li className="socials-item">
-                  <a
+                  <Link
                     className="socials__link"
-                    href="https://www.facebook.com/"
+                    to="https://www.facebook.com/"
                     aria-label="facebook"
                   >
                     <svg
@@ -117,12 +93,12 @@ function Catalog({api}: MainProps): JSX.Element {
                     >
                       <use xlinkHref="#icon-facebook"></use>
                     </svg>
-                  </a>
+                  </Link>
                 </li>
                 <li className="socials-item">
-                  <a
+                  <Link
                     className="socials__link"
-                    href="https://www.instagram.com/"
+                    to="https://www.instagram.com/"
                     aria-label="instagram"
                   >
                     <svg
@@ -133,12 +109,12 @@ function Catalog({api}: MainProps): JSX.Element {
                     >
                       <use xlinkHref="#icon-instagram"></use>
                     </svg>
-                  </a>
+                  </Link>
                 </li>
                 <li className="socials-item">
-                  <a
+                  <Link
                     className="socials__link"
-                    href="https://www.twitter.com/"
+                    to="https://www.twitter.com/"
                     aria-label="twitter"
                   >
                     <svg
@@ -149,7 +125,7 @@ function Catalog({api}: MainProps): JSX.Element {
                     >
                       <use xlinkHref="#icon-twitter"></use>
                     </svg>
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -168,29 +144,29 @@ function Catalog({api}: MainProps): JSX.Element {
               <h2 className="footer__nav-title">Информация</h2>
               <ul className="footer__nav-list">
                 <li className="footer__nav-list-item">
-                  <a className="link" href="#top">
+                  <Link className="link" to="#top">
                     Где купить?
-                  </a>
+                  </Link>
                 </li>
                 <li className="footer__nav-list-item">
-                  <a className="link" href="#top">
+                  <Link className="link" to="#top">
                     Блог
-                  </a>
+                  </Link>
                 </li>
                 <li className="footer__nav-list-item">
-                  <a className="link" href="#top">
+                  <Link className="link" to="#top">
                     Вопрос - ответ
-                  </a>
+                  </Link>
                 </li>
                 <li className="footer__nav-list-item">
-                  <a className="link" href="#top">
+                  <Link className="link" to="#top">
                     Возврат
-                  </a>
+                  </Link>
                 </li>
                 <li className="footer__nav-list-item">
-                  <a className="link" href="#top">
+                  <Link className="link" to="#top">
                     Сервис-центры
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </section>
@@ -210,10 +186,10 @@ function Catalog({api}: MainProps): JSX.Element {
                 >
                   <use xlinkHref="#icon-phone"></use>
                 </svg>
-                <a className="link" href="tel:88125005050">
+                <Link className="link" to="tel:88125005050">
                   {' '}
                   8-812-500-50-50
-                </a>
+                </Link>
               </div>
               <p className="footer__nav-content">
                 Режим работы:

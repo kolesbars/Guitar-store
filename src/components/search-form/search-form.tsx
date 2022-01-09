@@ -4,7 +4,11 @@ import { emptyGuitar } from '../../const';
 import {GuitarType} from '../../types/guitar';
 import {useSearchParams} from 'react-router-dom';
 import {ChangeEvent} from 'react';
+import { APIRoute } from '../../const';
+//import useDebounce from '../../hooks/use-debounce';
 import {AxiosInstance} from 'axios';
+
+//const DELAY = 500;
 
 type SearchFormProps = {
   api: AxiosInstance,
@@ -19,24 +23,25 @@ function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
   const [searchValue, setSearchValue] = useState(searchText);
   const [similarGuitars, setSimilarGuitars] = useState([emptyGuitar]);
 
-  const param = {
-    'name_like': searchValue,
-  };
-
   const handleChangeSearchForm = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setSearchValue(evt.target.value);
-    setSearchParams(param);
+    setSearchValue(e.target.value);
   };
 
-  // const searchSimilarGuitars = async () => {
-  //   const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}?${searchParams}`);
-  //   setSimilarGuitars(data);
-  // };
+  //const debounceSearchValue = useDebounce(searchValue, DELAY);
+
+  const searchSimilarGuitars = async () => {
+    const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}?${searchParams}`);
+    setSimilarGuitars(data);
+  };
 
   useEffect(() => {
-    setSimilarGuitars(guitars.filter((guitar) => guitar.name.toLowerCase().includes(searchValue.toLowerCase())));
+    setSearchParams({'name_like' : searchValue});
   }, [searchValue]);
+
+  useEffect(() => {
+    searchSimilarGuitars();
+  }, [searchParams]);
 
   return (
     <div className="form-search">

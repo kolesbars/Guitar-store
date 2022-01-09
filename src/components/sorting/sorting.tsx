@@ -1,5 +1,4 @@
 import { updateGuitarsList } from '../../store/action';
-//import { getGuitars } from '../../store/guitars-data/selectors';
 import { useState, useEffect } from 'react';
 import {useDispatch} from 'react-redux';
 import { AxiosInstance } from 'axios';
@@ -17,41 +16,23 @@ function Sorting({api}:SortingProps): JSX.Element {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  //const guitars = useSelector(getGuitars);
-
-  const sortType = searchParams.get('_sort') || '';
+  const sortType = searchParams.get('_sort') || 'price';
   const orderType = searchParams.get('_order') || '';
 
-  const [activeSortType, setActiveSortType] = useState(sortType);
-  const [activeOrder, setActiveOrder] = useState(orderType);
 
-  const [params, setParams] = useState({
-    _sort: activeSortType,
-    _order: activeOrder,
+  const [sort, setSort] = useState({
+    '_sort': sortType,
+    '_order': orderType,
   });
 
-  useEffect(() => {
-    setParams({...params, _sort: activeSortType, _order: activeOrder});
-  }, [activeSortType, activeOrder]);
-
-  const handleClickSortByPrice = (e: SyntheticEvent<EventTarget>) => {
+  const handleClickSortField = (e: SyntheticEvent<EventTarget>, value: string) => {
     e.preventDefault();
-    setActiveSortType('price');
+    setSort({...sort, '_sort': value});
   };
 
-  const handleClickSortByRating = (e: SyntheticEvent<EventTarget>) => {
+  const handleClickOrderField = (e: SyntheticEvent<EventTarget>, value: string) => {
     e.preventDefault();
-    setActiveSortType('rating');
-  };
-
-  const handleClickSortByIncrease = (e: SyntheticEvent<EventTarget>) => {
-    e.preventDefault();
-    setActiveOrder('asc');
-  };
-
-  const handleClickSortByDecrease = (e: SyntheticEvent<EventTarget>) => {
-    e.preventDefault();
-    setActiveOrder('desc');
+    setSort({...sort, '_order': value});
   };
 
   const sortGuitarList = async () => {
@@ -60,9 +41,12 @@ function Sorting({api}:SortingProps): JSX.Element {
   };
 
   useEffect(() => {
-    setSearchParams(params);
+    setSearchParams(sort);
+  }, [sort]);
+
+  useEffect(() => {
     sortGuitarList();
-  }, [params]);
+  }, [searchParams]);
 
   return (
     <div className="catalog-sort">
@@ -70,18 +54,18 @@ function Sorting({api}:SortingProps): JSX.Element {
       <div className="catalog-sort__type">
         <button
           className={`catalog-sort__type-button
-          ${activeSortType === 'price' ? 'catalog-sort__type-button--active' : ''}`}
+          ${sortType === 'price' ? 'catalog-sort__type-button--active' : ''}`}
           aria-label="по цене"
           tab-index="-1"
-          onClick={handleClickSortByPrice}
+          onClick={(evt) => handleClickSortField(evt, 'price')}
         >
                     по цене
         </button>
         <button
           className={`catalog-sort__type-button
-          ${activeSortType === 'rating' ? 'catalog-sort__type-button--active' : ''}`}
+          ${sortType === 'rating' ? 'catalog-sort__type-button--active' : ''}`}
           aria-label="по популярности"
-          onClick={handleClickSortByRating}
+          onClick={(evt) => handleClickSortField(evt, 'rating')}
         >
                     по популярности
         </button>
@@ -89,17 +73,17 @@ function Sorting({api}:SortingProps): JSX.Element {
       <div className="catalog-sort__order">
         <button
           className={`catalog-sort__order-button catalog-sort__order-button--up
-          ${activeOrder === 'asc' ? 'catalog-sort__order-button--active' : ''}`}
+          ${orderType === 'asc' ? 'catalog-sort__order-button--active' : ''}`}
           aria-label="По возрастанию"
           tab-index="-1"
-          onClick={handleClickSortByIncrease}
+          onClick={(evt) => handleClickOrderField(evt, 'asc')}
         >
         </button>
         <button
           className={`catalog-sort__order-button catalog-sort__order-button--down
-          ${activeOrder === 'desc' ? 'catalog-sort__order-button--active' : ''}`}
+          ${orderType === 'desc' ? 'catalog-sort__order-button--active' : ''}`}
           aria-label="По убыванию"
-          onClick={handleClickSortByDecrease}
+          onClick={(evt) => handleClickOrderField(evt, 'desc')}
         >
         </button>
       </div>

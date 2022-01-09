@@ -20,13 +20,18 @@ function App({api}: AppProps): JSX.Element {
         >
         </Route>
         <Route
-          path={AppRoute.Catalog}
+          path={`${AppRoute.Catalog}`}
+          element={<Catalog api={api}/>}
+        >
+        </Route>
+        <Route
+          path={`${AppRoute.Catalog}/:pageParam`}
           element={<Catalog api={api}/>}
         >
         </Route>
         <Route
           path={`${AppRoute.Guitar}/:id`}
-          element={<GuitarCard/>}
+          element={<GuitarCard api={api}/>}
         >
         </Route>
       </Routes>

@@ -1,13 +1,18 @@
 import { APIRoute } from '../../const';
 import { updateGuitarsList } from '../../store/action';
+//import { updateSearchParams } from '../../store/action';
 import { getGuitars } from '../../store/guitars-data/selectors';
+import { getSearchParams } from '../../store/search-params/selectors';
 import {ChangeEvent} from 'react';
 import {useSearchParams} from 'react-router-dom';
 import { useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+//import useDebounce from '../../hooks/use-debounce';
 import { GuitarType } from '../../types/guitar';
 import StringCheckbox from './string-checkbox';
 import {AxiosInstance} from 'axios';
+
+//const DELAY = 500;
 
 type FiltersFormProps = {
   api: AxiosInstance,
@@ -16,6 +21,10 @@ const guitarStrings = [4,6,7,12];
 
 function FiltersForm({api}: FiltersFormProps):JSX.Element {
   const guitars = useSelector(getGuitars);
+  const params = useSelector(getSearchParams);
+
+  // eslint-disable-next-line no-console
+  console.log(params);
 
   const minPrice = Math.min(...guitars.map((guitar) => guitar.price)).toString();
   const maxPrice = Math.max(...guitars.map((guitar) => guitar.price)).toString();
@@ -23,50 +32,57 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const guitarTypes = searchParams.getAll('type') ?? [''];
+  const stringCount = searchParams.getAll('stringCount') ?? [''];
+  const priceGTE = searchParams.get('price_gte') ?? '1700';
+  const priceLTE = searchParams.get('price_lte') ?? '35000';
+
+  const [filters, setFilters] = useState({
+    'type': guitarTypes,
+    'stringCount': stringCount,
+    'price_gte': priceGTE,
+    'price_lte': priceLTE,
+  });
+
+  // const debouncePriceMinValue = useDebounce(priceMinValue, DELAY);
+  // const debouncePriceMaxValue = useDebounce(priceMaxValue, DELAY);
+
+  const handleChangeType = (e: ChangeEvent<HTMLInputElement>) => {
+
+    if(e.target.checked) {
+      setFilters({...filters, 'type': [...filters['type'], e.target.name]});
+    } else {
+      setFilters({...filters, 'type' : filters['type'].filter((type) => type !== e.target.name)});
+    }
+  };
+
+  const handleChangeStringCount = (e: ChangeEvent<HTMLInputElement>, count: string) => {
+
+    if(e.target.checked) {
+      setFilters({...filters, 'stringCount': [...filters['stringCount'], count]});
+    } else {
+      setFilters({...filters, 'stringCount': filters['stringCount'].filter((value) => value !== count)});
+    }
+  };
+
+  const handleChangePriceField = (e: ChangeEvent<HTMLInputElement>, value: string) => {
+    if (e.target.value !== '') {
+      setFilters({...filters, [value] : e.target.value});
+    }
+  };
+
   const loadGuitarList = async () => {
     const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}?${searchParams.toString()}`);
     dispatch(updateGuitarsList(data));
   };
 
-  const guitarTypes = searchParams.getAll('type') || [''];
-  const stringCount = searchParams.getAll('stringCount') || [''];
-
-  const [currentTypes, setCurrentTypes] = useState(guitarTypes);
-  const [currentStrings, setCurrentStrings] = useState(stringCount);
-
-  const [params, setParams] = useState({
-    type: currentTypes,
-    stringCount: currentStrings,
-  });
+  useEffect(() => {
+    setSearchParams(filters);
+  }, [filters]);
 
   useEffect(() => {
-    setParams({...params, type: currentTypes, stringCount: currentStrings});
-  }, [currentTypes, currentStrings]);
-
-  const handleChangeType = (e: ChangeEvent<HTMLInputElement>) => {
-
-    if(e.target.checked) {
-      setCurrentTypes([...currentTypes, e.target.name]);
-    } else {
-      setCurrentTypes([...currentTypes.filter((type) => type !== e.target.name)]);
-    }
-    setSearchParams(params);
-  };
-
-  const handleStringCount = (e: ChangeEvent<HTMLInputElement>, count: string) => {
-
-    if(e.target.checked) {
-      setCurrentStrings([...currentStrings, count]);
-    } else {
-      setCurrentStrings([...currentStrings.filter((type) => type !== count)]);
-    }
-    setSearchParams(params);
-  };
-
-  useEffect(() => {
-    setSearchParams(params);
     loadGuitarList();
-  },  [params]);
+  }, [searchParams]);
 
   return (
     <form className="catalog-filter">
@@ -87,6 +103,9 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
               placeholder={minPrice}
               id="priceMin"
               name="от"
+              min='0'
+              onChange={(evt) => handleChangePriceField(evt, 'price_gte')}
+              value={priceGTE}
             />
           </div>
           <div className="form-input">
@@ -98,6 +117,9 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
               placeholder={maxPrice}
               id="priceMax"
               name="до"
+              min='0'
+              onChange={(evt) => handleChangePriceField(evt, 'price_lte')}
+              value={priceLTE}
             />
           </div>
         </div>
@@ -112,7 +134,7 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
             type="checkbox"
             id="acoustic"
             name="acoustic"
-            checked={currentTypes.includes('acoustic')}
+            checked={filters['type'].includes('acoustic')}
             onChange={handleChangeType}
           />
           <label htmlFor="acoustic">Акустические гитары</label>
@@ -123,7 +145,7 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
             type="checkbox"
             id="electric"
             name="electric"
-            checked={currentTypes.includes('electric')}
+            checked={filters['type'].includes('electric')}
             onChange={handleChangeType}
           />
           <label htmlFor="electric">Электрогитары</label>
@@ -134,7 +156,7 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
             type="checkbox"
             id="ukulele"
             name="ukulele"
-            checked={currentTypes.includes('ukulele')}
+            checked={filters['type'].includes('ukulele')}
             onChange={handleChangeType}
           />
           <label htmlFor="ukulele">Укулеле</label>
@@ -148,10 +170,10 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
           (
             <StringCheckbox
               key={`${count}-key`}
-              handleStringCount={handleStringCount}
+              handleStringCount={handleChangeStringCount}
               count={count}
-              currentStrings={currentStrings}
-              currentTypes={currentTypes}
+              currentStrings={filters['stringCount']}
+              currentTypes={filters['type']}
             />))}
       </fieldset>
     </form>
