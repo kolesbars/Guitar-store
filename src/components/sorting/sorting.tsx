@@ -5,7 +5,8 @@ import { AxiosInstance } from 'axios';
 import { APIRoute } from '../../const';
 import { GuitarType } from '../../types/guitar';
 import {SyntheticEvent} from 'react';
-import {useSearchParams} from 'react-router-dom';
+//import {useSearchParams} from 'react-router-dom';
+import {useQueryParams, StringParam} from 'use-query-params';
 
 type SortingProps = {
   api: AxiosInstance,
@@ -14,21 +15,28 @@ type SortingProps = {
 function Sorting({api}:SortingProps): JSX.Element {
   const dispatch = useDispatch();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useQueryParams({
+    '_sort': StringParam,
+    '_order': StringParam,
+  });
 
-  const sortType = searchParams.get('_sort') || 'price';
-  const orderType = searchParams.get('_order') || '';
+  const sortType = searchParams._sort;
+  const orderType = searchParams._order;
 
 
   const [sort, setSort] = useState({
-    '_sort': sortType,
     '_order': orderType,
   });
 
+  const [sor, setSor] = useState('');
+  // eslint-disable-next-line no-console
+  console.log(sor);
   const handleClickSortField = (e: SyntheticEvent<EventTarget>, value: string) => {
     e.preventDefault();
-    setSort({...sort, '_sort': value});
+    setSor(value);
+    setSearchParams({'_sort': value});
   };
+
 
   const handleClickOrderField = (e: SyntheticEvent<EventTarget>, value: string) => {
     e.preventDefault();
