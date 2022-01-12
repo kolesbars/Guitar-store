@@ -1,15 +1,20 @@
 import { GuitarType } from '../../types/guitar';
 import SearchForm from '../search-form/search-form';
+import {AxiosInstance} from 'axios';
+import { Link, URLSearchParamsInit } from 'react-router-dom';
 
 type HeaderProps = {
-  guitars: GuitarType[]
+  api: AxiosInstance,
+  guitars: GuitarType[],
+  searchParams: URLSearchParams,
+  setSearchParams: (nextInit: URLSearchParamsInit, navigateOptions?: { replace?: boolean | undefined; state?: any; } | undefined) => void,
 }
 
-function Header({guitars}: HeaderProps):JSX.Element {
+function Header({guitars, api, searchParams, setSearchParams}: HeaderProps):JSX.Element {
   return(
     <header className="header" id="header">
       <div className="container header__wrapper">
-        <a className="header__logo logo">
+        <Link className="header__logo logo" to='#'>
           <img
             className="logo__img"
             width="70"
@@ -17,28 +22,33 @@ function Header({guitars}: HeaderProps):JSX.Element {
             src="./img/svg/logo.svg"
             alt="Логотип"
           />
-        </a>
+        </Link>
         <nav className="main-nav">
           <ul className="main-nav__list">
             <li>
-              <a className="link main-nav__link link--current" href="#">
+              <Link className="link main-nav__link link--current" to="#">
                     Каталог
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="link main-nav__link" href="#">
+              <Link className="link main-nav__link" to="#">
                     Где купить?
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="link main-nav__link" href="#">
+              <Link className="link main-nav__link" to="#">
                     О компании
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
-        <SearchForm guitars={guitars}/>
-        <a className="header__cart-link" href="#" aria-label="Корзина">
+        <SearchForm
+          guitars={guitars}
+          api={api}
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+        />
+        <Link className="header__cart-link" to="#" aria-label="Корзина">
           <svg
             className="header__cart-icon"
             width="14"
@@ -49,7 +59,7 @@ function Header({guitars}: HeaderProps):JSX.Element {
           </svg>
           <span className="visually-hidden">Перейти в корзину</span>
           <span className="header__cart-count">2</span>
-        </a>
+        </Link>
       </div>
     </header>
   );

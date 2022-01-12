@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { rootReducer } from './store/root-reducer';
 import App from './components/app/app';
 import { configureStore } from '@reduxjs/toolkit';
+import { BrowserRouter} from 'react-router-dom';
 
 const api = createAPI();
 
@@ -15,7 +16,9 @@ const store = configureStore({
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App api={api}/>
+      <BrowserRouter>
+        <App api={api}/>
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root'));

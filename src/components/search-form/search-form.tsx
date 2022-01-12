@@ -1,24 +1,75 @@
 import SearchItem from './search-item';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { emptyGuitar } from '../../const';
 import {GuitarType} from '../../types/guitar';
+import {ChangeEvent, SyntheticEvent} from 'react';
+import { APIRoute } from '../../const';
+//import useDebounce from '../../hooks/use-debounce';
+import { updateSearchFormParams } from '../../store/action';
+import { useDispatch, useSelector } from 'react-redux';
+import {getSearchFormParams} from '../../store/search-params/selectors';
+import { URLSearchParamsInit } from 'react-router-dom';
+import {AxiosInstance} from 'axios';
+
+//const DELAY = 500;
 
 type SearchFormProps = {
-guitars: GuitarType[]
+  api: AxiosInstance,
+  guitars: GuitarType[],
+  searchParams: URLSearchParams,
+  setSearchParams: (nextInit: URLSearchParamsInit, navigateOptions?: { replace?: boolean | undefined; state?: any; } | undefined) => void,
 }
 
-function SearchForm({guitars}: SearchFormProps): JSX.Element {
+function SearchForm({guitars, api, searchParams, setSearchParams}: SearchFormProps): JSX.Element {
+  const dispatch = useDispatch();
+
+  const searchFormParams = useSelector(getSearchFormParams);
+
+  const searchText = searchParams.get('name_like') || '';
 
   const [searchValue, setSearchValue] = useState('');
   const [similarGuitars, setSimilarGuitars] = useState([emptyGuitar]);
 
+  const handleChangeSearchForm = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setSearchValue(e.target.value);
+  };
+
+  const searchSimilarGuitars = async () => {
+    const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}?name_like=${searchValue}`);
+    setSimilarGuitars(data);
+  };
+
+  const handleSubmitSearch = (e: SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSearchParams({
+      'name_like': searchValue,
+    });
+    searchSimilarGuitars();
+  };
+
+  //const debounceSearchValue = useDebounce(searchValue, DELAY);
+
   useEffect(() => {
-    setSimilarGuitars(guitars.filter((guitar) => guitar.name.toLowerCase().includes(searchValue)));
+    dispatch(updateSearchFormParams(Object.assign(
+      {},
+      searchFormParams,
+      {
+        'name_like': searchText,
+      },
+    )));
+  }, []);
+
+  useEffect(() => {
+    searchSimilarGuitars();
   }, [searchValue]);
 
   return (
     <div className="form-search">
-      <form className="form-search__form">
+      <form
+        className="form-search__form"
+        onSubmit={handleSubmitSearch}
+      >
         <button className="form-search__submit" type="submit">
           <svg
             className="form-search__icon"
@@ -36,10 +87,7 @@ function SearchForm({guitars}: SearchFormProps): JSX.Element {
           type="text"
           autoComplete="off"
           placeholder="что вы ищите?"
-          onChange={(evt) => {
-            evt.preventDefault();
-            setSearchValue(evt.target.value);
-          }}
+          onChange={handleChangeSearchForm}
         />
         <label className="visually-hidden" htmlFor="search">
                   Поиск

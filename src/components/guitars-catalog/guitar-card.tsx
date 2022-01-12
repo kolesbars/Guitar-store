@@ -1,5 +1,6 @@
 import RatingStars from './rating-star';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { AxiosInstance } from 'axios';
 import { APIRoute } from '../../const';
 import { GuitarType } from '../../types/guitar';
@@ -47,15 +48,15 @@ function GuitarCard({guitar, api}: GuitarCardProps):JSX.Element {
         </p>
       </div>
       <div className="product-card__buttons">
-        <a className="button button--mini" href="#">
+        <Link className="button button--mini" to="#">
                       Подробнее
-        </a>
-        <a
+        </Link>
+        <Link
           className="button button--red button--mini button--add-to-cart"
-          href="#"
+          to="#"
         >
                       Купить
-        </a>
+        </Link>
       </div>
     </div>
   );

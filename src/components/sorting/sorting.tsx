@@ -1,54 +1,51 @@
-import { updateGuitarsList } from '../../store/action';
-import { getGuitars } from '../../store/guitars-data/selectors';
-import { useState } from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { updateSortParams } from '../../store/action';
+import { useEffect } from 'react';
+import { AxiosInstance } from 'axios';
+import {SyntheticEvent} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFilterParams, getSortParams } from '../../store/search-params/selectors';
+import { useSearchParams } from 'react-router-dom';
 
-//catalog-sort__order-button--active
-function Sorting(): JSX.Element {
+type SortingProps = {
+  api: AxiosInstance,
+}
+
+function Sorting({api}:SortingProps): JSX.Element {
   const dispatch = useDispatch();
 
-  const guitars = useSelector(getGuitars);
+  const sortParams = useSelector(getSortParams);
+  const filterParams = useSelector(getFilterParams);
 
-  const [activeSortType, setActiveSortType] = useState('');
-  const [activeSortOrder, setActiveSortOrder] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleClickSortByPrice = (): void => {
-    setActiveSortType('price');
-    if (activeSortOrder === 'increase' || activeSortOrder === '') {
-      dispatch(updateGuitarsList([...guitars].sort((a, b) => a.price - b.price )));
-    } else if (activeSortOrder === 'decrease') {
-      dispatch(updateGuitarsList([...guitars].sort((a, b) => b.price - a.price )));
-    }
+  const sortType = searchParams.get('_sort') || 'price';
+  const orderType = searchParams.get('_order') || '';
+
+
+  const handleClickSortField = (e: SyntheticEvent<EventTarget>, value: string) => {
+    e.preventDefault();
+    dispatch(updateSortParams({...sortParams, '_sort': value}));
   };
 
-  const handleClickSortByRating = (): void => {
-    setActiveSortType('rating');
-    if (activeSortOrder === 'increase' || activeSortOrder === '') {
-      dispatch(updateGuitarsList([...guitars].sort((a, b) => a.rating - b.rating )));
-    } else if (activeSortOrder === 'decrease') {
-      dispatch(updateGuitarsList([...guitars].sort((a, b) => b.rating - a.rating )));
-    }
+  const handleClickOrderField = (e: SyntheticEvent<EventTarget>, value: string) => {
+    e.preventDefault();
+    dispatch(updateSortParams({...sortParams, '_order': value}));
   };
 
-  const handleClickSortByIncrease = (): void => {
-    setActiveSortOrder('increase');
-    if (activeSortType === 'price' || activeSortType === '') {
-      setActiveSortType('price');
-      dispatch(updateGuitarsList([...guitars].sort((a, b) => a.price - b.price )));
-    } else if (activeSortType === 'rating') {
-      dispatch(updateGuitarsList([...guitars].sort((a, b) => a.rating - b.rating )));
-    }
-  };
+  useEffect(() => {
+    dispatch(updateSortParams(Object.assign(
+      {},
+      sortParams,
+      {
+        '_order': orderType,
+        '_sort': sortType,
+      },
+    )));
+  }, []);
 
-  const handleClickSortByDecrease = (): void => {
-    setActiveSortOrder('decrease');
-    if (activeSortType === 'price' || activeSortType === '') {
-      setActiveSortType('price');
-      dispatch(updateGuitarsList([...guitars].sort((a, b) => b.price - a.price )));
-    } else if (activeSortType === 'rating') {
-      dispatch(updateGuitarsList([...guitars].sort((a, b) => b.rating - a.rating )));
-    }
-  };
+  useEffect(() => {
+    setSearchParams({...sortParams, ...filterParams});
+  }, [sortParams]);
 
   return (
     <div className="catalog-sort">
@@ -56,24 +53,18 @@ function Sorting(): JSX.Element {
       <div className="catalog-sort__type">
         <button
           className={`catalog-sort__type-button
-          ${activeSortType === 'price' ? 'catalog-sort__type-button--active' : ''}`}
+          ${sortType === 'price' ? 'catalog-sort__type-button--active' : ''}`}
           aria-label="по цене"
           tab-index="-1"
-          onClick={(evt) => {
-            evt.preventDefault();
-            handleClickSortByPrice();
-          }}
+          onClick={(evt) => handleClickSortField(evt, 'price')}
         >
                     по цене
         </button>
         <button
           className={`catalog-sort__type-button
-          ${activeSortType === 'rating' ? 'catalog-sort__type-button--active' : ''}`}
+          ${sortType === 'rating' ? 'catalog-sort__type-button--active' : ''}`}
           aria-label="по популярности"
-          onClick={(evt) => {
-            evt.preventDefault();
-            handleClickSortByRating();
-          }}
+          onClick={(evt) => handleClickSortField(evt, 'rating')}
         >
                     по популярности
         </button>
@@ -81,23 +72,17 @@ function Sorting(): JSX.Element {
       <div className="catalog-sort__order">
         <button
           className={`catalog-sort__order-button catalog-sort__order-button--up
-          ${activeSortOrder === 'increase' ? 'catalog-sort__order-button--active' : ''}`}
+          ${orderType === 'asc' ? 'catalog-sort__order-button--active' : ''}`}
           aria-label="По возрастанию"
           tab-index="-1"
-          onClick={(evt) => {
-            evt.preventDefault();
-            handleClickSortByIncrease();
-          }}
+          onClick={(evt) => handleClickOrderField(evt, 'asc')}
         >
         </button>
         <button
           className={`catalog-sort__order-button catalog-sort__order-button--down
-          ${activeSortOrder === 'decrease' ? 'catalog-sort__order-button--active' : ''}`}
+          ${orderType === 'desc' ? 'catalog-sort__order-button--active' : ''}`}
           aria-label="По убыванию"
-          onClick={(evt) => {
-            evt.preventDefault();
-            handleClickSortByDecrease();
-          }}
+          onClick={(evt) => handleClickOrderField(evt, 'desc')}
         >
         </button>
       </div>

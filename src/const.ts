@@ -4,7 +4,7 @@ export enum APIRoute {
 
 export enum AppRoute {
   Navigation = '/',
-  Main = '/main',
+  Catalog = 'catalog',
   Guitar = '/guitar'
 }
 

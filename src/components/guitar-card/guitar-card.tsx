@@ -1,24 +1,30 @@
-import { useSelector } from 'react-redux';
-import { getGuitars } from '../../store/guitars-data/selectors';
-import Header from '../header/header';
+//import { useSelector } from 'react-redux';
+//import { getGuitars } from '../../store/guitars-data/selectors';
+import { AxiosInstance } from 'axios';
+//import Header from '../header/header';
+import { Link } from 'react-router-dom';
 
-function GuitarCard(): JSX.Element {
-  const guitars = useSelector(getGuitars);
+type GuitarCardProps = {
+  api: AxiosInstance,
+}
+
+function GuitarCard({api}: GuitarCardProps): JSX.Element {
 
   return (
     <div className="wrapper">
-      <Header
+      {/* <Header
+        api = {api}
         guitars={guitars}
-      />
+      />*/}
       <main className="page-content">
         <div className="container">
           <h1 className="page-content__title title title--bigger">Товар</h1>
           <ul className="breadcrumbs page-content__breadcrumbs">
-            <li className="breadcrumbs__item"><a className="link" href="./main.html">Главная</a>
+            <li className="breadcrumbs__item"><Link className="link" to="./main.html">Главная</Link>
             </li>
-            <li className="breadcrumbs__item"><a className="link" href="./main.html">Каталог</a>
+            <li className="breadcrumbs__item"><Link className="link" to="./main.html">Каталог</Link>
             </li>
-            <li className="breadcrumbs__item"><a className="link">Товар</a>
+            <li className="breadcrumbs__item"><Link className="link" to='#'>Товар</Link>
             </li>
           </ul>
           <div className="product-container"><img className="product-container__img" src="img/content/guitar-2.jpg" width="90" height="235" alt=""/>
@@ -63,11 +69,11 @@ function GuitarCard(): JSX.Element {
             </div>
             <div className="product-container__price-wrapper">
               <p className="product-container__price-info product-container__price-info--title">Цена:</p>
-              <p className="product-container__price-info product-container__price-info--value">52 000 ₽</p><a className="button button--red button--big product-container__button" href="#">Добавить в корзину</a>
+              <p className="product-container__price-info product-container__price-info--value">52 000 ₽</p><Link className="button button--red button--big product-container__button" to="#">Добавить в корзину</Link>
             </div>
           </div>
           <section className="reviews">
-            <h3 className="reviews__title title title--bigger">Отзывы</h3><a className="button button--red-border button--big reviews__sumbit-button" href="#">Оставить отзыв</a>
+            <h3 className="reviews__title title title--bigger">Отзывы</h3><Link className="button button--red-border button--big reviews__sumbit-button" to="#">Оставить отзыв</Link>
             <div className="review">
               <div className="review__wrapper">
                 <h4 className="review__title review__title--author title title--lesser">Иванов Максим</h4><span className="review__date">12 декабря</span>
@@ -157,29 +163,29 @@ function GuitarCard(): JSX.Element {
         </div>
       </main>
       <footer className="footer">
-        <div className="footer__container container"><a className="footer__logo logo" href="main.html"><img className="logo__img" width="70" height="70" src="./img/svg/logo.svg" alt="Логотип"/></a>
+        <div className="footer__container container"><Link className="footer__logo logo" to="main.html"><img className="logo__img" width="70" height="70" src="./img/svg/logo.svg" alt="Логотип"/></Link>
           <div className="socials footer__socials">
             <ul className="socials__list">
               <li className="socials-item">
-                <a className="socials__link" href="https://www.facebook.com/" aria-label="facebook">
+                <Link className="socials__link" to="https://www.facebook.com/" aria-label="facebook">
                   <svg className="socials__icon" width="24" height="24" aria-hidden="true">
                     <use xlinkHref="#icon-facebook"></use>
                   </svg>
-                </a>
+                </Link>
               </li>
               <li className="socials-item">
-                <a className="socials__link" href="https://www.instagram.com/" aria-label="instagram">
+                <Link className="socials__link" to="https://www.instagram.com/" aria-label="instagram">
                   <svg className="socials__icon" width="24" height="24" aria-hidden="true">
                     <use xlinkHref="#icon-instagram"></use>
                   </svg>
-                </a>
+                </Link>
               </li>
               <li className="socials-item">
-                <a className="socials__link" href="https://www.twitter.com/" aria-label="twitter">
+                <Link className="socials__link" to="https://www.twitter.com/" aria-label="twitter">
                   <svg className="socials__icon" width="24" height="24" aria-hidden="true">
                     <use xlinkHref="#icon-twitter"></use>
                   </svg>
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
