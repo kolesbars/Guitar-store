@@ -1,6 +1,6 @@
 import { ActionType } from '../types/action';
 import { GuitarType } from '../types/guitar';
-import { SearchParamsType } from '../types/search-params';
+import { SortParamsType, FilterParamsType, SearchFormParamsType } from '../types/search-params';
 import { createAction } from '@reduxjs/toolkit';
 
 export const updateGuitarsList = createAction(
@@ -10,9 +10,23 @@ export const updateGuitarsList = createAction(
   }),
 );
 
-export const updateSearchParams = createAction(
-  ActionType.UpdateSearchParams,
-  (params: SearchParamsType) => ({
+export const updateSortParams = createAction(
+  ActionType.UpdateSortParams,
+  (params: SortParamsType) => ({
+    payload: params,
+  }),
+);
+
+export const updateFilterParams = createAction(
+  ActionType.UpdateFilterParams,
+  (params: FilterParamsType) => ({
+    payload: params,
+  }),
+);
+
+export const updateSearchFormParams = createAction(
+  ActionType.UpdateSearchFormParams,
+  (params: SearchFormParamsType) => ({
     payload: params,
   }),
 );

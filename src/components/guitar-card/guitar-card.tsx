@@ -1,7 +1,7 @@
-import { useSelector } from 'react-redux';
-import { getGuitars } from '../../store/guitars-data/selectors';
+//import { useSelector } from 'react-redux';
+//import { getGuitars } from '../../store/guitars-data/selectors';
 import { AxiosInstance } from 'axios';
-import Header from '../header/header';
+//import Header from '../header/header';
 import { Link } from 'react-router-dom';
 
 type GuitarCardProps = {
@@ -9,14 +9,13 @@ type GuitarCardProps = {
 }
 
 function GuitarCard({api}: GuitarCardProps): JSX.Element {
-  const guitars = useSelector(getGuitars);
 
   return (
     <div className="wrapper">
-      <Header
+      {/* <Header
         api = {api}
         guitars={guitars}
-      />
+      />*/}
       <main className="page-content">
         <div className="container">
           <h1 className="page-content__title title title--bigger">Товар</h1>

@@ -1,47 +1,42 @@
 import { APIRoute } from '../../const';
-import { updateGuitarsList } from '../../store/action';
-//import { updateSearchParams } from '../../store/action';
-import { getGuitars } from '../../store/guitars-data/selectors';
-import { getSearchParams } from '../../store/search-params/selectors';
-import {ChangeEvent} from 'react';
-import {useSearchParams} from 'react-router-dom';
+import { updateFilterParams } from '../../store/action';
+import { getFilterParams, getSortParams } from '../../store/search-params/selectors';
+import {ChangeEvent, FocusEvent} from 'react';
 import { useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-//import useDebounce from '../../hooks/use-debounce';
 import { GuitarType } from '../../types/guitar';
 import StringCheckbox from './string-checkbox';
+import { URLSearchParamsInit } from 'react-router-dom';
 import {AxiosInstance} from 'axios';
 
 //const DELAY = 500;
 
 type FiltersFormProps = {
   api: AxiosInstance,
+  searchParams: URLSearchParams,
+  setSearchParams: (nextInit: URLSearchParamsInit, navigateOptions?: { replace?: boolean | undefined; state?: any; } | undefined) => void,
 }
 const guitarStrings = [4,6,7,12];
 
-function FiltersForm({api}: FiltersFormProps):JSX.Element {
-  const guitars = useSelector(getGuitars);
-  const params = useSelector(getSearchParams);
-
-  // eslint-disable-next-line no-console
-  console.log(params);
-
-  const minPrice = Math.min(...guitars.map((guitar) => guitar.price)).toString();
-  const maxPrice = Math.max(...guitars.map((guitar) => guitar.price)).toString();
+function FiltersForm({api, searchParams, setSearchParams}: FiltersFormProps):JSX.Element {
+  const sortParams = useSelector(getSortParams);
+  const filterParams = useSelector(getFilterParams);
 
   const dispatch = useDispatch();
-  const [searchParams, setSearchParams] = useSearchParams();
 
   const guitarTypes = searchParams.getAll('type') ?? [''];
   const stringCount = searchParams.getAll('stringCount') ?? [''];
-  const priceGTE = searchParams.get('price_gte') ?? '1700';
-  const priceLTE = searchParams.get('price_lte') ?? '35000';
+  const priceGTE = searchParams.get('price_gte') ?? '';
+  const priceLTE = searchParams.get('price_lte') ?? '';
+
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
 
   const [filters, setFilters] = useState({
     'type': guitarTypes,
     'stringCount': stringCount,
-    'price_gte': priceGTE,
-    'price_lte': priceLTE,
+    'price_gte': priceGTE || undefined,
+    'price_lte': priceLTE || undefined,
   });
 
   // const debouncePriceMinValue = useDebounce(priceMinValue, DELAY);
@@ -68,21 +63,53 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
   const handleChangePriceField = (e: ChangeEvent<HTMLInputElement>, value: string) => {
     if (e.target.value !== '') {
       setFilters({...filters, [value] : e.target.value});
+    } else {
+      e.target.value = '';
     }
   };
 
-  const loadGuitarList = async () => {
-    const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}?${searchParams.toString()}`);
-    dispatch(updateGuitarsList(data));
+  const hahdleOutMinField = (e: FocusEvent<HTMLInputElement>) => {
+    if (e.target.value < minPrice) {
+      e.target.value = minPrice;
+      setFilters({...filters, 'price_gte' : minPrice});
+    }
+  };
+
+  const hahdleOutMaxField = (e: FocusEvent<HTMLInputElement>) => {
+    if (e.target.value > maxPrice) {
+      e.target.value = maxPrice;
+      setFilters({...filters, 'price_lte' : maxPrice});
+    }
+  };
+
+  const loadMaxMinPrices = async () => {
+    const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}`);
+    setMinPrice(Math.min(...data.map((guitar) => guitar.price)).toString());
+    setMaxPrice(Math.max(...data.map((guitar) => guitar.price)).toString());
   };
 
   useEffect(() => {
-    setSearchParams(filters);
+    loadMaxMinPrices();
+  }, []);
+
+  useEffect(() => {
+    if (filters['price_gte'] === undefined) {
+      delete filters['price_gte'];
+    }
+    if (filters['price_lte'] === undefined) {
+      delete filters['price_lte'];
+    }
+
+    dispatch(updateFilterParams(Object.assign(
+      {},
+      filterParams,
+      filters,
+    )));
   }, [filters]);
 
   useEffect(() => {
-    loadGuitarList();
-  }, [searchParams]);
+    setSearchParams({...sortParams, ...filterParams});
+  }, [filterParams]);
 
   return (
     <form className="catalog-filter">
@@ -103,8 +130,9 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
               placeholder={minPrice}
               id="priceMin"
               name="от"
-              min='0'
+              min='1'
               onChange={(evt) => handleChangePriceField(evt, 'price_gte')}
+              onBlur={hahdleOutMinField}
               value={priceGTE}
             />
           </div>
@@ -117,8 +145,9 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
               placeholder={maxPrice}
               id="priceMax"
               name="до"
-              min='0'
+              min='1'
               onChange={(evt) => handleChangePriceField(evt, 'price_lte')}
+              onBlur={hahdleOutMaxField}
               value={priceLTE}
             />
           </div>

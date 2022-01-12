@@ -1,4 +1,4 @@
-import { updateSearchParams } from '../action';
+import { updateFilterParams, updateSortParams, updateSearchFormParams } from '../action';
 import { SearchParams } from '../../types/state';
 import { createReducer } from '@reduxjs/toolkit';
 
@@ -13,13 +13,21 @@ import { createReducer } from '@reduxjs/toolkit';
 // };
 
 const initialState: SearchParams = {
-  params: {},
+  sortParams: {},
+  filterParams: {},
+  searchFormParams: {},
 };
 
 const searchParams = createReducer(initialState, (builder) => {
   builder
-    .addCase(updateSearchParams, (state, action) => {
-      state.params = action.payload;
+    .addCase(updateSortParams, (state, action) => {
+      state.sortParams = action.payload;
+    })
+    .addCase(updateFilterParams, (state, action) => {
+      state.filterParams = action.payload;
+    })
+    .addCase(updateSearchFormParams, (state, action) => {
+      state.searchFormParams = action.payload;
     });
 });
 

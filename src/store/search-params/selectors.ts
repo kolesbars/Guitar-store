@@ -1,5 +1,7 @@
 import { NameSpace } from '../root-reducer';
-import {SearchParamsType} from '../../types/search-params';
+import {SearchFormParamsType, SortParamsType, FilterParamsType} from '../../types/search-params';
 import { State } from '../../types/state';
 
-export const getSearchParams = (state: State): SearchParamsType => state[NameSpace.params].params;
+export const getSortParams = (state: State): SortParamsType => state[NameSpace.params].sortParams;
+export const getFilterParams = (state: State): FilterParamsType => state[NameSpace.params].filterParams;
+export const getSearchFormParams = (state: State): SearchFormParamsType => state[NameSpace.params].searchFormParams;

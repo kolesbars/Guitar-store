@@ -1,12 +1,10 @@
-import { updateGuitarsList } from '../../store/action';
-import { useState, useEffect } from 'react';
-import {useDispatch} from 'react-redux';
+import { updateSortParams } from '../../store/action';
+import { useEffect } from 'react';
 import { AxiosInstance } from 'axios';
-import { APIRoute } from '../../const';
-import { GuitarType } from '../../types/guitar';
 import {SyntheticEvent} from 'react';
-//import {useSearchParams} from 'react-router-dom';
-import {useQueryParams, StringParam} from 'use-query-params';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFilterParams, getSortParams } from '../../store/search-params/selectors';
+import { useSearchParams } from 'react-router-dom';
 
 type SortingProps = {
   api: AxiosInstance,
@@ -15,46 +13,39 @@ type SortingProps = {
 function Sorting({api}:SortingProps): JSX.Element {
   const dispatch = useDispatch();
 
-  const [searchParams, setSearchParams] = useQueryParams({
-    '_sort': StringParam,
-    '_order': StringParam,
-  });
+  const sortParams = useSelector(getSortParams);
+  const filterParams = useSelector(getFilterParams);
 
-  const sortType = searchParams._sort;
-  const orderType = searchParams._order;
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const sortType = searchParams.get('_sort') || 'price';
+  const orderType = searchParams.get('_order') || '';
 
 
-  const [sort, setSort] = useState({
-    '_order': orderType,
-  });
-
-  const [sor, setSor] = useState('');
-  // eslint-disable-next-line no-console
-  console.log(sor);
   const handleClickSortField = (e: SyntheticEvent<EventTarget>, value: string) => {
     e.preventDefault();
-    setSor(value);
-    setSearchParams({'_sort': value});
+    dispatch(updateSortParams({...sortParams, '_sort': value}));
   };
-
 
   const handleClickOrderField = (e: SyntheticEvent<EventTarget>, value: string) => {
     e.preventDefault();
-    setSort({...sort, '_order': value});
-  };
-
-  const sortGuitarList = async () => {
-    const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}?${searchParams.toString()}`);
-    dispatch(updateGuitarsList(data));
+    dispatch(updateSortParams({...sortParams, '_order': value}));
   };
 
   useEffect(() => {
-    setSearchParams(sort);
-  }, [sort]);
+    dispatch(updateSortParams(Object.assign(
+      {},
+      sortParams,
+      {
+        '_order': orderType,
+        '_sort': sortType,
+      },
+    )));
+  }, []);
 
   useEffect(() => {
-    sortGuitarList();
-  }, [searchParams]);
+    setSearchParams({...sortParams, ...filterParams});
+  }, [sortParams]);
 
   return (
     <div className="catalog-sort">

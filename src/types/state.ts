@@ -1,5 +1,5 @@
 import { GuitarType } from './guitar';
-import { SearchParamsType } from './search-params';
+import { SearchFormParamsType, SortParamsType, FilterParamsType } from './search-params';
 import { RootState } from '../store/root-reducer';
 
 export type GuitarsData = {
@@ -7,7 +7,9 @@ export type GuitarsData = {
 }
 
 export type SearchParams = {
-  params: SearchParamsType
+  sortParams: SortParamsType,
+  filterParams: FilterParamsType,
+  searchFormParams: SearchFormParamsType,
 }
 
 export type State = RootState;
