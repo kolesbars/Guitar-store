@@ -31,6 +31,8 @@ function Catalog({api}: MainProps): JSX.Element {
 
   useEffect(() => {
     loadGuitarList();
+    // eslint-disable-next-line no-console
+    console.log(guitars);
   }, [searchParams]);
 
   return (
@@ -71,7 +73,9 @@ function Catalog({api}: MainProps): JSX.Element {
                 api={api}
                 guitars={guitars}
               />
-              <Pagination/>
+              <Pagination
+                api={api}
+              />
             </div>
           </div>
         </main>

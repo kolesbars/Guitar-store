@@ -1,26 +1,28 @@
 import { APIRoute } from '../../const';
 import { updateFilterParams } from '../../store/action';
-import { getFilterParams, getSortParams } from '../../store/search-params/selectors';
+import { getFilterParams, getSortParams, getPaginationParams } from '../../store/search-params/selectors';
 import {ChangeEvent, FocusEvent} from 'react';
 import { useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+//import useDebounce from '../../hooks/use-debounce';
 import { GuitarType } from '../../types/guitar';
 import StringCheckbox from './string-checkbox';
 import { URLSearchParamsInit } from 'react-router-dom';
 import {AxiosInstance} from 'axios';
 
 //const DELAY = 500;
+const GUITARS_STRINGS = [4,6,7,12];
 
 type FiltersFormProps = {
   api: AxiosInstance,
   searchParams: URLSearchParams,
   setSearchParams: (nextInit: URLSearchParamsInit, navigateOptions?: { replace?: boolean | undefined; state?: any; } | undefined) => void,
 }
-const guitarStrings = [4,6,7,12];
 
 function FiltersForm({api, searchParams, setSearchParams}: FiltersFormProps):JSX.Element {
   const sortParams = useSelector(getSortParams);
   const filterParams = useSelector(getFilterParams);
+  const paginationParams = useSelector(getPaginationParams);
 
   const dispatch = useDispatch();
 
@@ -108,7 +110,7 @@ function FiltersForm({api, searchParams, setSearchParams}: FiltersFormProps):JSX
   }, [filters]);
 
   useEffect(() => {
-    setSearchParams({...sortParams, ...filterParams});
+    setSearchParams({...sortParams, ...filterParams, ...paginationParams});
   }, [filterParams]);
 
   return (
@@ -195,7 +197,7 @@ function FiltersForm({api, searchParams, setSearchParams}: FiltersFormProps):JSX
         <legend className="catalog-filter__block-title">
                     Количество струн
         </legend>
-        {guitarStrings.map((count) =>
+        {GUITARS_STRINGS.map((count) =>
           (
             <StringCheckbox
               key={`${count}-key`}

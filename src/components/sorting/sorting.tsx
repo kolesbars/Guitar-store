@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { AxiosInstance } from 'axios';
 import {SyntheticEvent} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFilterParams, getSortParams } from '../../store/search-params/selectors';
+import { getFilterParams, getSortParams, getPaginationParams } from '../../store/search-params/selectors';
 import { useSearchParams } from 'react-router-dom';
 
 type SortingProps = {
@@ -15,6 +15,7 @@ function Sorting({api}:SortingProps): JSX.Element {
 
   const sortParams = useSelector(getSortParams);
   const filterParams = useSelector(getFilterParams);
+  const paginationParams = useSelector(getPaginationParams);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -44,7 +45,7 @@ function Sorting({api}:SortingProps): JSX.Element {
   }, []);
 
   useEffect(() => {
-    setSearchParams({...sortParams, ...filterParams});
+    setSearchParams({...sortParams, ...filterParams, ...paginationParams});
   }, [sortParams]);
 
   return (

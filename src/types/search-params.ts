@@ -13,3 +13,8 @@ export type FilterParamsType = {
 export type SearchFormParamsType = {
   'name_like'?: string,
 };
+
+export type PaginationParamsType = {
+  '_start'?: string,
+  '_end'?: string,
+}

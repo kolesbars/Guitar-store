@@ -1,21 +1,12 @@
-import { updateFilterParams, updateSortParams, updateSearchFormParams } from '../action';
+import { updateFilterParams, updateSortParams, updateSearchFormParams, updatePaginationParams } from '../action';
 import { SearchParams } from '../../types/state';
 import { createReducer } from '@reduxjs/toolkit';
-
-// const emptyParams = {
-//   'type': [''],
-//   'stringCount': [''],
-//   'price_gte': '',
-//   'price_lte': '',
-//   '_sort': '',
-//   '_order': '',
-//   'name_like': '',
-// };
 
 const initialState: SearchParams = {
   sortParams: {},
   filterParams: {},
   searchFormParams: {},
+  paginationParams: {},
 };
 
 const searchParams = createReducer(initialState, (builder) => {
@@ -28,6 +19,9 @@ const searchParams = createReducer(initialState, (builder) => {
     })
     .addCase(updateSearchFormParams, (state, action) => {
       state.searchFormParams = action.payload;
+    })
+    .addCase(updatePaginationParams, (state, action) => {
+      state.paginationParams = action.payload;
     });
 });
 

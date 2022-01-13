@@ -20,12 +20,12 @@ function App({api}: AppProps): JSX.Element {
       >
       </Route>
       <Route
-        path={`${AppRoute.Catalog}`}
+        path={AppRoute.Catalog}
         element={<Catalog api={api}/>}
       >
       </Route>
       <Route
-        path={`${AppRoute.Catalog}/:pageParam`}
+        path={`${AppRoute.Catalog}/:page`}
         element={<Catalog api={api}/>}
       >
       </Route>
