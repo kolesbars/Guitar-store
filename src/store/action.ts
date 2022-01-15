@@ -17,6 +17,13 @@ export const updatePageCount = createAction(
   }),
 );
 
+export const updateTotalCount = createAction(
+  ActionType.UpdateTotalCount,
+  (totalCount: string ) => ({
+    payload: totalCount,
+  }),
+);
+
 export const updateSortParams = createAction(
   ActionType.UpdateSortParams,
   (params: SortParamsType) => ({

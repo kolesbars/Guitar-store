@@ -5,7 +5,7 @@ export enum APIRoute {
 export enum AppRoute {
   Navigation = '/',
   Catalog = '/catalog',
-  Guitar = '/guitar'
+  Guitar = '/guitar/:id'
 }
 
 export const emptyGuitar = {

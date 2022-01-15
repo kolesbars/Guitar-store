@@ -7,7 +7,8 @@ export type GuitarsData = {
 }
 
 export type PageCount = {
-  pageCount: string
+  pageCount: string,
+  totalCount: string,
 }
 
 export type SearchParams = {

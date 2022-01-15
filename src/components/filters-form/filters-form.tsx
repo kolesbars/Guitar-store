@@ -1,13 +1,15 @@
-import { APIRoute } from '../../const';
+import { APIRoute, AppRoute } from '../../const';
 import { updateFilterParams } from '../../store/action';
-import { getFilterParams, getSortParams, getPaginationParams } from '../../store/search-params/selectors';
+import { updatePageCount } from '../../store/action';
+import { getFilterParams, getSortParams} from '../../store/search-params/selectors';
 import {ChangeEvent, FocusEvent} from 'react';
 import { useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
 //import useDebounce from '../../hooks/use-debounce';
 import { GuitarType } from '../../types/guitar';
 import StringCheckbox from './string-checkbox';
-import { URLSearchParamsInit } from 'react-router-dom';
 import {AxiosInstance} from 'axios';
 
 //const DELAY = 500;
@@ -15,16 +17,16 @@ const GUITARS_STRINGS = [4,6,7,12];
 
 type FiltersFormProps = {
   api: AxiosInstance,
-  searchParams: URLSearchParams,
-  setSearchParams: (nextInit: URLSearchParamsInit, navigateOptions?: { replace?: boolean | undefined; state?: any; } | undefined) => void,
 }
 
-function FiltersForm({api, searchParams, setSearchParams}: FiltersFormProps):JSX.Element {
+function FiltersForm({api}: FiltersFormProps):JSX.Element {
   const sortParams = useSelector(getSortParams);
   const filterParams = useSelector(getFilterParams);
-  const paginationParams = useSelector(getPaginationParams);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const guitarTypes = searchParams.getAll('type') ?? [''];
   const stringCount = searchParams.getAll('stringCount') ?? [''];
@@ -110,7 +112,9 @@ function FiltersForm({api, searchParams, setSearchParams}: FiltersFormProps):JSX
   }, [filters]);
 
   useEffect(() => {
-    setSearchParams({...sortParams, ...filterParams, ...paginationParams});
+    setSearchParams({...sortParams, ...filterParams});
+    dispatch(updatePageCount('1'));
+    navigate(`${AppRoute.Catalog}/1`);
   }, [filterParams]);
 
   return (

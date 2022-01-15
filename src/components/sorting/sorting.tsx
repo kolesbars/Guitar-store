@@ -1,21 +1,19 @@
 import { updateSortParams } from '../../store/action';
+import { updatePageCount } from '../../store/action';
 import { useEffect } from 'react';
-import { AxiosInstance } from 'axios';
 import {SyntheticEvent} from 'react';
+import { useNavigate } from 'react-router';
+import { AppRoute } from '../../const';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFilterParams, getSortParams, getPaginationParams } from '../../store/search-params/selectors';
+import { getFilterParams, getSortParams} from '../../store/search-params/selectors';
 import { useSearchParams } from 'react-router-dom';
 
-type SortingProps = {
-  api: AxiosInstance,
-}
-
-function Sorting({api}:SortingProps): JSX.Element {
+function Sorting(): JSX.Element {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const sortParams = useSelector(getSortParams);
   const filterParams = useSelector(getFilterParams);
-  const paginationParams = useSelector(getPaginationParams);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -45,7 +43,9 @@ function Sorting({api}:SortingProps): JSX.Element {
   }, []);
 
   useEffect(() => {
-    setSearchParams({...sortParams, ...filterParams, ...paginationParams});
+    setSearchParams({...sortParams, ...filterParams});
+    dispatch(updatePageCount('1'));
+    navigate(`${AppRoute.Catalog}/1`);
   }, [sortParams]);
 
   return (

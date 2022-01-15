@@ -1,5 +1,6 @@
 import SearchItem from './search-item';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { emptyGuitar } from '../../const';
 import {GuitarType} from '../../types/guitar';
 import {ChangeEvent, SyntheticEvent} from 'react';
@@ -8,7 +9,6 @@ import { APIRoute } from '../../const';
 import { updateSearchFormParams } from '../../store/action';
 import { useDispatch, useSelector } from 'react-redux';
 import {getSearchFormParams} from '../../store/search-params/selectors';
-import { URLSearchParamsInit } from 'react-router-dom';
 import {AxiosInstance} from 'axios';
 
 //const DELAY = 500;
@@ -16,14 +16,14 @@ import {AxiosInstance} from 'axios';
 type SearchFormProps = {
   api: AxiosInstance,
   guitars: GuitarType[],
-  searchParams: URLSearchParams,
-  setSearchParams: (nextInit: URLSearchParamsInit, navigateOptions?: { replace?: boolean | undefined; state?: any; } | undefined) => void,
 }
 
-function SearchForm({guitars, api, searchParams, setSearchParams}: SearchFormProps): JSX.Element {
+function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
   const dispatch = useDispatch();
 
   const searchFormParams = useSelector(getSearchFormParams);
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const searchText = searchParams.get('name_like') || '';
 

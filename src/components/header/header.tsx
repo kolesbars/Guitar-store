@@ -1,16 +1,14 @@
 import { GuitarType } from '../../types/guitar';
 import SearchForm from '../search-form/search-form';
 import {AxiosInstance} from 'axios';
-import { Link, URLSearchParamsInit } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 
 type HeaderProps = {
   api: AxiosInstance,
   guitars: GuitarType[],
-  searchParams: URLSearchParams,
-  setSearchParams: (nextInit: URLSearchParamsInit, navigateOptions?: { replace?: boolean | undefined; state?: any; } | undefined) => void,
 }
 
-function Header({guitars, api, searchParams, setSearchParams}: HeaderProps):JSX.Element {
+function Header({guitars, api}: HeaderProps):JSX.Element {
   return(
     <header className="header" id="header">
       <div className="container header__wrapper">
@@ -19,7 +17,7 @@ function Header({guitars, api, searchParams, setSearchParams}: HeaderProps):JSX.
             className="logo__img"
             width="70"
             height="70"
-            src="./img/svg/logo.svg"
+            src="/img/svg/logo.svg"
             alt="Логотип"
           />
         </Link>
@@ -45,8 +43,6 @@ function Header({guitars, api, searchParams, setSearchParams}: HeaderProps):JSX.
         <SearchForm
           guitars={guitars}
           api={api}
-          searchParams={searchParams}
-          setSearchParams={setSearchParams}
         />
         <Link className="header__cart-link" to="#" aria-label="Корзина">
           <svg

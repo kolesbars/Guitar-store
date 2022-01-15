@@ -28,7 +28,7 @@ function GuitarCard({guitar, api}: GuitarCardProps):JSX.Element {
   return (
     <div className="product-card">
       <img
-        src={previewImg}
+        src={`/${previewImg}`}
         width="75"
         height="190"
         alt={name}

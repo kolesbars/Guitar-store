@@ -2,38 +2,28 @@ import {useEffect, useState, MouseEvent} from 'react';
 import PageItem from './page-item';
 import { useSelector, useDispatch } from 'react-redux';
 import { updatePaginationParams } from '../../store/action';
+import { updatePageCount } from '../../store/action';
 import { getPaginationParams } from '../../store/search-params/selectors';
 import { getSortParams, getFilterParams } from '../../store/search-params/selectors';
-import { useParams, useNavigate } from 'react-router';
+import { getTotalCount, getPageCount } from '../../store/page-count/selectors';
+import { useNavigate } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 import { AppRoute } from '../../const';
-import { AxiosInstance } from 'axios';
-import { GuitarType } from '../../types/guitar';
-import { APIRoute } from '../../const';
 import {Link} from 'react-router-dom';
 
 const RANGE_STEP = 9;
+const DEFAULT_PAGE_COUNT = 1;
 
-type PaginationProps = {
-  api: AxiosInstance,
-}
+// type PageParams = {
+//   page: string
+// }
 
-function Pagination({api}: PaginationProps): JSX.Element {
+function Pagination(): JSX.Element {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {page} = useParams<{page: string}>();
-
-  const [XTotalCount, setXTotalCount] = useState(RANGE_STEP);
-
-  const pages = [];
-
-  for (let i = 1; i <= Math.ceil(XTotalCount/RANGE_STEP); i++) {
-    pages.push(i);
-  }
-
-  const [currentPage, setCurrentPage] = useState(page || '1');
+  //const {page} = useParams<PageParams>();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -44,6 +34,14 @@ function Pagination({api}: PaginationProps): JSX.Element {
     '_start': startValue,
     '_end': endValue,
   });
+
+  const page = useSelector(getPageCount);
+
+  const [pageCount, setPageCount] = useState(DEFAULT_PAGE_COUNT);
+
+  const [pages, setPages] = useState([1]);
+
+  const totalCount = useSelector(getTotalCount);
 
   const sortParams = useSelector(getSortParams);
   const filterParams = useSelector(getFilterParams);
@@ -63,36 +61,41 @@ function Pagination({api}: PaginationProps): JSX.Element {
   //   return false;
   // };
 
-  const loadTotalCount = async () => {
-    const totalCount = await api.get<GuitarType[]>(
-      `${APIRoute.Guitars}?${searchParams.toString()}`).then((resp) => resp.headers);
-    // eslint-disable-next-line no-console
-    console.log(totalCount);
-    setXTotalCount(totalCount['x-total-count']);
-  };
+  useEffect(() => {
+    const pagesArray = [];
+
+    for (let i = 1; i <= Math.ceil(+totalCount/RANGE_STEP); i++) {
+      pagesArray.push(i);
+    }
+
+    setPages(pagesArray);
+  }, [totalCount]);
 
   useEffect(() => {
-    loadTotalCount();
-  }, [searchParams]);
+
+    if (page) {
+      setPageCount(+page);
+    }
+  }, [page]);
 
   const handlePrevClick = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    setCurrentPage((+currentPage-1).toString());
-    navigate(`${AppRoute.Catalog}/${+currentPage-1}`);
+    dispatch(updatePageCount((pageCount-1).toString()));
+    navigate(`${AppRoute.Catalog}/${pageCount-1}`);
   };
 
   const handleNextClick = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    setCurrentPage((+currentPage+1).toString());
-    navigate(`${AppRoute.Catalog}/${+currentPage+1}`);
+    dispatch(updatePageCount((pageCount+1).toString()));
+    navigate(`${AppRoute.Catalog}/${pageCount+1}`);
   };
 
   useEffect(() => {
     setRange({
-      '_start': ((+currentPage-1)*RANGE_STEP+1).toString(),
-      '_end': (+currentPage*RANGE_STEP+1).toString(),
+      '_start': ((pageCount-1)*RANGE_STEP+1).toString(),
+      '_end': (pageCount*RANGE_STEP+1).toString(),
     });
-  }, [currentPage]);
+  }, [pageCount]);
 
   useEffect(() => {
     dispatch(updatePaginationParams(Object.assign(
@@ -109,7 +112,7 @@ function Pagination({api}: PaginationProps): JSX.Element {
   return (
     <div className="pagination page-content__pagination">
       <ul className="pagination__list">
-        {+currentPage !== 1 &&
+        {pageCount !== 1 &&
           <li
             className='pagination__page pagination__page--next'
             id="prev"
@@ -127,10 +130,8 @@ function Pagination({api}: PaginationProps): JSX.Element {
             <PageItem
               page={count.toString()}
               key={`page-${count}`}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
             />))}
-        {+currentPage !== pages[pages.length-1] &&
+        {pageCount !== pages[pages.length-1] &&
           <li
             className='pagination__page pagination__page--next'
             id="next"

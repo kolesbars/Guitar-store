@@ -3,7 +3,7 @@ import { useEffect} from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { GuitarType } from '../../types/guitar';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateGuitarsList } from '../../store/action';
+import { updateGuitarsList, updateTotalCount } from '../../store/action';
 import { getGuitars } from '../../store/guitars-data/selectors';
 import {APIRoute} from '../../const';
 import GuitarCatalog from '../guitars-catalog/guitars-catalog';
@@ -18,15 +18,18 @@ type MainProps = {
 
 function Catalog({api}: MainProps): JSX.Element {
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const guitars = useSelector(getGuitars);
 
   const dispatch = useDispatch();
 
   const loadGuitarList = async () => {
-    const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}?${searchParams.toString()}`);
-    dispatch(updateGuitarsList(data));
+    await api.get<GuitarType[]>(`${APIRoute.Guitars}?${searchParams.toString()}`)
+      .then((response) => {
+        dispatch(updateGuitarsList(response.data));
+        dispatch(updateTotalCount(response.headers['x-total-count']));
+      });
   };
 
   useEffect(() => {
@@ -42,8 +45,6 @@ function Catalog({api}: MainProps): JSX.Element {
         <Header
           api={api}
           guitars={guitars}
-          searchParams={searchParams}
-          setSearchParams={setSearchParams}
         />
         <main className="page-content">
           <div className="container">
@@ -63,19 +64,15 @@ function Catalog({api}: MainProps): JSX.Element {
             <div className="catalog">
               <FiltersForm
                 api={api}
-                searchParams={searchParams}
-                setSearchParams={setSearchParams}
               />
-              <Sorting
-                api={api}
-              />
+              <Sorting/>
               <GuitarCatalog
                 api={api}
                 guitars={guitars}
               />
-              <Pagination
-                api={api}
-              />
+              {
+                <Pagination/>
+              }
             </div>
           </div>
         </main>
