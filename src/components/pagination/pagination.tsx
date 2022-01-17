@@ -1,33 +1,35 @@
 import {useEffect, useState, MouseEvent} from 'react';
+import { memo } from 'react';
 import PageItem from './page-item';
 import { useSelector, useDispatch } from 'react-redux';
 import { updatePaginationParams } from '../../store/action';
 import { updatePageCount } from '../../store/action';
 import { getPaginationParams } from '../../store/search-params/selectors';
-import { getSortParams, getFilterParams } from '../../store/search-params/selectors';
-import { getTotalCount, getPageCount } from '../../store/page-count/selectors';
-import { useNavigate } from 'react-router';
+//import { getSortParams, getFilterParams } from '../../store/search-params/selectors';
+import { getTotalCount} from '../../store/page-count/selectors';
+import { useNavigate, useParams } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import {Link} from 'react-router-dom';
 
 const RANGE_STEP = 9;
 const DEFAULT_PAGE_COUNT = 1;
+const DEFAULT_START_VALUE = '1';
 
-// type PageParams = {
-//   page: string
-// }
+type PageParams = {
+  pageParam: string
+}
 
 function Pagination(): JSX.Element {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //const {page} = useParams<PageParams>();
+  const {pageParam} = useParams<PageParams>();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
-  const startValue = searchParams.get('_start') || '1';
+  const startValue = searchParams.get('_start') || DEFAULT_START_VALUE;
   const endValue = searchParams.get('_end') || `${RANGE_STEP+1}`;
 
   const [range, setRange] = useState({
@@ -35,16 +37,16 @@ function Pagination(): JSX.Element {
     '_end': endValue,
   });
 
-  const page = useSelector(getPageCount);
+  //const page = useSelector(getPageCount);
 
   const [pageCount, setPageCount] = useState(DEFAULT_PAGE_COUNT);
 
-  const [pages, setPages] = useState([1]);
+  const [pages, setPages] = useState([DEFAULT_PAGE_COUNT]);
 
   const totalCount = useSelector(getTotalCount);
 
-  const sortParams = useSelector(getSortParams);
-  const filterParams = useSelector(getFilterParams);
+  //const sortParams = useSelector(getSortParams);
+  //const filterParams = useSelector(getFilterParams);
   const paginationParams = useSelector(getPaginationParams);
 
   // const getIsVisiblePage = (count: number) => {
@@ -72,11 +74,13 @@ function Pagination(): JSX.Element {
   }, [totalCount]);
 
   useEffect(() => {
-
-    if (page) {
-      setPageCount(+page);
+    // eslint-disable-next-line no-console
+    console.log(pageParam);
+    if (pageParam) {
+      dispatch(updatePageCount(pageParam));
+      setPageCount(+pageParam);
     }
-  }, [page]);
+  }, [pageParam]);
 
   const handlePrevClick = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -92,8 +96,8 @@ function Pagination(): JSX.Element {
 
   useEffect(() => {
     setRange({
-      '_start': ((pageCount-1)*RANGE_STEP+1).toString(),
-      '_end': (pageCount*RANGE_STEP+1).toString(),
+      '_start': ((pageCount-1)*RANGE_STEP).toString(),
+      '_end': (pageCount*RANGE_STEP).toString(),
     });
   }, [pageCount]);
 
@@ -105,9 +109,9 @@ function Pagination(): JSX.Element {
     )));
   }, [range]);
 
-  useEffect(() => {
-    setSearchParams({...sortParams, ...filterParams, ...paginationParams});
-  }, [paginationParams]);
+  // useEffect(() => {
+  //   setSearchParams({...sortParams, ...filterParams, ...paginationParams});
+  // }, [paginationParams]);
 
   return (
     <div className="pagination page-content__pagination">
@@ -149,4 +153,4 @@ function Pagination(): JSX.Element {
   );
 }
 
-export default Pagination;
+export default memo(Pagination);

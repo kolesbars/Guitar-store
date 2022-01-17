@@ -2,7 +2,7 @@ import RatingStars from './rating-star';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AxiosInstance } from 'axios';
-import { APIRoute } from '../../const';
+import { APIRoute, AppRoute } from '../../const';
 import { GuitarType } from '../../types/guitar';
 
 type GuitarCardProps = {
@@ -17,8 +17,12 @@ function GuitarCard({guitar, api}: GuitarCardProps):JSX.Element {
   const [commentsCount, setCommentsCount] = useState(0);
 
   const loadGuitarComments = async () => {
-    const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}/${id}/comments`);
-    setCommentsCount(data.length);
+    try {
+      const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}/${id}/comments`);
+      setCommentsCount(data.length);
+    } catch {
+      Error('ошибка');
+    }
   };
 
   useEffect(() => {
@@ -26,7 +30,7 @@ function GuitarCard({guitar, api}: GuitarCardProps):JSX.Element {
   }, []);
 
   return (
-    <div className="product-card">
+    <div className="product-card" data-testid='guitar-card'>
       <img
         src={`/${previewImg}`}
         width="75"
@@ -48,7 +52,7 @@ function GuitarCard({guitar, api}: GuitarCardProps):JSX.Element {
         </p>
       </div>
       <div className="product-card__buttons">
-        <Link className="button button--mini" to="#">
+        <Link className="button button--mini" to={`${AppRoute.Guitar}/${id}`}>
                       Подробнее
         </Link>
         <Link

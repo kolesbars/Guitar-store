@@ -1,21 +1,14 @@
-//import { useSelector } from 'react-redux';
-//import { getGuitars } from '../../store/guitars-data/selectors';
 import { AxiosInstance } from 'axios';
-//import Header from '../header/header';
 import { Link } from 'react-router-dom';
 
-type GuitarCardProps = {
+type GuitarScreenProps = {
   api: AxiosInstance,
 }
 
-function GuitarCard({api}: GuitarCardProps): JSX.Element {
+function GuitarScreen({api}: GuitarScreenProps): JSX.Element {
 
   return (
     <div className="wrapper">
-      {/* <Header
-        api = {api}
-        guitars={guitars}
-      />*/}
       <main className="page-content">
         <div className="container">
           <h1 className="page-content__title title title--bigger">Товар</h1>
@@ -47,7 +40,7 @@ function GuitarCard({api}: GuitarCardProps): JSX.Element {
                   <use xlinkHref="#icon-star"></use>
                 </svg><span className="rate__count"></span><span className="rate__message"></span>
               </div>
-              <div className="tabs"><a className="button button--medium tabs__button" href="#characteristics">Характеристики</a><a className="button button--black-border button--medium tabs__button" href="#description">Описание</a>
+              <div className="tabs"><Link className="button button--medium tabs__button" to="#" data-testid='characteristics' >Характеристики</Link><Link className="button button--black-border button--medium tabs__button" to="#" data-testid='description'>Описание</Link>
                 <div className="tabs__content" id="characteristics">
                   <table className="tabs__table">
                     <tr className="tabs__table-row">
@@ -230,4 +223,4 @@ function GuitarCard({api}: GuitarCardProps): JSX.Element {
   );
 }
 
-export default GuitarCard;
+export default GuitarScreen;

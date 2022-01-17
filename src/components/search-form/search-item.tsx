@@ -13,6 +13,7 @@ function SearchItem({guitar}: SearchItemProps): JSX.Element {
     <li
       className="form-search__select-item"
       tab-index="0"
+      data-testid='search-item'
       onClick={(evt) => {
         evt.preventDefault();
         navigate(`${AppRoute.Guitar}/${guitar.id}`);

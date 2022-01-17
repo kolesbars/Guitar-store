@@ -31,7 +31,7 @@ function StringCheckbox(props: StringCheckboxProps): JSX.Element {
   };
 
   return (
-    <div className="form-checkbox catalog-filter__block-item">
+    <div className="form-checkbox catalog-filter__block-item" data-testid='string-checkbox'>
       <input
         className="visually-hidden"
         type="checkbox"

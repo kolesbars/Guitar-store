@@ -1,16 +1,22 @@
 import {AxiosInstance} from 'axios';
-import { useEffect} from 'react';
+import { useState, useEffect} from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { GuitarType } from '../../types/guitar';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateGuitarsList, updateTotalCount } from '../../store/action';
 import { getGuitars } from '../../store/guitars-data/selectors';
-import {APIRoute} from '../../const';
+import { getSortParams, getFilterParams, getPaginationParams } from '../../store/search-params/selectors';
+import {APIRoute, AppRoute} from '../../const';
 import GuitarCatalog from '../guitars-catalog/guitars-catalog';
 import FiltersForm from '../filters-form/filters-form';
 import Sorting from '../sorting/sorting';
 import Pagination from '../pagination/pagination';
+import Loading from '../loading/loading';
+import Footer from '../footer/footer';
+//import { toast } from 'react-toastify';
+// import { debounce } from 'ts-debounce';
 import Header from '../header/header';
+import { toast } from 'react-toastify';
 
 type MainProps = {
   api: AxiosInstance
@@ -18,24 +24,38 @@ type MainProps = {
 
 function Catalog({api}: MainProps): JSX.Element {
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [isLoaded, setIsLoaded] = useState(true);
 
   const guitars = useSelector(getGuitars);
+
+  const sortParams = useSelector(getSortParams);
+  const filterParams = useSelector(getFilterParams);
+  const paginationParams = useSelector(getPaginationParams);
 
   const dispatch = useDispatch();
 
   const loadGuitarList = async () => {
-    await api.get<GuitarType[]>(`${APIRoute.Guitars}?${searchParams.toString()}`)
-      .then((response) => {
-        dispatch(updateGuitarsList(response.data));
-        dispatch(updateTotalCount(response.headers['x-total-count']));
-      });
+    setIsLoaded(false);
+    try {
+      const response = await api.get<GuitarType[]>(`${APIRoute.Guitars}?${searchParams.toString()}`);
+      dispatch(updateGuitarsList(response.data));
+      dispatch(updateTotalCount(response.headers['x-total-count']));
+      setIsLoaded(true);
+      //eslint-disable-next-line no-console
+      console.log(response.data);
+    } catch {
+      toast.info('ошибка');
+    }
   };
 
   useEffect(() => {
+    setSearchParams({...sortParams, ...filterParams, ...paginationParams});
+  }, [filterParams, sortParams, paginationParams]);
+
+  useEffect(() => {
     loadGuitarList();
-    // eslint-disable-next-line no-console
-    console.log(guitars);
   }, [searchParams]);
 
   return (
@@ -53,7 +73,7 @@ function Catalog({api}: MainProps): JSX.Element {
             </h1>
             <ul className="breadcrumbs page-content__breadcrumbs">
               <li className="breadcrumbs__item">
-                <Link className="link" to="./main.html">
+                <Link className="link" to={AppRoute.Navigation}>
                   Главная
                 </Link>
               </li>
@@ -66,160 +86,17 @@ function Catalog({api}: MainProps): JSX.Element {
                 api={api}
               />
               <Sorting/>
-              <GuitarCatalog
-                api={api}
-                guitars={guitars}
-              />
-              {
-                <Pagination/>
-              }
+              {isLoaded ?
+                <GuitarCatalog
+                  api={api}
+                  guitars={guitars}
+                /> :
+                <Loading/>}
+              <Pagination/>
             </div>
           </div>
         </main>
-        <footer className="footer">
-          <div className="footer__container container">
-            <Link className="footer__logo logo" to='#'>
-              <img
-                className="logo__img"
-                width="70"
-                height="70"
-                src="./img/svg/logo.svg"
-                alt="Логотип"
-              />
-            </Link>
-            <div className="socials footer__socials">
-              <ul className="socials__list">
-                <li className="socials-item">
-                  <Link
-                    className="socials__link"
-                    to="https://www.facebook.com/"
-                    aria-label="facebook"
-                  >
-                    <svg
-                      className="socials__icon"
-                      width="24"
-                      height="24"
-                      aria-hidden="true"
-                    >
-                      <use xlinkHref="#icon-facebook"></use>
-                    </svg>
-                  </Link>
-                </li>
-                <li className="socials-item">
-                  <Link
-                    className="socials__link"
-                    to="https://www.instagram.com/"
-                    aria-label="instagram"
-                  >
-                    <svg
-                      className="socials__icon"
-                      width="24"
-                      height="24"
-                      aria-hidden="true"
-                    >
-                      <use xlinkHref="#icon-instagram"></use>
-                    </svg>
-                  </Link>
-                </li>
-                <li className="socials-item">
-                  <Link
-                    className="socials__link"
-                    to="https://www.twitter.com/"
-                    aria-label="twitter"
-                  >
-                    <svg
-                      className="socials__icon"
-                      width="24"
-                      height="24"
-                      aria-hidden="true"
-                    >
-                      <use xlinkHref="#icon-twitter"></use>
-                    </svg>
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <section className="footer__nav-section footer__nav-section--info">
-              <h2 className="footer__nav-title">О нас</h2>
-              <p className="footer__nav-content footer__nav-content--font-secondary">
-                Магазин гитар, музыкальных инструментов и гитарная мастерская{' '}
-                <br /> в Санкт-Петербурге.
-                <br />
-                <br />
-                Все инструменты проверены, отстроены <br /> и доведены до
-                идеала!
-              </p>
-            </section>
-            <section className="footer__nav-section footer__nav-section--links">
-              <h2 className="footer__nav-title">Информация</h2>
-              <ul className="footer__nav-list">
-                <li className="footer__nav-list-item">
-                  <Link className="link" to="#top">
-                    Где купить?
-                  </Link>
-                </li>
-                <li className="footer__nav-list-item">
-                  <Link className="link" to="#top">
-                    Блог
-                  </Link>
-                </li>
-                <li className="footer__nav-list-item">
-                  <Link className="link" to="#top">
-                    Вопрос - ответ
-                  </Link>
-                </li>
-                <li className="footer__nav-list-item">
-                  <Link className="link" to="#top">
-                    Возврат
-                  </Link>
-                </li>
-                <li className="footer__nav-list-item">
-                  <Link className="link" to="#top">
-                    Сервис-центры
-                  </Link>
-                </li>
-              </ul>
-            </section>
-            <section className="footer__nav-section footer__nav-section--contacts">
-              <h2 className="footer__nav-title">Контакты</h2>
-              <p className="footer__nav-content">
-                г. Санкт-Петербург,
-                <br /> м. Невский проспект, <br />
-                ул. Казанская 6.
-              </p>
-              <div className="footer__nav-content">
-                <svg
-                  className="footer__icon"
-                  width="8"
-                  height="8"
-                  aria-hidden="true"
-                >
-                  <use xlinkHref="#icon-phone"></use>
-                </svg>
-                <Link className="link" to="tel:88125005050">
-                  {' '}
-                  8-812-500-50-50
-                </Link>
-              </div>
-              <p className="footer__nav-content">
-                Режим работы:
-                <br />
-                <span className="footer__span">
-                  <svg
-                    className="footer__icon"
-                    width="13"
-                    height="13"
-                    aria-hidden="true"
-                  >
-                    <use xlinkHref="#icon-clock"></use>
-                  </svg>
-                  <span> с 11:00 до 20:00</span>
-                  <span>без выходных</span>
-                </span>
-              </p>
-            </section>
-          </div>
-        </footer>
+        <Footer/>
       </div>
     </>
   );

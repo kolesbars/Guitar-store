@@ -1,11 +1,12 @@
 import { updateSortParams } from '../../store/action';
+import { memo } from 'react';
 import { updatePageCount } from '../../store/action';
 import { useEffect } from 'react';
 import {SyntheticEvent} from 'react';
 import { useNavigate } from 'react-router';
 import { AppRoute } from '../../const';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFilterParams, getSortParams} from '../../store/search-params/selectors';
+import {getSortParams} from '../../store/search-params/selectors';
 import { useSearchParams } from 'react-router-dom';
 
 function Sorting(): JSX.Element {
@@ -13,9 +14,9 @@ function Sorting(): JSX.Element {
   const navigate = useNavigate();
 
   const sortParams = useSelector(getSortParams);
-  const filterParams = useSelector(getFilterParams);
+  //const filterParams = useSelector(getFilterParams);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const sortType = searchParams.get('_sort') || 'price';
   const orderType = searchParams.get('_order') || '';
@@ -43,7 +44,6 @@ function Sorting(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    setSearchParams({...sortParams, ...filterParams});
     dispatch(updatePageCount('1'));
     navigate(`${AppRoute.Catalog}/1`);
   }, [sortParams]);
@@ -77,6 +77,7 @@ function Sorting(): JSX.Element {
           aria-label="По возрастанию"
           tab-index="-1"
           onClick={(evt) => handleClickOrderField(evt, 'asc')}
+          data-testid='asc'
         >
         </button>
         <button
@@ -91,4 +92,4 @@ function Sorting(): JSX.Element {
   );
 }
 
-export default Sorting;
+export default memo(Sorting);

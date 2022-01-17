@@ -1,10 +1,9 @@
 import {Routes, Route} from 'react-router-dom';
-//import {browserHistory} from '../../brower-history';
 import { AxiosInstance } from 'axios';
 import { AppRoute } from '../../const';
 import Catalog from '../catalog/catalog';
-import GuitarCard from '../guitar-card/guitar-card';
-//import { QueryParamProvider } from 'use-query-params';
+import GuitarScreen from '../guitar-screen/guitar-screen';
+import NotFoundScreen from '../not-found-screen/not-found-screen';
 import Navigation from '../navigation/navigation';
 
 type AppProps = {
@@ -20,13 +19,18 @@ function App({api}: AppProps): JSX.Element {
       >
       </Route>
       <Route
-        path={`${AppRoute.Catalog}/:page`}
+        path={`${AppRoute.Catalog}/:pageParam`}
         element={<Catalog api={api}/>}
       >
       </Route>
       <Route
-        path={AppRoute.Guitar}
-        element={<GuitarCard api={api}/>}
+        path={`${AppRoute.Guitar}/:id`}
+        element={<GuitarScreen api={api}/>}
+      >
+      </Route>
+      <Route
+        path="*"
+        element={<NotFoundScreen/>}
       >
       </Route>
     </Routes>

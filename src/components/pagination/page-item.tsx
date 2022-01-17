@@ -1,10 +1,14 @@
 import { MouseEvent } from 'react';
 import { AppRoute } from '../../const';
-import { useNavigate } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
-import { getPageCount } from '../../store/page-count/selectors';
+import { useDispatch} from 'react-redux';
+//import { getPageCount } from '../../store/page-count/selectors';
+import { useParams, useNavigate } from 'react-router';
 import { updatePageCount } from '../../store/action';
 import {Link} from 'react-router-dom';
+
+type PageParams = {
+  pageParam: string
+}
 
 type PageItemProps = {
   page: string,
@@ -14,7 +18,9 @@ function PageItem ({page}: PageItemProps):JSX.Element {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const currentPage = useSelector(getPageCount);
+  //const currentPage = useSelector(getPageCount);
+  const {pageParam} = useParams<PageParams>();
+
 
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -24,10 +30,10 @@ function PageItem ({page}: PageItemProps):JSX.Element {
 
 
   return (
-    <li className={`pagination__page ${page === currentPage ? 'pagination__page--active' : ''}`}>
+    <li className={`pagination__page ${page === pageParam ? 'pagination__page--active' : ''}`}>
       <Link
         className="link pagination__page-link"
-        to='#'
+        to={`${AppRoute.Catalog}/${page}`}
         onClick={handleClick}
       >
         {page}

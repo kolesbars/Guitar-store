@@ -10,7 +10,7 @@ function RatingStars({rating}: RatingStarsProps): JSX.Element {
     for (let i = 0; i < Math.ceil(ratingValue); i++) {
       stars.push(
         <svg width="12" height="11" aria-hidden="true" key={`${i}-star`}>
-          <use xlinkHref="#icon-full-star"></use>
+          <use xlinkHref="#icon-full-star" data-testid='rating-star'></use>
         </svg>);
     }
     for (let i = 0; i < Math.floor(5 - ratingValue); i++) {

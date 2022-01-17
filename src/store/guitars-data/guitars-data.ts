@@ -1,10 +1,9 @@
-import { emptyGuitar } from '../../const';
 import { GuitarsData } from '../../types/state';
 import { updateGuitarsList } from '../action';
 import { createReducer } from '@reduxjs/toolkit';
 
 const initialState: GuitarsData = {
-  guitarsList: [emptyGuitar],
+  guitarsList: [],
 };
 
 const guitarsData = createReducer(initialState, (builder) => {

@@ -9,6 +9,7 @@ import { APIRoute } from '../../const';
 import { updateSearchFormParams } from '../../store/action';
 import { useDispatch, useSelector } from 'react-redux';
 import {getSearchFormParams} from '../../store/search-params/selectors';
+//import { debounce } from 'ts-debounce';
 import {AxiosInstance} from 'axios';
 
 //const DELAY = 500;
@@ -36,8 +37,12 @@ function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
   };
 
   const searchSimilarGuitars = async () => {
-    const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}?name_like=${searchValue}`);
-    setSimilarGuitars(data);
+    try {
+      const {data} =  await api.get<GuitarType[]>(`${APIRoute.Guitars}?name_like=${searchValue}`);
+      setSimilarGuitars(data);
+    } catch {
+      Error('ошибка загрузки данных');
+    }
   };
 
   const handleSubmitSearch = (e: SyntheticEvent<HTMLFormElement>) => {
@@ -45,7 +50,6 @@ function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
     setSearchParams({
       'name_like': searchValue,
     });
-    searchSimilarGuitars();
   };
 
   //const debounceSearchValue = useDebounce(searchValue, DELAY);
@@ -86,7 +90,7 @@ function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
           id="search"
           type="text"
           autoComplete="off"
-          placeholder="что вы ищите?"
+          placeholder="что вы ищете?"
           onChange={handleChangeSearchForm}
         />
         <label className="visually-hidden" htmlFor="search">
