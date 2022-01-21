@@ -6,7 +6,6 @@ import { createAPI } from '../../services/api';
 import { emptyGuitar } from '../../const';
 import {configureMockStore} from '@jedmao/redux-mock-store';
 
-
 const api = createAPI();
 
 const mockStore = configureMockStore();

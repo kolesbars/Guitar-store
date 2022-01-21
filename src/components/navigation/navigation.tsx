@@ -1,9 +1,7 @@
+import { AppRoute } from '../../const';
 import { Link } from 'react-router-dom';
-import { getPageCount } from '../../store/page-count/selectors';
-import {useSelector} from 'react-redux';
 
 function Navigation(): JSX.Element {
-  const pageCount = useSelector(getPageCount);
 
   return (
     <div className="container main-index">
@@ -11,7 +9,7 @@ function Navigation(): JSX.Element {
       <h1>Список страниц</h1>
       <ol>
         <li><Link to="ui-kit.html">UI-kit — ui-kit.html</Link></li>
-        <li><Link to={`/catalog/${pageCount}`}>Каталог — main.html</Link></li>
+        <li><Link to={AppRoute.Catalog}>Каталог — main.html</Link></li>
         <li><Link to="cart.html">Корзина — cart.html</Link></li>
         <li><Link to="guitar/:id">Товар — product.html</Link></li>
       </ol>

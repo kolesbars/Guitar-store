@@ -2,7 +2,7 @@ import RatingStars from './rating-star';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AxiosInstance } from 'axios';
-import { APIRoute, AppRoute } from '../../const';
+import { APIRoute, AppRoute, ErrorMessage } from '../../const';
 import { GuitarType } from '../../types/guitar';
 
 type GuitarCardProps = {
@@ -21,7 +21,7 @@ function GuitarCard({guitar, api}: GuitarCardProps):JSX.Element {
       const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}/${id}/comments`);
       setCommentsCount(data.length);
     } catch {
-      Error('ошибка');
+      Error(ErrorMessage.FailLoading);
     }
   };
 

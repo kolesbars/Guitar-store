@@ -17,7 +17,6 @@ function GuitarCatalog({guitars, api}:GuitarCatalogProps):JSX.Element {
           api={api}
           guitar={guitar}
         />),
-
       )}
     </div>
   );

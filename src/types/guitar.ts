@@ -9,3 +9,8 @@ export type GuitarType = {
   'rating': number,
   'price': number
 }
+
+export type PricesType ={
+  min: string,
+  max: string,
+}

@@ -13,7 +13,14 @@ const api = createAPI();
 
 const store = configureStore({
   reducer: rootReducer,
-});
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      thunk: {
+        extraArgument: api,
+      },
+    }),
+},
+);
 
 ReactDOM.render(
   <React.StrictMode>

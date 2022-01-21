@@ -1,12 +1,33 @@
 import { ActionType } from '../types/action';
-import { GuitarType } from '../types/guitar';
-import { SortParamsType, FilterParamsType, SearchFormParamsType, PaginationParamsType } from '../types/search-params';
+import { GuitarType, PricesType } from '../types/guitar';
 import { createAction } from '@reduxjs/toolkit';
+import {
+  SortParamsType,
+  FilterParamsType,
+  SearchFormParamsType,
+  PaginationParamsType
+} from '../types/search-params';
 
 export const updateGuitarsList = createAction(
   ActionType.UpdateGuitarsList,
   (guitars: GuitarType[]) => ({
     payload: guitars,
+  }),
+);
+
+export const updateGuitarsPrices = createAction(
+  ActionType.UpdateGuitarsPrices,
+  (prices: PricesType) => ({
+    payload: prices,
+  }),
+);
+
+export const setLoadedStatusFalse = createAction(ActionType.SetLoadedStatusFalse);
+
+export const updateSimilarGuitarsList = createAction(
+  ActionType.UpdateSimilarGuitarsList,
+  (similarGuitars: GuitarType[]) => ({
+    payload: similarGuitars,
   }),
 );
 

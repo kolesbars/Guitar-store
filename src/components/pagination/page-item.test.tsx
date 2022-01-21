@@ -18,7 +18,10 @@ describe('Component: PageItem', () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <PageItem page={'1'}/>
+          <PageItem
+            page='1'
+            pageCount='1'
+          />
         </BrowserRouter>
       </Provider>,
     );

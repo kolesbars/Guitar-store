@@ -1,9 +1,12 @@
-import { GuitarType } from './guitar';
+import { GuitarType, PricesType } from './guitar';
 import { SearchFormParamsType, SortParamsType, FilterParamsType, PaginationParamsType } from './search-params';
 import { RootState } from '../store/root-reducer';
 
 export type GuitarsData = {
-  guitarsList: GuitarType[]
+  guitarsList: GuitarType[],
+  similarGuitars: GuitarType[],
+  isLoaded: boolean,
+  prices: PricesType,
 }
 
 export type PageCount = {

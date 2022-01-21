@@ -8,6 +8,10 @@ export enum AppRoute {
   Guitar = '/guitar'
 }
 
+export enum ErrorMessage {
+  FailLoading = 'Ошибка загрузки данных',
+}
+
 export const emptyGuitar = {
   'id': 0,
   'name': '',

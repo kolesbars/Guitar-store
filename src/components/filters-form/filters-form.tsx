@@ -1,31 +1,27 @@
-import { APIRoute, AppRoute } from '../../const';
-import { memo } from 'react';
 import { updateFilterParams } from '../../store/action';
 import { updatePageCount } from '../../store/action';
 import { getFilterParams} from '../../store/search-params/selectors';
+import { getMaxMinPrices } from '../../store/guitars-data/selectors';
 import {ChangeEvent, FocusEvent} from 'react';
 import { useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
-//import useDebounce from '../../hooks/use-debounce';
-import { GuitarType } from '../../types/guitar';
 import StringCheckbox from './string-checkbox';
+import { loadMaxMinPrices } from '../../store/api-actions';
 import {AxiosInstance} from 'axios';
 
-//const DELAY = 500;
 const GUITARS_STRINGS = [4,6,7,12];
+const DEFAULT_PAGE_COUNT = '1';
 
 type FiltersFormProps = {
   api: AxiosInstance,
 }
 
 function FiltersForm({api}: FiltersFormProps):JSX.Element {
-  // const sortParams = useSelector(getSortParams);
   const filterParams = useSelector(getFilterParams);
+  const prices = useSelector(getMaxMinPrices);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
 
@@ -34,18 +30,12 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
   const priceGTE = searchParams.get('price_gte') ?? '';
   const priceLTE = searchParams.get('price_lte') ?? '';
 
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-
   const [filters, setFilters] = useState({
     'type': guitarTypes,
     'stringCount': stringCount,
     'price_gte': priceGTE || undefined,
     'price_lte': priceLTE || undefined,
   });
-
-  // const debouncePriceMinValue = useDebounce(priceMinValue, DELAY);
-  // const debouncePriceMaxValue = useDebounce(priceMaxValue, DELAY);
 
   const handleChangeType = (e: ChangeEvent<HTMLInputElement>) => {
 
@@ -68,46 +58,34 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
   const handleChangePriceField = (e: ChangeEvent<HTMLInputElement>, value: string) => {
     if (e.target.value !== '') {
       setFilters({...filters, [value] : e.target.value});
-    } else {
+    }
+    else {
       e.target.value = '';
+      setFilters({...filters, [value] : ''});
     }
   };
 
   const hahdleOutMinField = (e: FocusEvent<HTMLInputElement>) => {
-    if (e.target.value < minPrice) {
-      e.target.value = minPrice;
-      setFilters({...filters, 'price_gte' : minPrice});
+    if (e.target.value !== '' && +e.target.value < +prices.min) {
+      e.target.value = prices.min;
+      setFilters({...filters, 'price_gte' : prices.min});
     } else {
-      e.target.value = '';
+      setFilters({...filters, 'price_gte' : e.target.value});
     }
   };
 
   const hahdleOutMaxField = (e: FocusEvent<HTMLInputElement>) => {
-    if (e.target.value > minPrice) {
-      if (e.target.value > maxPrice) {
-        e.target.value = maxPrice;
-        setFilters({...filters, 'price_lte' : maxPrice});
-      } else {
-        e.target.value = '';
-      }
-    } else {
-      e.target.value = minPrice;
+    if (e.target.value !== '' && +e.target.value > +prices.max) {
+      e.target.value = prices.max;
+      setFilters({...filters, 'price_lte' : prices.max});
     }
-
-  };
-
-  const loadMaxMinPrices = async () => {
-    try {
-      const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}`);
-      setMinPrice(Math.min(...data.map((guitar) => guitar.price)).toString());
-      setMaxPrice(Math.max(...data.map((guitar) => guitar.price)).toString());
-    } catch {
-      Error ('ошибка');
+    else {
+      setFilters({...filters, 'price_lte' : e.target.value});
     }
   };
 
   useEffect(() => {
-    loadMaxMinPrices();
+    dispatch(loadMaxMinPrices());
   }, []);
 
   useEffect(() => {
@@ -123,11 +101,7 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
       filterParams,
       filters,
     )));
-  }, [filters]);
-
-  useEffect(() => {
-    dispatch(updatePageCount('1'));
-    navigate(`${AppRoute.Catalog}/1`);
+    dispatch(updatePageCount(DEFAULT_PAGE_COUNT));
   }, [filters]);
 
   return (
@@ -146,7 +120,7 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
             </label>
             <input
               type="number"
-              placeholder={minPrice}
+              placeholder={prices && prices.min}
               id="priceMin"
               name="от"
               min='1'
@@ -161,7 +135,7 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
             </label>
             <input
               type="number"
-              placeholder={maxPrice}
+              placeholder={prices && prices.max}
               id="priceMax"
               name="до"
               min='1'
@@ -228,4 +202,4 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
   );
 }
 
-export default memo(FiltersForm);
+export default FiltersForm;

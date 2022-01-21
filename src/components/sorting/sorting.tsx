@@ -1,20 +1,15 @@
 import { updateSortParams } from '../../store/action';
-import { memo } from 'react';
 import { updatePageCount } from '../../store/action';
 import { useEffect } from 'react';
 import {SyntheticEvent} from 'react';
-import { useNavigate } from 'react-router';
-import { AppRoute } from '../../const';
 import { useDispatch, useSelector } from 'react-redux';
 import {getSortParams} from '../../store/search-params/selectors';
 import { useSearchParams } from 'react-router-dom';
 
 function Sorting(): JSX.Element {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const sortParams = useSelector(getSortParams);
-  //const filterParams = useSelector(getFilterParams);
 
   const [searchParams] = useSearchParams();
 
@@ -45,7 +40,6 @@ function Sorting(): JSX.Element {
 
   useEffect(() => {
     dispatch(updatePageCount('1'));
-    navigate(`${AppRoute.Catalog}/1`);
   }, [sortParams]);
 
   return (
@@ -92,4 +86,4 @@ function Sorting(): JSX.Element {
   );
 }
 
-export default memo(Sorting);
+export default Sorting;

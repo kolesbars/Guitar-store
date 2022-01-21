@@ -1,18 +1,14 @@
 import SearchItem from './search-item';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { emptyGuitar } from '../../const';
 import {GuitarType} from '../../types/guitar';
 import {ChangeEvent, SyntheticEvent} from 'react';
-import { APIRoute } from '../../const';
-//import useDebounce from '../../hooks/use-debounce';
 import { updateSearchFormParams } from '../../store/action';
 import { useDispatch, useSelector } from 'react-redux';
-import {getSearchFormParams} from '../../store/search-params/selectors';
-//import { debounce } from 'ts-debounce';
+import { getSearchFormParams} from '../../store/search-params/selectors';
+import { getSimilarGuitars } from '../../store/guitars-data/selectors';
+import { loadSimilarGuitars } from '../../store/api-actions';
 import {AxiosInstance} from 'axios';
-
-//const DELAY = 500;
 
 type SearchFormProps = {
   api: AxiosInstance,
@@ -23,26 +19,17 @@ function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
   const dispatch = useDispatch();
 
   const searchFormParams = useSelector(getSearchFormParams);
+  const similarGuitars = useSelector(getSimilarGuitars);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
   const searchText = searchParams.get('name_like') || '';
 
   const [searchValue, setSearchValue] = useState('');
-  const [similarGuitars, setSimilarGuitars] = useState([emptyGuitar]);
 
   const handleChangeSearchForm = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setSearchValue(e.target.value);
-  };
-
-  const searchSimilarGuitars = async () => {
-    try {
-      const {data} =  await api.get<GuitarType[]>(`${APIRoute.Guitars}?name_like=${searchValue}`);
-      setSimilarGuitars(data);
-    } catch {
-      Error('ошибка загрузки данных');
-    }
   };
 
   const handleSubmitSearch = (e: SyntheticEvent<HTMLFormElement>) => {
@@ -51,8 +38,6 @@ function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
       'name_like': searchValue,
     });
   };
-
-  //const debounceSearchValue = useDebounce(searchValue, DELAY);
 
   useEffect(() => {
     dispatch(updateSearchFormParams(Object.assign(
@@ -65,7 +50,7 @@ function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
   }, []);
 
   useEffect(() => {
-    searchSimilarGuitars();
+    dispatch(loadSimilarGuitars(searchValue));
   }, [searchValue]);
 
   return (
@@ -89,6 +74,7 @@ function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
           className="form-search__input"
           id="search"
           type="text"
+          data-testid='search-input'
           autoComplete="off"
           placeholder="что вы ищете?"
           onChange={handleChangeSearchForm}
@@ -98,7 +84,8 @@ function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
         </label>
       </form>
       <ul className={`form-search__select-list ${searchValue === '' ? 'hidden' : ''}`}>
-        {similarGuitars.map((guitar) =>
+        {similarGuitars &&
+        similarGuitars.map((guitar) =>
           (
             <SearchItem
               key={guitar.id}

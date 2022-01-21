@@ -3,7 +3,7 @@ import { updatePageCount, updateTotalCount } from '../action';
 import { createReducer } from '@reduxjs/toolkit';
 
 const initialState: PageCount = {
-  pageCount: '1',
+  pageCount: '',
   totalCount: '',
 };
 
