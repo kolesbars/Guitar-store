@@ -170,6 +170,7 @@ sup {
 
 img {
   border-style: none;
+  background-color: black;
 }
 
 /* Forms
@@ -684,9 +685,9 @@ button,
 .header {
   display: flex;
 
-  min-height: 110px;
-  padding-top: 22px;
-  padding-bottom: 12px;
+  max-height: 120px;
+  padding-top: 15px;
+  padding-bottom: 0;
 
   color: #ffffff;
   background-color: #131212;
@@ -694,8 +695,9 @@ button,
 
 .header__wrapper {
   display: flex;
+
+  justify-content: space-between;
   align-content: center;
-  align-items: center;
 
   width: 100%;
   padding-right: 66px;
@@ -792,7 +794,9 @@ button,
   display: flex;
   flex-wrap: wrap;
 
-  width: 390px;
+  justify-content: space-around;
+
+  width: 420px;
   margin: -10px 0 0 -37px;
   padding: 0;
 
@@ -2270,6 +2274,7 @@ button,
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+  z-index: 100;
 }
 
 .form-search__select-list::-webkit-scrollbar {
@@ -2654,6 +2659,7 @@ button,
 
   -o-object-fit: scale-down;
   object-fit: scale-down;
+  background-color: #ffffff;
 }
 
 .product-card__rate {

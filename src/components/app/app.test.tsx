@@ -29,7 +29,7 @@ const fakeApp = (
 
 describe('Application Routing', () => {
   it('should render navigate screen when user navigate to "/"', () => {
-    history.push(AppRoute.Navigation);
+    history.push(AppRoute.Main);
     render(fakeApp);
 
     expect(screen.getByText(/Список страниц/i)).toBeInTheDocument();

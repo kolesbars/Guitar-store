@@ -59,7 +59,7 @@ function Catalog({api}: MainProps): JSX.Element {
             </h1>
             <ul className="breadcrumbs page-content__breadcrumbs">
               <li className="breadcrumbs__item">
-                <Link className="link" to={AppRoute.Navigation}>
+                <Link className="link" to={AppRoute.Main}>
                   Главная
                 </Link>
               </li>

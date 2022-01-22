@@ -1,10 +1,9 @@
-import {Routes, Route} from 'react-router-dom';
+import {Routes, Route, Navigate} from 'react-router-dom';
 import { AxiosInstance } from 'axios';
 import { AppRoute } from '../../const';
 import Catalog from '../catalog/catalog';
 import GuitarScreen from '../guitar-screen/guitar-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
-import Navigation from '../navigation/navigation';
 
 type AppProps = {
   api: AxiosInstance
@@ -14,8 +13,8 @@ function App({api}: AppProps): JSX.Element {
   return (
     <Routes>
       <Route
-        path={AppRoute.Navigation}
-        element={<Navigation/>}
+        path={AppRoute.Main}
+        element={<Navigate to={AppRoute.Catalog}/>}
       >
       </Route>
       <Route
