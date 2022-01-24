@@ -6,8 +6,19 @@ import { Provider } from 'react-redux';
 import { AppRoute } from '../../const';
 import { createAPI } from '../../services/api';
 import App from './app';
+import { State } from '../../types/state';
+import { Action } from 'redux';
+import thunk, {ThunkDispatch} from 'redux-thunk';
 
-const mockStore = configureMockStore();
+const api = createAPI();
+
+const middlewares = [thunk.withExtraArgument(api)];
+
+const mockStore = configureMockStore<
+    State,
+    Action,
+    ThunkDispatch<State, typeof api, Action>
+    >(middlewares);
 
 const store = mockStore({
   GUITARS: {guitarsList: []},
@@ -16,8 +27,6 @@ const store = mockStore({
 });
 
 const history = createMemoryHistory();
-
-const api = createAPI();
 
 const fakeApp = (
   <Provider store={store}>
@@ -28,12 +37,12 @@ const fakeApp = (
 );
 
 describe('Application Routing', () => {
-  it('should render navigate screen when user navigate to "/"', () => {
+  it('should render main screen when user navigate to "/"', () => {
     history.push(AppRoute.Main);
     render(fakeApp);
 
-    expect(screen.getByText(/Список страниц/i)).toBeInTheDocument();
-    expect(screen.getByText(/Каталог/i)).toBeInTheDocument();
+    expect(screen.getByText(/Каталог гитар/i)).toBeInTheDocument();
+    expect(screen.getByText(/Фильтр/i)).toBeInTheDocument();
   });
 });
 

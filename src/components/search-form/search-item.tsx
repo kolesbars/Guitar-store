@@ -4,15 +4,17 @@ import {GuitarType} from '../../types/guitar';
 
 type SearchItemProps = {
   guitar: GuitarType,
+  id: number
+  currentItem: number | undefined
 }
 
-function SearchItem({guitar}: SearchItemProps): JSX.Element {
+function SearchItem({guitar, id, currentItem}: SearchItemProps): JSX.Element {
   const navigate = useNavigate();
 
   return (
     <li
-      className="form-search__select-item"
-      tab-index="0"
+      className={`form-search__select-item${currentItem === id ? 'form-search__select-item-focus' : ''}`}
+      tab-index='0'
       data-testid='search-item'
       onClick={(evt) => {
         evt.preventDefault();

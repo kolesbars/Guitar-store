@@ -2308,6 +2308,20 @@ button,
   transition: color 0.3s ease;
 }
 
+.form-search__select-item-focus {
+  padding-top: 4px;
+  padding-bottom: 4px;
+
+  font-size: 14px;
+  line-height: 19px;
+
+  color: red;
+
+  cursor: pointer;
+  -webkit-transition: color 0.3s ease;
+  transition: color 0.3s ease;
+}
+
 .form-search__select-item:hover,
 .form-search__select-item:focus {
   color: #545454;

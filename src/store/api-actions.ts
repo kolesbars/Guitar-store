@@ -13,34 +13,34 @@ import {
 export const loadGuitarList = (searchParams: string): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     dispatch(setLoadedStatusFalse());
-    try {
-      const response = await api.get<GuitarType[]>(`${APIRoute.Guitars}?${searchParams}`);
-      dispatch(updateGuitarsList(response.data));
-      dispatch(updateTotalCount(response.headers['x-total-count']));
-    } catch {
-      toast.info(ErrorMessage.FailLoading);
-    }
+    await api.get<GuitarType[]>(`${APIRoute.Guitars}?${searchParams}`)
+      .then((response) => {
+        dispatch(updateGuitarsList(response.data));
+        dispatch(updateTotalCount(response.headers['x-total-count']));
+      }).catch((err) => {
+        toast.info(ErrorMessage.FailLoading);
+
+      });
   };
 
 export const loadSimilarGuitars = (searchValue: string) :ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
-    try {
-      const {data} =  await api.get<GuitarType[]>(`${APIRoute.Guitars}?name_like=${searchValue}`);
-      dispatch(updateSimilarGuitarsList(data));
-    } catch {
-      Error(ErrorMessage.FailLoading);
-    }
+    await api.get<GuitarType[]>(`${APIRoute.Guitars}?name_like=${searchValue}`)
+      .then((response) => {
+        dispatch(updateSimilarGuitarsList(response.data));
+      }).catch((err) => {
+        throw new Error(err);
+      });
   };
 
 export const loadMaxMinPrices = () :ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
-    try {
-      const {data} = await api.get<GuitarType[]>(APIRoute.Guitars);
+    await api.get<GuitarType[]>(APIRoute.Guitars).then((response) => {
       dispatch(updateGuitarsPrices({
-        min: Math.min(...data.map((guitar) => guitar.price)).toString(),
-        max: Math.max(...data.map((guitar) => guitar.price)).toString(),
+        min: Math.min(...response.data.map((guitar) => guitar.price)).toString(),
+        max: Math.max(...response.data.map((guitar) => guitar.price)).toString(),
       }));
-    } catch {
-      Error (ErrorMessage.FailLoading);
-    }
+    }).catch((err) => {
+      throw new Error(err);
+    });
   };

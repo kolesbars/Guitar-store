@@ -1,5 +1,10 @@
 import {ChangeEvent} from 'react';
 
+const FOUR_STRING_COUNT = 4;
+const SIX_STRING_COUNT = 6;
+const SEVEN_STRING_COUNT = 7;
+const TWELVE_STRING_COUNT = 12;
+
 type StringCheckboxProps = {
   count: number,
   handleStringCount: (e: ChangeEvent<HTMLInputElement>, count: string) => void,
@@ -14,13 +19,13 @@ function StringCheckbox(props: StringCheckboxProps): JSX.Element {
   const isDisabled = (): boolean => {
     if (currentTypes.length) {
       switch (count) {
-        case 4:
+        case FOUR_STRING_COUNT:
           return !currentTypes.includes('ukulele') && !currentTypes.includes('electric');
-        case 6:
+        case SIX_STRING_COUNT:
           return !currentTypes.includes('acoustic') && !currentTypes.includes('electric');
-        case 7:
+        case SEVEN_STRING_COUNT:
           return !currentTypes.includes('acoustic') && !currentTypes.includes('electric');
-        case 12:
+        case TWELVE_STRING_COUNT:
           return !currentTypes.includes('acoustic');
         default:
           return false;

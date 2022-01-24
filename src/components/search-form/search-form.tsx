@@ -1,14 +1,24 @@
 import SearchItem from './search-item';
-import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {GuitarType} from '../../types/guitar';
-import {ChangeEvent, SyntheticEvent} from 'react';
+import {useNavigate} from 'react-router-dom';
 import { updateSearchFormParams } from '../../store/action';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSearchFormParams} from '../../store/search-params/selectors';
 import { getSimilarGuitars } from '../../store/guitars-data/selectors';
 import { loadSimilarGuitars } from '../../store/api-actions';
+import { AppRoute } from '../../const';
 import {AxiosInstance} from 'axios';
+import {
+  useEffect,
+  useState,
+  KeyboardEvent,
+  ChangeEvent,
+  SyntheticEvent} from 'react';
+
+const ARROW_UP_KEY_CODE = 40;
+const ARROW_DOWN_KEY_CODE = 38;
+const ENTER_KEY_CODE = 13;
 
 type SearchFormProps = {
   api: AxiosInstance,
@@ -17,15 +27,19 @@ type SearchFormProps = {
 
 function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const searchFormParams = useSelector(getSearchFormParams);
   const similarGuitars = useSelector(getSimilarGuitars);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const searchText = searchParams.get('name_like') || '';
 
   const [searchValue, setSearchValue] = useState('');
+
+  const [itemsId, setItemsId] = useState(similarGuitars?.map((guitar) => guitar.id).sort((a,b) => a - b ));
+  const [currentItem, setCurrentItem] = useState<number | undefined>(0);
 
   const handleChangeSearchForm = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -34,10 +48,28 @@ function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
 
   const handleSubmitSearch = (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSearchParams({
-      'name_like': searchValue,
-    });
   };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (currentItem !== undefined) {
+      if(e.keyCode === ENTER_KEY_CODE && searchValue !== '' && currentItem !== 0) {
+        navigate(`${AppRoute.Guitar}/${currentItem}`);
+      } else if (e.keyCode === ARROW_DOWN_KEY_CODE) {
+        setCurrentItem(itemsId[itemsId.indexOf(currentItem)-1]);
+      }
+      else if (e.keyCode === ARROW_UP_KEY_CODE) {
+        setCurrentItem(itemsId[itemsId.indexOf(currentItem)+1]);
+      }
+    } else if (e.keyCode === ARROW_UP_KEY_CODE) {
+      setCurrentItem(itemsId[0]);
+    }
+  };
+
+  useEffect(() => {
+    if(similarGuitars) {
+      setItemsId(similarGuitars.map((guitar) => guitar.id).sort((a,b) => a - b ));
+    }
+  }, [similarGuitars]);
 
   useEffect(() => {
     dispatch(updateSearchFormParams(Object.assign(
@@ -78,19 +110,24 @@ function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
           autoComplete="off"
           placeholder="что вы ищете?"
           onChange={handleChangeSearchForm}
+          onKeyDown={handleKeyDown}
         />
         <label className="visually-hidden" htmlFor="search">
                   Поиск
         </label>
       </form>
-      <ul className={`form-search__select-list ${searchValue === '' ? 'hidden' : ''}`}>
+      <ul
+        className={`form-search__select-list ${searchValue === '' ? 'hidden' : ''}`}
+        tab-index='0'
+      >
         {similarGuitars &&
-        similarGuitars.map((guitar) =>
-          (
-            <SearchItem
-              key={guitar.id}
-              guitar={guitar}
-            />))}
+        [...similarGuitars].sort((first, second) => first.id - second.id).map((guitar) => (
+          <SearchItem
+            key={guitar.id}
+            currentItem={currentItem}
+            id={guitar.id}
+            guitar={guitar}
+          />))}
       </ul>
     </div>
   );
