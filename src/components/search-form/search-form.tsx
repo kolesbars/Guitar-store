@@ -1,4 +1,4 @@
-import SearchItem from './search-item';
+import SearchItem from '../search-item/search-item';
 import { useSearchParams } from 'react-router-dom';
 import {GuitarType} from '../../types/guitar';
 import {useNavigate} from 'react-router-dom';
@@ -8,7 +8,7 @@ import { getSearchFormParams} from '../../store/search-params/selectors';
 import { getSimilarGuitars } from '../../store/guitars-data/selectors';
 import { loadSimilarGuitars } from '../../store/api-actions';
 import { AppRoute } from '../../const';
-import {AxiosInstance} from 'axios';
+import { KeyCode } from '../../const';
 import {
   useEffect,
   useState,
@@ -16,16 +16,11 @@ import {
   ChangeEvent,
   SyntheticEvent} from 'react';
 
-const ARROW_UP_KEY_CODE = 40;
-const ARROW_DOWN_KEY_CODE = 38;
-const ENTER_KEY_CODE = 13;
-
 type SearchFormProps = {
-  api: AxiosInstance,
   guitars: GuitarType[],
 }
 
-function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
+function SearchForm({guitars}: SearchFormProps): JSX.Element {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -52,15 +47,15 @@ function SearchForm({guitars, api}: SearchFormProps): JSX.Element {
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (currentItem !== undefined) {
-      if(e.keyCode === ENTER_KEY_CODE && searchValue !== '' && currentItem !== 0) {
+      if(e.keyCode === KeyCode.Enter && searchValue !== '' && currentItem !== 0) {
         navigate(`${AppRoute.Guitar}/${currentItem}`);
-      } else if (e.keyCode === ARROW_DOWN_KEY_CODE) {
+      } else if (e.keyCode === KeyCode.ArrowDown) {
         setCurrentItem(itemsId[itemsId.indexOf(currentItem)-1]);
       }
-      else if (e.keyCode === ARROW_UP_KEY_CODE) {
+      else if (e.keyCode === KeyCode.ArrowUp) {
         setCurrentItem(itemsId[itemsId.indexOf(currentItem)+1]);
       }
-    } else if (e.keyCode === ARROW_UP_KEY_CODE) {
+    } else if (e.keyCode === KeyCode.ArrowUp) {
       setCurrentItem(itemsId[0]);
     }
   };

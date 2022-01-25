@@ -19,12 +19,12 @@ function App({api}: AppProps): JSX.Element {
       </Route>
       <Route
         path={AppRoute.Catalog}
-        element={<Catalog api={api}/>}
+        element={<Catalog/>}
       >
       </Route>
       <Route
         path={`${AppRoute.Guitar}/:id`}
-        element={<GuitarScreen api={api}/>}
+        element={<GuitarScreen/>}
       >
       </Route>
       <Route

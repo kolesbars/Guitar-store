@@ -14,6 +14,7 @@ describe('Reducer: guitarData', () => {
         guitarsList: [],
         similarGuitars: [],
         isLoaded: false,
+        commentsCounts: [],
         prices: {
           min: '',
           max: '',
@@ -25,6 +26,7 @@ describe('Reducer: guitarData', () => {
       guitarsList: [],
       similarGuitars: [],
       isLoaded: false,
+      commentsCounts: [],
       prices: {
         min: '',
         max: '',
@@ -37,6 +39,7 @@ describe('Reducer: guitarData', () => {
         guitarsList: [emptyGuitar],
         similarGuitars: [],
         isLoaded: true,
+        commentsCounts: [],
         prices: {
           min: '',
           max: '',
@@ -48,6 +51,7 @@ describe('Reducer: guitarData', () => {
       guitarsList: [],
       similarGuitars: [],
       isLoaded: true,
+      commentsCounts: [],
       prices: {
         min: '',
         max: '',
@@ -60,6 +64,7 @@ describe('Reducer: guitarData', () => {
         guitarsList: [],
         similarGuitars: [emptyGuitar],
         isLoaded: true,
+        commentsCounts: [],
         prices: {
           min: '',
           max: '',
@@ -71,6 +76,7 @@ describe('Reducer: guitarData', () => {
       guitarsList: [],
       similarGuitars: [],
       isLoaded: false,
+      commentsCounts: [],
       prices: {
         min: '',
         max: '',
@@ -81,6 +87,7 @@ describe('Reducer: guitarData', () => {
         guitarsList: [],
         similarGuitars: [],
         isLoaded: false,
+        commentsCounts: [],
         prices: {
           min: '',
           max: '',
@@ -91,6 +98,7 @@ describe('Reducer: guitarData', () => {
       guitarsList: [],
       similarGuitars: [],
       isLoaded: false,
+      commentsCounts: [],
       prices: {
         min: '',
         max: '',
@@ -104,6 +112,7 @@ describe('Reducer: guitarData', () => {
         guitarsList: [],
         similarGuitars: [],
         isLoaded: false,
+        commentsCounts: [],
         prices: {
           min: '1700',
           max: '35000',

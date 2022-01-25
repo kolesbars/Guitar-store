@@ -9,13 +9,15 @@ import { State } from '../types/state';
 import {
   loadGuitarList,
   loadSimilarGuitars,
-  loadMaxMinPrices
+  loadMaxMinPrices,
+  loadGuitarComments
 } from './api-actions';
 import {
   setLoadedStatusFalse,
   updateGuitarsList,
   updateSimilarGuitarsList,
-  updateGuitarsPrices
+  updateGuitarsPrices,
+  updateGuitarsComents
 } from '../store/action';
 
 describe('Async action', () => {
@@ -82,6 +84,24 @@ describe('Async action', () => {
       updateGuitarsPrices({
         min: '1000',
         max: '2000',
+      }),
+    ]);
+  });
+
+  it('should load guitar comments', async () => {
+    const store = mockStore();
+    const mockCount = [{}];
+
+    mockAPI
+      .onGet(`${APIRoute.Guitars}/1/comments`)
+      .reply(200, mockCount);
+
+    await store.dispatch(loadGuitarComments(1));
+
+    expect(store.getActions()).toEqual([
+      updateGuitarsComents({
+        id: 1,
+        count: 1,
       }),
     ]);
   });

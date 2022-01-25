@@ -14,3 +14,8 @@ export type PricesType ={
   min: string,
   max: string,
 }
+
+export type GuitarComment = {
+  id?: number,
+  count?: number,
+};

@@ -7,7 +7,8 @@ import {
   updateTotalCount,
   setLoadedStatusFalse,
   updateSimilarGuitarsList,
-  updateGuitarsPrices
+  updateGuitarsPrices,
+  updateGuitarsComents
 } from './action';
 
 export const loadGuitarList = (searchParams: string): ThunkActionResult =>
@@ -43,4 +44,17 @@ export const loadMaxMinPrices = () :ThunkActionResult =>
     }).catch((err) => {
       throw new Error(err);
     });
+  };
+
+export const loadGuitarComments = (id: number):ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    try {
+      const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}/${id}/comments`);
+      dispatch(updateGuitarsComents({
+        id: id,
+        count: data.length,
+      }));
+    } catch {
+      Error(ErrorMessage.FailLoading);
+    }
   };

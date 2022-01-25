@@ -1,33 +1,35 @@
-import RatingStars from './rating-star';
+import RatingStars from '../rating-stars/rating-stars';
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getCommentsCounts } from '../../store/guitars-data/selectors';
+import { loadGuitarComments } from '../../store/api-actions';
 import { Link } from 'react-router-dom';
-import { AxiosInstance } from 'axios';
-import { APIRoute, AppRoute, ErrorMessage } from '../../const';
+import { AppRoute } from '../../const';
 import { GuitarType } from '../../types/guitar';
 
 type GuitarCardProps = {
-  api: AxiosInstance
   guitar: GuitarType
 }
 
-function GuitarCard({guitar, api}: GuitarCardProps):JSX.Element {
+function GuitarCard({guitar}: GuitarCardProps):JSX.Element {
+  const dispatch = useDispatch();
 
   const {previewImg, name, price, rating, id} = guitar;
 
-  const [commentsCount, setCommentsCount] = useState(0);
+  const commentsCounts = useSelector(getCommentsCounts);
 
-  const loadGuitarComments = async () => {
-    try {
-      const {data} = await api.get<GuitarType[]>(`${APIRoute.Guitars}/${id}/comments`);
-      setCommentsCount(data.length);
-    } catch {
-      Error(ErrorMessage.FailLoading);
-    }
-  };
+  const [count, setCount] = useState<number | undefined>();
+
 
   useEffect(() => {
-    loadGuitarComments();
-  }, []);
+    if (commentsCounts) {
+      setCount(commentsCounts.find((item) => item.id === id)?.count);
+    }
+  }, [commentsCounts]);
+
+  useEffect(() => {
+    dispatch(loadGuitarComments(id));
+  }, [count]);
 
   return (
     <div className="product-card" data-testid='guitar-card'>
@@ -41,7 +43,7 @@ function GuitarCard({guitar, api}: GuitarCardProps):JSX.Element {
         <div className="rate product-card__rate" aria-hidden="true">
           <span className="visually-hidden">Рейтинг:</span>
           <RatingStars rating={rating}/>
-          <span className="rate__count">{commentsCount}</span>
+          <span className="rate__count">{count}</span>
           <span className="rate__message"></span>
         </div>
         <p className="product-card__title">

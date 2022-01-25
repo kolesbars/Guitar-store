@@ -7,6 +7,7 @@ export enum ActionType {
   UpdateGuitarsList = 'guitars/updateGuitarsList',
   UpdateGuitarsPrices = 'guitars/updateGuitarsPrices',
   UpdateSimilarGuitarsList = 'guitars/updateSimilarGuitarsList',
+  UpdateGuitarsComments = 'guitars/updateGuitarsComents',
   SetLoadedStatusFalse = 'guitars/setLoadedStatusFalse',
   UpdatePageCount = 'page/updatePageCount',
   UpdateTotalCount = 'page/updateTotalCount',

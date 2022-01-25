@@ -1,12 +1,11 @@
 import { useState, useEffect, ChangeEvent, KeyboardEvent, FocusEvent} from 'react';
+import {DEFAULT_PAGE_COUNT} from '../../const';
 import { updateFilterParams } from '../../store/action';
 import { updatePageCount } from '../../store/action';
 import { getMaxMinPrices } from '../../store/guitars-data/selectors';
 import { useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFilterParams} from '../../store/search-params/selectors';
-
-const DEFAULT_PAGE_COUNT = '1';
 
 function PriceFields(): JSX.Element {
   const dispatch = useDispatch();

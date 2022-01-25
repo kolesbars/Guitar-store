@@ -1,22 +1,16 @@
+import {DEFAULT_PAGE_COUNT, GuitarType} from '../../const';
 import { updateFilterParams } from '../../store/action';
 import { updatePageCount } from '../../store/action';
 import { getFilterParams} from '../../store/search-params/selectors';
 import { useState, useEffect, ChangeEvent} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import StringCheckbox from './string-checkbox';
+import StringCheckbox from '../string-checkbox/string-checkbox';
 import { loadMaxMinPrices } from '../../store/api-actions';
-import {AxiosInstance} from 'axios';
-import PriceFields from './price-fields';
+import PriceFields from '../price-fields/price-fields';
 
-const GUITARS_STRINGS = [4,6,7,12];
-const DEFAULT_PAGE_COUNT = '1';
-
-type FiltersFormProps = {
-  api: AxiosInstance,
-}
-
-function FiltersForm({api}: FiltersFormProps):JSX.Element {
+function FiltersForm():JSX.Element {
+  const guitarsStrings = [4,6,7,12];
   const filterParams = useSelector(getFilterParams);
 
   const dispatch = useDispatch();
@@ -78,7 +72,7 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
             type="checkbox"
             id="acoustic"
             name="acoustic"
-            checked={filters['type'].includes('acoustic')}
+            checked={filters['type'].includes(GuitarType.Acoustic)}
             onChange={handleChangeType}
           />
           <label htmlFor="acoustic">Акустические гитары</label>
@@ -89,7 +83,7 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
             type="checkbox"
             id="electric"
             name="electric"
-            checked={filters['type'].includes('electric')}
+            checked={filters['type'].includes(GuitarType.Electric)}
             onChange={handleChangeType}
           />
           <label htmlFor="electric">Электрогитары</label>
@@ -100,7 +94,7 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
             type="checkbox"
             id="ukulele"
             name="ukulele"
-            checked={filters['type'].includes('ukulele')}
+            checked={filters['type'].includes(GuitarType.Ukulele)}
             onChange={handleChangeType}
           />
           <label htmlFor="ukulele">Укулеле</label>
@@ -110,11 +104,11 @@ function FiltersForm({api}: FiltersFormProps):JSX.Element {
         <legend className="catalog-filter__block-title">
                     Количество струн
         </legend>
-        {GUITARS_STRINGS.map((count) =>
+        {guitarsStrings.map((count) =>
           (
             <StringCheckbox
               key={`${count}-key`}
-              handleStringCount={handleChangeStringCount}
+              onHandleStringCount={handleChangeStringCount}
               count={count}
               currentStrings={filters['stringCount']}
               currentTypes={filters['type']}

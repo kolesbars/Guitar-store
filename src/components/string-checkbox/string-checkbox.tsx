@@ -1,32 +1,28 @@
-import {ChangeEvent} from 'react';
-
-const FOUR_STRING_COUNT = 4;
-const SIX_STRING_COUNT = 6;
-const SEVEN_STRING_COUNT = 7;
-const TWELVE_STRING_COUNT = 12;
+import { StringCount, GuitarType } from '../../const';
+import { ChangeEvent } from 'react';
 
 type StringCheckboxProps = {
   count: number,
-  handleStringCount: (e: ChangeEvent<HTMLInputElement>, count: string) => void,
+  onHandleStringCount: (e: ChangeEvent<HTMLInputElement>, count: string) => void,
   currentStrings: string[],
   currentTypes: string[],
 }
 
 function StringCheckbox(props: StringCheckboxProps): JSX.Element {
 
-  const {count, handleStringCount, currentStrings, currentTypes} = props;
+  const {count, onHandleStringCount: handleStringCount, currentStrings, currentTypes} = props;
 
   const isDisabled = (): boolean => {
     if (currentTypes.length) {
       switch (count) {
-        case FOUR_STRING_COUNT:
-          return !currentTypes.includes('ukulele') && !currentTypes.includes('electric');
-        case SIX_STRING_COUNT:
-          return !currentTypes.includes('acoustic') && !currentTypes.includes('electric');
-        case SEVEN_STRING_COUNT:
-          return !currentTypes.includes('acoustic') && !currentTypes.includes('electric');
-        case TWELVE_STRING_COUNT:
-          return !currentTypes.includes('acoustic');
+        case StringCount.Four:
+          return !currentTypes.includes(GuitarType.Ukulele) && !currentTypes.includes(GuitarType.Electric);
+        case StringCount.Six:
+          return !currentTypes.includes(GuitarType.Acoustic) && !currentTypes.includes(GuitarType.Electric);
+        case StringCount.Seven:
+          return !currentTypes.includes(GuitarType.Acoustic) && !currentTypes.includes(GuitarType.Electric);
+        case StringCount.Twelve:
+          return !currentTypes.includes(GuitarType.Acoustic);
         default:
           return false;
       }

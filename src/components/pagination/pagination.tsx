@@ -1,5 +1,6 @@
 import {useEffect, useState, MouseEvent} from 'react';
-import PageItem from './page-item';
+import {RANGE_STEP, DEFAULT_PAGE_COUNT, DEFAULT_START_VALUE} from '../../const';
+import PageItem from '../page-item/page-item';
 import { useSelector, useDispatch } from 'react-redux';
 import { updatePaginationParams } from '../../store/action';
 import { updatePageCount } from '../../store/action';
@@ -7,10 +8,6 @@ import { getPaginationParams } from '../../store/search-params/selectors';
 import { getTotalCount, getPageCount} from '../../store/page-count/selectors';
 import { useSearchParams } from 'react-router-dom';
 import {Link} from 'react-router-dom';
-
-const RANGE_STEP = 9;
-const DEFAULT_PAGE_COUNT = 1;
-const DEFAULT_START_VALUE = '1';
 
 function Pagination(): JSX.Element {
 
@@ -28,9 +25,9 @@ function Pagination(): JSX.Element {
     '_end': endValue,
   });
 
-  const [pageCount, setPageCount] = useState(DEFAULT_PAGE_COUNT);
+  const [pageCount, setPageCount] = useState(+DEFAULT_PAGE_COUNT);
 
-  const [pages, setPages] = useState([DEFAULT_PAGE_COUNT]);
+  const [pages, setPages] = useState([+DEFAULT_PAGE_COUNT]);
 
   const totalCount = useSelector(getTotalCount);
 

@@ -30,7 +30,7 @@ describe('Component: SearchForm', () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <SearchForm api={api} guitars={[]}/>
+          <SearchForm guitars={[]}/>
         </BrowserRouter>
       </Provider>,
     );

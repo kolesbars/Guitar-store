@@ -1,4 +1,3 @@
-import {AxiosInstance} from 'axios';
 import { loadGuitarList} from '../../store/api-actions';
 import { useEffect, useCallback} from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -15,11 +14,7 @@ import Footer from '../footer/footer';
 import { debounce } from 'ts-debounce';
 import Header from '../header/header';
 
-type MainProps = {
-  api: AxiosInstance
-}
-
-function Catalog({api}: MainProps): JSX.Element {
+function Catalog(): JSX.Element {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -49,7 +44,6 @@ function Catalog({api}: MainProps): JSX.Element {
       <div className="visually-hidden"></div>
       <div className="wrapper">
         <Header
-          api={api}
           guitars={guitars}
         />
         <main className="page-content">
@@ -68,13 +62,10 @@ function Catalog({api}: MainProps): JSX.Element {
               </li>
             </ul>
             <div className="catalog">
-              <FiltersForm
-                api={api}
-              />
+              <FiltersForm/>
               <Sorting/>
               {isLoaded ?
                 <GuitarCatalog
-                  api={api}
                   guitars={guitars}
                 /> :
                 <Loading/>}

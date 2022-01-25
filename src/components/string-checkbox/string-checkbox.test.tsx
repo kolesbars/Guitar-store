@@ -22,7 +22,7 @@ describe('Component: StringCheckbox', () => {
         <BrowserRouter>
           <StringCheckbox
             count={4}
-            handleStringCount={cb}
+            onHandleStringCount={cb}
             currentStrings={[]}
             currentTypes= {[]}
           />

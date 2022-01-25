@@ -1,11 +1,6 @@
-import { AxiosInstance } from 'axios';
 import { Link } from 'react-router-dom';
 
-type GuitarScreenProps = {
-  api: AxiosInstance,
-}
-
-function GuitarScreen({api}: GuitarScreenProps): JSX.Element {
+function GuitarScreen(): JSX.Element {
 
   return (
     <div className="wrapper">

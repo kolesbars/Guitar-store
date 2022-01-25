@@ -1,4 +1,4 @@
-import { GuitarType, PricesType } from './guitar';
+import { GuitarType, PricesType, GuitarComment } from './guitar';
 import { SearchFormParamsType, SortParamsType, FilterParamsType, PaginationParamsType } from './search-params';
 import { RootState } from '../store/root-reducer';
 
@@ -7,6 +7,7 @@ export type GuitarsData = {
   similarGuitars: GuitarType[],
   isLoaded: boolean,
   prices: PricesType,
+  commentsCounts: GuitarComment[]
 }
 
 export type PageCount = {

@@ -1,4 +1,4 @@
-import RatingStars from './rating-star';
+import RatingStars from './rating-stars';
 import {BrowserRouter} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import {render, screen} from '@testing-library/react';

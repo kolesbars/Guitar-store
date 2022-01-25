@@ -29,7 +29,7 @@ describe('Component: Catalog', () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <Catalog api={api}/>
+          <Catalog/>
         </BrowserRouter>
       </Provider>,
     );

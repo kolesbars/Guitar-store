@@ -2,13 +2,23 @@ import GuitarCatalog from './guitars-catalog';
 import {BrowserRouter} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import {render, screen} from '@testing-library/react';
-import { createAPI } from '../../services/api';
 import { emptyGuitar } from '../../const';
 import {configureMockStore} from '@jedmao/redux-mock-store';
+import { State } from '../../types/state';
+import { Action } from 'redux';
+import { createAPI } from '../../services/api';
+import thunk, {ThunkDispatch} from 'redux-thunk';
+
 
 const api = createAPI();
 
-const mockStore = configureMockStore();
+const middlewares = [thunk.withExtraArgument(api)];
+
+const mockStore = configureMockStore<
+    State,
+    Action,
+    ThunkDispatch<State, typeof api, Action>
+    >(middlewares);
 
 const store = mockStore({
   GUITARS: {guitarsList: []},
@@ -22,7 +32,7 @@ describe('Component: GuitarsCatalog', () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <GuitarCatalog api={api} guitars={[emptyGuitar]}/>
+          <GuitarCatalog guitars={[emptyGuitar]}/>
         </BrowserRouter>
       </Provider>,
     );

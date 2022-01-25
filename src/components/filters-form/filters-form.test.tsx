@@ -30,7 +30,7 @@ describe('Component: FiltersForm', () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <FiltersForm api={api}/>
+          <FiltersForm/>
         </BrowserRouter>
       </Provider>,
     );

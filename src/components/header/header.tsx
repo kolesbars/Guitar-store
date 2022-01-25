@@ -1,14 +1,12 @@
 import { GuitarType } from '../../types/guitar';
 import SearchForm from '../search-form/search-form';
-import {AxiosInstance} from 'axios';
 import { Link} from 'react-router-dom';
 
 type HeaderProps = {
-  api: AxiosInstance,
   guitars: GuitarType[],
 }
 
-function Header({guitars, api}: HeaderProps):JSX.Element {
+function Header({guitars}: HeaderProps):JSX.Element {
   return(
     <header className="header" id="header">
       <div className="container header__wrapper">
@@ -42,7 +40,6 @@ function Header({guitars, api}: HeaderProps):JSX.Element {
         </nav>
         <SearchForm
           guitars={guitars}
-          api={api}
         />
         <Link className="header__cart-link" to="#" aria-label="Корзина">
           <svg
