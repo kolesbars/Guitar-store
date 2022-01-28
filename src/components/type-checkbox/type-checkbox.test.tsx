@@ -1,4 +1,4 @@
-import Pagination from './pagination';
+import TypeCheckbox from './type-checkbox';
 import {BrowserRouter} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import {render, screen} from '@testing-library/react';
@@ -12,17 +12,24 @@ const store = mockStore({
   PAGE: {pageCount: '', totalCount: ''},
 });
 
-describe('Component: Pagination', () => {
+describe('Component: TypeCheckbox', () => {
   it('should render correctly', () => {
+
+    const cb =jest.fn();
 
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <Pagination/>
+          <TypeCheckbox
+            type={'ukulele'}
+            onHandleChangeType={cb}
+            currentStrings={[]}
+            currentTypes= {[]}
+          />
         </BrowserRouter>
       </Provider>,
     );
 
-    expect(screen.getByTestId('pagination-list')).toBeInTheDocument();
+    expect(screen.getByTestId('type-checkbox')).toBeInTheDocument();
   });
 });

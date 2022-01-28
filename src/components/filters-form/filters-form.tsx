@@ -1,4 +1,4 @@
-import {DEFAULT_PAGE_COUNT, GuitarType} from '../../const';
+import {DEFAULT_PAGE_COUNT} from '../../const';
 import { updateFilterParams } from '../../store/action';
 import { updatePageCount } from '../../store/action';
 import { getFilterParams} from '../../store/search-params/selectors';
@@ -6,11 +6,13 @@ import { useState, useEffect, ChangeEvent} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import StringCheckbox from '../string-checkbox/string-checkbox';
+import TypeCheckbox from '../type-checkbox/type-checkbox';
 import { loadMaxMinPrices } from '../../store/api-actions';
 import PriceFields from '../price-fields/price-fields';
 
 function FiltersForm():JSX.Element {
   const guitarsStrings = [4,6,7,12];
+  const guitarsTypes = ['acoustic', 'electric', 'ukulele'];
   const filterParams = useSelector(getFilterParams);
 
   const dispatch = useDispatch();
@@ -66,39 +68,14 @@ function FiltersForm():JSX.Element {
         <legend className="catalog-filter__block-title">
                     Тип гитар
         </legend>
-        <div className="form-checkbox catalog-filter__block-item">
-          <input
-            className="visually-hidden"
-            type="checkbox"
-            id="acoustic"
-            name="acoustic"
-            checked={filters['type'].includes(GuitarType.Acoustic)}
-            onChange={handleChangeType}
-          />
-          <label htmlFor="acoustic">Акустические гитары</label>
-        </div>
-        <div className="form-checkbox catalog-filter__block-item">
-          <input
-            className="visually-hidden"
-            type="checkbox"
-            id="electric"
-            name="electric"
-            checked={filters['type'].includes(GuitarType.Electric)}
-            onChange={handleChangeType}
-          />
-          <label htmlFor="electric">Электрогитары</label>
-        </div>
-        <div className="form-checkbox catalog-filter__block-item">
-          <input
-            className="visually-hidden"
-            type="checkbox"
-            id="ukulele"
-            name="ukulele"
-            checked={filters['type'].includes(GuitarType.Ukulele)}
-            onChange={handleChangeType}
-          />
-          <label htmlFor="ukulele">Укулеле</label>
-        </div>
+        {guitarsTypes.map((type) => (
+          <TypeCheckbox
+            key={`${type}-key`}
+            onHandleChangeType={handleChangeType}
+            type={type}
+            currentStrings={filters['stringCount']}
+            currentTypes={filters['type']}
+          />))}
       </fieldset>
       <fieldset className="catalog-filter__block">
         <legend className="catalog-filter__block-title">

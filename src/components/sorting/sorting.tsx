@@ -50,7 +50,6 @@ function Sorting(): JSX.Element {
           className={`catalog-sort__type-button
           ${sortType === 'price' ? 'catalog-sort__type-button--active' : ''}`}
           aria-label="по цене"
-          tab-index="-1"
           onClick={(evt) => handleClickSortField(evt, 'price')}
         >
                     по цене
@@ -69,7 +68,6 @@ function Sorting(): JSX.Element {
           className={`catalog-sort__order-button catalog-sort__order-button--up
           ${orderType === 'asc' ? 'catalog-sort__order-button--active' : ''}`}
           aria-label="По возрастанию"
-          tab-index="-1"
           onClick={(evt) => handleClickOrderField(evt, 'asc')}
           data-testid='asc'
         >

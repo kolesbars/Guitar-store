@@ -32,8 +32,7 @@ function PriceFields(): JSX.Element {
     setIsChanged(false);
     if (e.target.value !== '') {
       setFilterPriceFieldsValue({...filterPriceFieldsValue, [value] : e.target.value});
-    }
-    else {
+    } else {
       setFilterPriceFieldsValue({...filterPriceFieldsValue, [value] : ''});
     }
   };
@@ -51,6 +50,8 @@ function PriceFields(): JSX.Element {
     setIsChanged(false);
     if (e.target.value !== '' && +e.target.value > +prices.max) {
       setFilterPriceFieldsValue({...filterPriceFieldsValue, 'price_lte' : prices.max});
+    } else if (+e.target.value < 0) {
+      setFilterPriceFieldsValue({...filterPriceFieldsValue, 'price_lte' : prices.min});
     }
     else {
       setFilterPriceFieldsValue({...filterPriceFieldsValue, 'price_lte' : e.target.value});
@@ -70,20 +71,33 @@ function PriceFields(): JSX.Element {
         setFilterPriceFieldsValue({...filterPriceFieldsValue, 'price_lte' : prices.max});
       }
 
+      if (+filterPriceFieldsValue.price_lte < 0) {
+        setFilterPriceFieldsValue({...filterPriceFieldsValue, 'price_lte' : prices.min});
+      }
+
       setIsChanged(true);
       dispatch(updatePageCount(DEFAULT_PAGE_COUNT));
     }
   };
 
   useEffect(() => {
-    setFilterPriceFieldsValue({
-      'price_gte': priceGTE,
-      'price_lte': priceLTE,
-    });
+    if ( priceGTE || priceLTE) {
+      setFilterPriceFieldsValue({
+        'price_gte': priceGTE,
+        'price_lte': priceLTE,
+      });
+      setIsChanged(true);
+    }
   }, []);
 
   useEffect(() => {
     if (isChanged) {
+      if (filterPriceFieldsValue.price_gte === '') {
+        setFilterPriceFieldsValue({...filterPriceFieldsValue, 'price_gte' : prices.min});
+      }
+      if (filterPriceFieldsValue.price_lte === '') {
+        setFilterPriceFieldsValue({...filterPriceFieldsValue, 'price_lte' : prices.max});
+      }
       dispatch(updateFilterParams(Object.assign(
         {},
         filterParams,
@@ -107,7 +121,7 @@ function PriceFields(): JSX.Element {
             placeholder={prices && prices.min}
             id="priceMin"
             name="от"
-            min='1'
+            min='0'
             onChange={(evt) => {
               handleChangePriceField(evt, 'price_gte');
             }}
@@ -125,7 +139,7 @@ function PriceFields(): JSX.Element {
             placeholder={prices && prices.max}
             id="priceMax"
             name="до"
-            min='1'
+            min='0'
             onChange={(evt) => {
               handleChangePriceField(evt, 'price_lte');
             }}

@@ -45,7 +45,7 @@ function SearchForm({guitars}: SearchFormProps): JSX.Element {
     e.preventDefault();
   };
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLUListElement>) => {
     if (currentItem !== undefined) {
       if(e.keyCode === KeyCode.Enter && searchValue !== '' && currentItem !== 0) {
         navigate(`${AppRoute.Guitar}/${currentItem}`);
@@ -56,6 +56,12 @@ function SearchForm({guitars}: SearchFormProps): JSX.Element {
         setCurrentItem(itemsId[itemsId.indexOf(currentItem)+1]);
       }
     } else if (e.keyCode === KeyCode.ArrowUp) {
+      setCurrentItem(itemsId[0]);
+    }
+  };
+
+  const handleKeyDownInput = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.keyCode === KeyCode.ArrowUp) {
       setCurrentItem(itemsId[0]);
     }
   };
@@ -105,7 +111,7 @@ function SearchForm({guitars}: SearchFormProps): JSX.Element {
           autoComplete="off"
           placeholder="что вы ищете?"
           onChange={handleChangeSearchForm}
-          onKeyDown={handleKeyDown}
+          onKeyDown={handleKeyDownInput}
         />
         <label className="visually-hidden" htmlFor="search">
                   Поиск
@@ -113,7 +119,7 @@ function SearchForm({guitars}: SearchFormProps): JSX.Element {
       </form>
       <ul
         className={`form-search__select-list ${searchValue === '' ? 'hidden' : ''}`}
-        tab-index='0'
+        onKeyDown={handleKeyDown}
       >
         {similarGuitars &&
         [...similarGuitars].sort((first, second) => first.id - second.id).map((guitar) => (
