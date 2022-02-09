@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getCommentsCounts } from '../../store/guitars-data/selectors';
 import { loadGuitarComments } from '../../store/api-actions';
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import { AppRoute, RatingStarsLocation} from '../../const';
 import { GuitarType } from '../../types/guitar';
 
 type GuitarCardProps = {
@@ -42,7 +42,10 @@ function GuitarCard({guitar}: GuitarCardProps):JSX.Element {
       <div className="product-card__info">
         <div className="rate product-card__rate" aria-hidden="true">
           <span className="visually-hidden">Рейтинг:</span>
-          <RatingStars rating={rating}/>
+          <RatingStars
+            rating={rating}
+            location={RatingStarsLocation.GuitarCard}
+          />
           <span className="rate__count">{count}</span>
           <span className="rate__message"></span>
         </div>

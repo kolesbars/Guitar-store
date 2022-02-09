@@ -1,16 +1,20 @@
-import { GuitarType } from '../../types/guitar';
+import { useSelector } from 'react-redux';
+import { getGuitars } from '../../store/guitars-data/selectors';
 import SearchForm from '../search-form/search-form';
+import { AppRoute } from '../../const';
+import { useLocation } from 'react-router';
 import { Link} from 'react-router-dom';
 
-type HeaderProps = {
-  guitars: GuitarType[],
-}
+function Header():JSX.Element {
 
-function Header({guitars}: HeaderProps):JSX.Element {
+  const guitars = useSelector(getGuitars);
+
+  const location = useLocation();
+
   return(
     <header className="header" id="header">
       <div className="container header__wrapper">
-        <Link className="header__logo logo" to='#'>
+        <Link className="header__logo logo" to={AppRoute.Main}>
           <img
             className="logo__img"
             width="70"
@@ -22,7 +26,9 @@ function Header({guitars}: HeaderProps):JSX.Element {
         <nav className="main-nav">
           <ul className="main-nav__list">
             <li>
-              <Link className="link main-nav__link link--current" to="#">
+              <Link className={`link main-nav__link
+              ${location.pathname === AppRoute.Catalog ? 'link--current' : ''}`} to={AppRoute.Catalog}
+              >
                     Каталог
               </Link>
             </li>

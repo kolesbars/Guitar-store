@@ -32,6 +32,17 @@ export enum GuitarType {
   Ukulele = 'ukulele',
 }
 
+export enum RatingStarsLocation {
+  GuitarScreen = 'screen',
+  GuitarCard = 'card',
+  Comment = 'comment',
+}
+
+export enum GuitarScreenTabs {
+  Specifications = 'specifications',
+  Description = 'description',
+}
+
 export enum HttpCode {
   ServerError = 500,
 }
@@ -52,6 +63,7 @@ export const DEFAULT_PAGE_COUNT = '1';
 export const RANGE_STEP = 9;
 export const DEFAULT_START_VALUE = '1';
 export const RATING_STAR_MAX_VALUE = 5;
+export const COMMENTS_RANGE = 3;
 
 export const BACKEND_URL = 'https://accelerator-guitar-shop-api-v1.glitch.me';
 export const REQUEST_TIMEOUT = 5000;

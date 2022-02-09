@@ -1,9 +1,11 @@
 import { toast } from 'react-toastify';
 import { APIRoute, ErrorMessage } from '../const';
-import { GuitarType } from '../types/guitar';
+import { GuitarType, CommentType } from '../types/guitar';
 import {ThunkActionResult} from '../types/action';
 import {
   updateGuitarsList,
+  updateGuitarData,
+  updateCurrentGuitarComments,
   updateTotalCount,
   setLoadedStatusFalse,
   updateSimilarGuitarsList,
@@ -21,6 +23,26 @@ export const loadGuitarList = (searchParams: string): ThunkActionResult =>
       }).catch((err) => {
         toast.info(ErrorMessage.FailLoading);
 
+      });
+  };
+
+export const loadGuitarData = (id: string): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    await api.get<GuitarType>(`${APIRoute.Guitars}/${id}`)
+      .then((response) => {
+        dispatch(updateGuitarData(response.data));
+      }).catch((err) => {
+        toast.info(ErrorMessage.FailLoading);
+      });
+  };
+
+export const loadCurrentGuitarComments = (id: string): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    await api.get<CommentType[]>(`${APIRoute.Guitars}/${id}/comments`)
+      .then((response) => {
+        dispatch(updateCurrentGuitarComments(response.data));
+      }).catch((err) => {
+        toast.info(ErrorMessage.FailLoading);
       });
   };
 

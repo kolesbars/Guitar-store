@@ -30,7 +30,7 @@ describe('Component: Header', () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <Header guitars={[]}/>
+          <Header/>
         </BrowserRouter>
       </Provider>,
     );

@@ -18,7 +18,10 @@ describe('Component: RatingStar', () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <RatingStars rating={1}/>
+          <RatingStars
+            rating={1}
+            location={'card'}
+          />
         </BrowserRouter>
       </Provider>,
     );

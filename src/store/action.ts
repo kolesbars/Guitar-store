@@ -1,5 +1,5 @@
 import { ActionType } from '../types/action';
-import { GuitarType, PricesType, GuitarComment } from '../types/guitar';
+import { GuitarType, CommentType, PricesType, GuitarComment } from '../types/guitar';
 import { createAction } from '@reduxjs/toolkit';
 import {
   SortParamsType,
@@ -12,6 +12,20 @@ export const updateGuitarsList = createAction(
   ActionType.UpdateGuitarsList,
   (guitars: GuitarType[]) => ({
     payload: guitars,
+  }),
+);
+
+export const updateGuitarData = createAction(
+  ActionType.UpdateGuitarData,
+  (guitarData: GuitarType) => ({
+    payload: guitarData,
+  }),
+);
+
+export const updateCurrentGuitarComments = createAction(
+  ActionType.UpdateCurrentGuitarComments,
+  (comments: CommentType[]) => ({
+    payload: comments,
   }),
 );
 

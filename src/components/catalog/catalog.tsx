@@ -10,9 +10,7 @@ import FiltersForm from '../filters-form/filters-form';
 import Sorting from '../sorting/sorting';
 import Pagination from '../pagination/pagination';
 import Loading from '../loading/loading';
-import Footer from '../footer/footer';
 import { debounce } from 'ts-debounce';
-import Header from '../header/header';
 
 function Catalog(): JSX.Element {
 
@@ -43,9 +41,6 @@ function Catalog(): JSX.Element {
     <>
       <div className="visually-hidden"></div>
       <div className="wrapper">
-        <Header
-          guitars={guitars}
-        />
         <main className="page-content">
           <div className="container">
             <h1 className="page-content__title title title--bigger">
@@ -73,7 +68,6 @@ function Catalog(): JSX.Element {
             </div>
           </div>
         </main>
-        <Footer/>
       </div>
     </>
   );
