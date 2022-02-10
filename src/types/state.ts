@@ -12,7 +12,9 @@ export type GuitarsData = {
 
 export type CurrentGuitarData = {
   guitarData: GuitarType,
-  isLoaded: boolean,
+  isDataLoaded: boolean,
+  isCommentsLoaded: boolean,
+  isCommentSent: boolean,
   comments: CommentType[],
 };
 

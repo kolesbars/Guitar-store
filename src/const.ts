@@ -1,5 +1,6 @@
 export enum APIRoute {
-  Guitars = '/guitars'
+  Guitars = '/guitars',
+  Comments = '/comments',
 }
 
 export enum AppRoute {
@@ -24,6 +25,7 @@ export enum KeyCode {
   ArrowUp = 40,
   ArrowDown = 38,
   Enter = 13,
+  Escape = 27,
 }
 
 export enum GuitarType {

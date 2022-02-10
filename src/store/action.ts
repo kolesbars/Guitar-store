@@ -29,6 +29,15 @@ export const updateCurrentGuitarComments = createAction(
   }),
 );
 
+export const addNewGuitarComment = createAction(
+  ActionType.AddNewGuitarComment,
+  (comment: CommentType) => ({
+    payload: comment,
+  }),
+);
+
+export const setSetingStatusFalse = createAction(ActionType.AddNewGuitarComment);
+
 export const updateGuitarsPrices = createAction(
   ActionType.UpdateGuitarsPrices,
   (prices: PricesType) => ({

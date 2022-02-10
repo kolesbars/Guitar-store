@@ -21,6 +21,15 @@ export type CommentType = {
     'guitarId': number
 }
 
+export type CommentPostType = {
+    'guitarId': number,
+    'userName': string,
+    'advantage': string,
+    'disadvantage': string,
+    'comment': string,
+    'rating': number,
+  }
+
 export type PricesType ={
   min: string,
   max: string,

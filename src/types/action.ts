@@ -6,6 +6,7 @@ import {ThunkAction} from 'redux-thunk';
 export enum ActionType {
   UpdateGuitarData = 'guitar/updateGuitarData',
   UpdateCurrentGuitarComments = 'guitar/updateCurrentGuitarComments',
+  AddNewGuitarComment = 'guitar/addNewGuitarComment',
   UpdateGuitarsList = 'guitars/updateGuitarsList',
   UpdateGuitarsPrices = 'guitars/updateGuitarsPrices',
   UpdateSimilarGuitarsList = 'guitars/updateSimilarGuitarsList',
