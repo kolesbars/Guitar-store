@@ -2,12 +2,6 @@ import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadGuitarData, loadCurrentGuitarComments} from '../../store/api-actions';
 import { useEffect, useState} from 'react';
-import {
-  getGuitarData,
-  getComments,
-  getDataLoadingStatus,
-  getCommentsLoadingStatus
-} from '../../store/current-guitar-data/selectors';
 import RatingStars from '../rating-stars/rating-stars';
 import Review from '../review/review';
 import { RatingStarsLocation, GuitarType, GuitarScreenTabs } from '../../const';
@@ -18,6 +12,13 @@ import Loading from '../loading/loading';
 import { Link } from 'react-router-dom';
 import { KeyboardEvent } from 'react';
 import {KeyCode} from '../../const';
+import {
+  getGuitarData,
+  getComments,
+  getDataLoadingStatus,
+  getCommentsLoadingStatus,
+  getCommentSendingStatus
+} from '../../store/current-guitar-data/selectors';
 
 function GuitarScreen(): JSX.Element {
 
@@ -32,6 +33,7 @@ function GuitarScreen(): JSX.Element {
   const comments = useSelector(getComments);
   const loadingDataStatus = useSelector(getDataLoadingStatus);
   const loadingCommentsStatus = useSelector(getCommentsLoadingStatus);
+  const sendingCommentStatus = useSelector(getCommentSendingStatus);
 
   const sortedComments = [...comments].sort((a,b) => new Date(b.createAt).getTime() - new Date(a.createAt).getTime());
 
@@ -192,7 +194,7 @@ function GuitarScreen(): JSX.Element {
               name={name}
               id={guitarData.id}
             />}
-            {!isThanksModalHidden &&
+            {!isThanksModalHidden && sendingCommentStatus &&
             <ThanksModal
               onSetIsThanksModalHidden={setIsThanksModalHidden}
               id={guitarData.id}

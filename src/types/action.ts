@@ -7,6 +7,7 @@ export enum ActionType {
   UpdateGuitarData = 'guitar/updateGuitarData',
   UpdateCurrentGuitarComments = 'guitar/updateCurrentGuitarComments',
   AddNewGuitarComment = 'guitar/addNewGuitarComment',
+  SetCommentSendingStatusFalse = 'guitar/setCommentSendingStatusFalse',
   UpdateGuitarsList = 'guitars/updateGuitarsList',
   UpdateGuitarsPrices = 'guitars/updateGuitarsPrices',
   UpdateSimilarGuitarsList = 'guitars/updateSimilarGuitarsList',

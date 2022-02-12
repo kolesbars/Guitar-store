@@ -1,4 +1,6 @@
 import { AppRoute } from '../../const';
+import { useRef, useState, useEffect, FocusEvent, KeyboardEvent} from 'react';
+import { KeyCode } from '../../const';
 import {useNavigate} from 'react-router';
 
 
@@ -10,6 +12,11 @@ id: number,
 function ThanksModal({onSetIsThanksModalHidden, id}: ThanksModalProps): JSX.Element {
 
   const navigate = useNavigate();
+
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const buttonToShoppingRef = useRef<HTMLButtonElement | null>(null);
+
+  const [focusedElement, setFocusedElement] = useState<HTMLButtonElement | null>(null);
 
   const handlClickToShopping = () => {
     navigate(`${AppRoute.Guitar}/${id}`);
@@ -25,8 +32,37 @@ function ThanksModal({onSetIsThanksModalHidden, id}: ThanksModalProps): JSX.Elem
     onSetIsThanksModalHidden(true);
   };
 
+  const handleChangeFocus = (e:FocusEvent<HTMLButtonElement>) => {
+    setFocusedElement(e.target);
+  };
+
+
+  const handleTabKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if(e.keyCode === KeyCode.Tab) {
+      if (focusedElement === closeButtonRef.current) {
+        setFocusedElement(buttonToShoppingRef.current);
+      }
+    }
+    if(e.keyCode === KeyCode.Tab && e.shiftKey) {
+      if (focusedElement === buttonToShoppingRef.current) {
+        setFocusedElement(closeButtonRef.current);
+      }
+    }
+  };
+
+  useEffect(() => {
+    setFocusedElement(closeButtonRef.current);
+  }, []);
+
+  useEffect(() => {
+    focusedElement?.focus();
+  }, [focusedElement]);
+
   return (
-    <div className="modal is-active modal--success">
+    <div
+      className="modal is-active modal--success"
+      onKeyDown={handleTabKeyDown}
+    >
       <div className="modal__wrapper">
         <div
           className="modal__overlay"
@@ -41,16 +77,20 @@ function ThanksModal({onSetIsThanksModalHidden, id}: ThanksModalProps): JSX.Elem
           <p className="modal__message">Спасибо за ваш отзыв!</p>
           <div className="modal__button-container modal__button-container--review">
             <button
+              ref={buttonToShoppingRef}
               className="button button--small modal__button modal__button--review"
               onClick={handlClickToShopping}
+              onFocus={handleChangeFocus}
             >К покупкам!
             </button>
           </div>
           <button
+            ref={closeButtonRef}
             className="modal__close-btn button-cross"
             type="button"
             aria-label="Закрыть"
             onClick={handleClickClose}
+            onFocus={handleChangeFocus}
           >
             <span className="button-cross__icon">
             </span>

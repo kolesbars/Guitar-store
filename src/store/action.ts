@@ -36,7 +36,7 @@ export const addNewGuitarComment = createAction(
   }),
 );
 
-export const setSetingStatusFalse = createAction(ActionType.AddNewGuitarComment);
+export const setCommentSendigStatusFalse = createAction(ActionType.SetCommentSendingStatusFalse);
 
 export const updateGuitarsPrices = createAction(
   ActionType.UpdateGuitarsPrices,

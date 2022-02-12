@@ -1,7 +1,11 @@
 import { CurrentGuitarData } from '../../types/state';
 import { createReducer } from '@reduxjs/toolkit';
 import { emptyGuitar } from '../../const';
-import { updateGuitarData, updateCurrentGuitarComments, addNewGuitarComment} from '../action';
+import {
+  updateGuitarData,
+  updateCurrentGuitarComments,
+  addNewGuitarComment,
+  setCommentSendigStatusFalse} from '../action';
 
 const initialState: CurrentGuitarData = {
   guitarData: emptyGuitar,
@@ -24,6 +28,9 @@ const currentGuitarData = createReducer(initialState, (builder) => {
     .addCase(addNewGuitarComment, (state, action) => {
       state.comments = [...state.comments, action.payload];
       state.isCommentSent = true;
+    })
+    .addCase(setCommentSendigStatusFalse, (state, action) => {
+      state.isCommentSent = false;
     });
 });
 

@@ -7,6 +7,7 @@ import {
   updateGuitarData,
   updateCurrentGuitarComments,
   addNewGuitarComment,
+  setCommentSendigStatusFalse,
   updateTotalCount,
   setLoadedStatusFalse,
   updateSimilarGuitarsList,
@@ -48,6 +49,7 @@ export const loadCurrentGuitarComments = (id: string): ThunkActionResult =>
 
 export const addGuitarComment = (data: CommentPostType): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
+    dispatch(setCommentSendigStatusFalse());
     await api.post<CommentType>(APIRoute.Comments, data)
       .then((response) => {
         dispatch(addNewGuitarComment(response.data));

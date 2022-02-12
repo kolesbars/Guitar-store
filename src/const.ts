@@ -26,6 +26,7 @@ export enum KeyCode {
   ArrowDown = 38,
   Enter = 13,
   Escape = 27,
+  Tab = 9,
 }
 
 export enum GuitarType {
