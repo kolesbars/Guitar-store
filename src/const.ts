@@ -50,6 +50,17 @@ export enum HttpCode {
   ServerError = 500,
 }
 
+export enum RatingStarsSizes {
+  defaultWidth = '0',
+  defaultHeight = '0',
+  inCardWidth = '12',
+  inCardHeight = '11',
+  inGuitarScreenWidth = '14',
+  inGuitarScreenHeight = '14',
+  inCommentWidth = '16',
+  inCommentHeight ='16',
+}
+
 export const emptyGuitar = {
   'id': 0,
   'name': '',
@@ -62,11 +73,35 @@ export const emptyGuitar = {
   'price': 0,
 };
 
+export const emptyComment = {
+  'id': '',
+  'userName': '',
+  'advantage': '',
+  'disadvantage': '',
+  'comment': '',
+  'rating': 0,
+  'createAt': '',
+  'guitarId': 0,
+};
+
+export const emptyCommentPost = {
+  'guitarId': 0,
+  'userName': '',
+  'advantage': '',
+  'disadvantage': '',
+  'comment': '',
+  'rating': 0,
+};
+
 export const DEFAULT_PAGE_COUNT = '1';
 export const RANGE_STEP = 9;
 export const DEFAULT_START_VALUE = '1';
 export const RATING_STAR_MAX_VALUE = 5;
 export const COMMENTS_RANGE = 3;
+export const ZERO_COORDINATE = 0;
+export const COMMENTS_START_COUNT = 0;
+export const PAGE_DIVIDER_COUNT = 4;
+export const CURRENT_SEARCH_ITEM_COUNT = 0;
 
 export const BACKEND_URL = 'https://accelerator-guitar-shop-api-v1.glitch.me';
 export const REQUEST_TIMEOUT = 5000;

@@ -8,8 +8,9 @@ import { getSearchFormParams} from '../../store/search-params/selectors';
 import { getSimilarGuitars } from '../../store/guitars-data/selectors';
 import { loadSimilarGuitars } from '../../store/api-actions';
 import { AppRoute } from '../../const';
-import { KeyCode } from '../../const';
+import { KeyCode, CURRENT_SEARCH_ITEM_COUNT } from '../../const';
 import {
+  useRef,
   useEffect,
   useState,
   KeyboardEvent,
@@ -24,6 +25,8 @@ function SearchForm({guitars}: SearchFormProps): JSX.Element {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const searchFormRef = useRef<HTMLFormElement | null>(null);
+
   const searchFormParams = useSelector(getSearchFormParams);
   const similarGuitars = useSelector(getSimilarGuitars);
 
@@ -32,13 +35,15 @@ function SearchForm({guitars}: SearchFormProps): JSX.Element {
   const searchText = searchParams.get('name_like') || '';
 
   const [searchValue, setSearchValue] = useState('');
+  const [isShow, setIsShow] = useState(false);
 
   const [itemsId, setItemsId] = useState(similarGuitars?.map((guitar) => guitar.id).sort((a,b) => a - b ));
-  const [currentItem, setCurrentItem] = useState<number | undefined>(0);
+  const [currentItem, setCurrentItem] = useState<number | undefined>(CURRENT_SEARCH_ITEM_COUNT);
 
   const handleChangeSearchForm = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setSearchValue(e.target.value);
+    setIsShow(true);
   };
 
   const handleSubmitSearch = (e: SyntheticEvent<HTMLFormElement>) => {
@@ -47,7 +52,7 @@ function SearchForm({guitars}: SearchFormProps): JSX.Element {
 
   const handleKeyDown = (e: KeyboardEvent<HTMLUListElement>) => {
     if (currentItem !== undefined) {
-      if(e.keyCode === KeyCode.Enter && searchValue !== '' && currentItem !== 0) {
+      if(e.keyCode === KeyCode.Enter && searchValue !== '' && currentItem !== CURRENT_SEARCH_ITEM_COUNT) {
         navigate(`${AppRoute.Guitar}/${currentItem}`);
       } else if (e.keyCode === KeyCode.ArrowDown) {
         setCurrentItem(itemsId[itemsId.indexOf(currentItem)-1]);
@@ -65,6 +70,14 @@ function SearchForm({guitars}: SearchFormProps): JSX.Element {
       setCurrentItem(itemsId[0]);
     }
   };
+
+  const handleDocumentClick = () => {
+    setIsShow(false);
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleDocumentClick);
+  }, []);
 
   useEffect(() => {
     if(similarGuitars) {
@@ -89,6 +102,7 @@ function SearchForm({guitars}: SearchFormProps): JSX.Element {
   return (
     <div className="form-search">
       <form
+        ref={searchFormRef}
         className="form-search__form"
         onSubmit={handleSubmitSearch}
       >
@@ -118,7 +132,7 @@ function SearchForm({guitars}: SearchFormProps): JSX.Element {
         </label>
       </form>
       <ul
-        className={`form-search__select-list ${searchValue === '' ? 'hidden' : ''}`}
+        className={`form-search__select-list ${!isShow ? 'hidden' : ''}`}
         onKeyDown={handleKeyDown}
       >
         {similarGuitars &&

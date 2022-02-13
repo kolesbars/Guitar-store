@@ -1,17 +1,16 @@
 import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadGuitarData, loadCurrentGuitarComments} from '../../store/api-actions';
-import { useEffect, useState} from 'react';
+import { KeyboardEvent, useEffect, useState} from 'react';
 import RatingStars from '../rating-stars/rating-stars';
 import Review from '../review/review';
-import { RatingStarsLocation, GuitarType, GuitarScreenTabs } from '../../const';
 import { AppRoute, COMMENTS_RANGE } from '../../const';
 import AddReviewModal from '../add-review-modal/add-review-modal';
 import ThanksModal from '../thanks-modal/thanks-modal';
 import Loading from '../loading/loading';
 import { Link } from 'react-router-dom';
-import { KeyboardEvent } from 'react';
 import {KeyCode} from '../../const';
+import {RemoveScroll} from 'react-remove-scroll';
 import {
   getGuitarData,
   getComments,
@@ -19,6 +18,13 @@ import {
   getCommentsLoadingStatus,
   getCommentSendingStatus
 } from '../../store/current-guitar-data/selectors';
+import {
+  RatingStarsLocation,
+  GuitarType,
+  GuitarScreenTabs,
+  ZERO_COORDINATE,
+  COMMENTS_START_COUNT,
+  PAGE_DIVIDER_COUNT } from '../../const';
 
 function GuitarScreen(): JSX.Element {
 
@@ -63,7 +69,7 @@ function GuitarScreen(): JSX.Element {
   };
 
   const handleClickToUp = () => {
-    window.scroll(0,0);
+    window.scroll(ZERO_COORDINATE, ZERO_COORDINATE);
   };
 
   const handleClickAddReview = () => {
@@ -77,6 +83,39 @@ function GuitarScreen(): JSX.Element {
     }
   };
 
+  function checkPosition() {
+    const height = document.body.offsetHeight;
+
+    const screenHeight = window.innerHeight;
+
+    const threshold = height - screenHeight / PAGE_DIVIDER_COUNT;
+
+    const scrolled = window.scrollY;
+
+    const position = scrolled + screenHeight;
+
+    if (position >= threshold) {
+      setCommentsRange(commentsRange + COMMENTS_RANGE);
+    }
+  }
+
+  const handleScrollWindow = () => {
+    checkPosition();
+  };
+
+  useEffect(() => {
+    document.addEventListener('scroll', handleScrollWindow);
+
+    return function () {
+      document.removeEventListener('scroll', handleScrollWindow);
+    };
+  }, [handleScrollWindow]);
+
+  useEffect(() => {
+    window.scroll(ZERO_COORDINATE, ZERO_COORDINATE);
+    setCommentsRange(COMMENTS_RANGE);
+  }, [id]);
+
   useEffect(() => {
     if (id) {
       dispatch(loadGuitarData(id));
@@ -85,7 +124,10 @@ function GuitarScreen(): JSX.Element {
   }, [id]);
 
   return (
-    <div className="wrapper" onKeyDown={handleEscKeyDown}>
+    <div
+      className="wrapper"
+      onKeyDown={handleEscKeyDown}
+    >
       <main className="page-content">
         <div className="container">
           <h1 className="page-content__title title title--bigger">{name}</h1>
@@ -168,7 +210,7 @@ function GuitarScreen(): JSX.Element {
             >Оставить отзыв
             </Link>
             {loadingCommentsStatus ?
-              sortedComments.slice(0, commentsRange).map((comment) =>
+              sortedComments.slice(COMMENTS_START_COUNT, commentsRange).map((comment) =>
                 (
                   <Review
                     key={comment.id}
@@ -188,17 +230,21 @@ function GuitarScreen(): JSX.Element {
             >Наверх
             </Link>
             {!isReviewModalHidden &&
-            <AddReviewModal
-              onSetIsReviewModalHidden={setIsReviewModalHidden}
-              onSetIsThanksModalHidden={setIsThanksModalHidden}
-              name={name}
-              id={guitarData.id}
-            />}
+            <RemoveScroll>
+              <AddReviewModal
+                onSetIsReviewModalHidden={setIsReviewModalHidden}
+                onSetIsThanksModalHidden={setIsThanksModalHidden}
+                name={name}
+                id={guitarData.id}
+              />
+            </RemoveScroll>}
             {!isThanksModalHidden && sendingCommentStatus &&
-            <ThanksModal
-              onSetIsThanksModalHidden={setIsThanksModalHidden}
-              id={guitarData.id}
-            />}
+            <RemoveScroll>
+              <ThanksModal
+                onSetIsThanksModalHidden={setIsThanksModalHidden}
+                id={guitarData.id}
+              />
+            </RemoveScroll>}
           </section>
         </div>
       </main>

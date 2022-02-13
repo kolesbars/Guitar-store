@@ -1,6 +1,6 @@
 import { AppRoute } from '../../const';
 import { useRef, useState, useEffect, FocusEvent, KeyboardEvent} from 'react';
-import { KeyCode } from '../../const';
+import { KeyCode, ZERO_COORDINATE } from '../../const';
 import {useNavigate} from 'react-router';
 
 
@@ -21,7 +21,7 @@ function ThanksModal({onSetIsThanksModalHidden, id}: ThanksModalProps): JSX.Elem
   const handlClickToShopping = () => {
     navigate(`${AppRoute.Guitar}/${id}`);
     onSetIsThanksModalHidden(true);
-    window.scroll(0,0);
+    window.scroll(ZERO_COORDINATE, ZERO_COORDINATE);
   };
 
   const handleClickClose = () => {

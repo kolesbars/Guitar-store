@@ -143,6 +143,7 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
               </div>
               <div><span className="form-review__label form-review__label--required">Ваша Оценка</span>
                 <div
+                  dir='rtl'
                   className="rate rate--reverse"
                   onFocus={handleChangeFocus}
                 >

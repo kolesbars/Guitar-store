@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {RATING_STAR_MAX_VALUE, RatingStarsLocation} from '../../const';
+import {RATING_STAR_MAX_VALUE, RatingStarsLocation, RatingStarsSizes} from '../../const';
 
 type RatingStarsProps = {
   rating: number,
@@ -9,34 +9,34 @@ type RatingStarsProps = {
 function RatingStars({rating, location}: RatingStarsProps): JSX.Element {
 
   const [starSizes, setStarSizes] = useState({
-    width: '0',
-    height: '0',
+    width: RatingStarsSizes.defaultWidth,
+    height: RatingStarsSizes.defaultHeight,
   });
 
   const getStarSizes = (value: string) => {
     switch (value) {
       case RatingStarsLocation.GuitarCard:
         setStarSizes({
-          width: '12',
-          height: '11',
+          width: RatingStarsSizes.inCardWidth,
+          height: RatingStarsSizes.inCardHeight,
         });
         break;
       case RatingStarsLocation.GuitarScreen:
         setStarSizes({
-          width: '14',
-          height: '14',
+          width: RatingStarsSizes.inGuitarScreenWidth,
+          height: RatingStarsSizes.inGuitarScreenHeight,
         });
         break;
       case RatingStarsLocation.Comment:
         setStarSizes({
-          width: '16',
-          height: '16',
+          width: RatingStarsSizes.inCommentWidth,
+          height: RatingStarsSizes.inCommentHeight,
         });
         break;
       default:
         setStarSizes({
-          width: '12',
-          height: '11',
+          width: RatingStarsSizes.defaultWidth,
+          height: RatingStarsSizes.defaultHeight,
         });
         break;
     }

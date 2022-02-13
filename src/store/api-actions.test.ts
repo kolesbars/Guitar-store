@@ -3,18 +3,25 @@ import { Action } from 'redux';
 import thunk, {ThunkDispatch} from 'redux-thunk';
 import { createAPI} from '../services/api';
 import { APIRoute} from '../const';
-import { emptyGuitar } from '../const';
+import { emptyGuitar, emptyComment, emptyCommentPost } from '../const';
 import {configureMockStore} from '@jedmao/redux-mock-store';
 import { State } from '../types/state';
 import {
+  loadGuitarData,
+  loadCurrentGuitarComments,
+  addGuitarComment,
   loadGuitarList,
   loadSimilarGuitars,
   loadMaxMinPrices,
   loadGuitarComments
 } from './api-actions';
 import {
-  setLoadedStatusFalse,
   updateGuitarsList,
+  updateGuitarData,
+  updateCurrentGuitarComments,
+  addNewGuitarComment,
+  setCommentSendigStatusFalse,
+  setLoadedStatusFalse,
   updateSimilarGuitarsList,
   updateGuitarsPrices,
   updateGuitarsComents
@@ -103,6 +110,55 @@ describe('Async action', () => {
         id: 1,
         count: 1,
       }),
+    ]);
+  });
+
+  it('should load guitar data', async () => {
+    const store = mockStore();
+    const mockGuitarData = emptyGuitar;
+    const mockId = '1';
+
+    mockAPI
+      .onGet(`${APIRoute.Guitars}/${mockId}`)
+      .reply(200, mockGuitarData);
+
+    await store.dispatch(loadGuitarData(mockId));
+
+    expect(store.getActions()).toEqual([
+      updateGuitarData(mockGuitarData),
+    ]);
+  });
+
+  it('should load current guitars comments', async () => {
+    const store = mockStore();
+    const mockGuitarComments = [emptyComment];
+    const mockId = '1';
+
+    mockAPI
+      .onGet(`${APIRoute.Guitars}/${mockId}/comments`)
+      .reply(200, mockGuitarComments);
+
+    await store.dispatch(loadCurrentGuitarComments(mockId));
+
+    expect(store.getActions()).toEqual([
+      updateCurrentGuitarComments(mockGuitarComments),
+    ]);
+  });
+
+  it('should add new comment', async () => {
+    const store = mockStore();
+    const mockGuitarComment = emptyComment;
+    const mockGuitarCommentPost = emptyCommentPost;
+
+    mockAPI
+      .onPost(APIRoute.Comments)
+      .reply(200, mockGuitarComment);
+
+    await store.dispatch(addGuitarComment(mockGuitarCommentPost));
+
+    expect(store.getActions()).toEqual([
+      setCommentSendigStatusFalse(),
+      addNewGuitarComment(mockGuitarComment),
     ]);
   });
 });

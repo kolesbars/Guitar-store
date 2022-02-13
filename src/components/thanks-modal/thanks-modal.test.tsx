@@ -1,4 +1,4 @@
-import GuitarScreen from './guitar-screen';
+import ThanksModal from './thanks-modal';
 import {BrowserRouter} from 'react-router-dom';
 import {render, screen} from '@testing-library/react';
 import { Provider } from 'react-redux';
@@ -9,7 +9,7 @@ import { createAPI } from '../../services/api';
 import { emptyGuitar } from '../../const';
 import thunk, {ThunkDispatch} from 'redux-thunk';
 
-describe('Component: GuitarScreen', () => {
+describe('Component: ThanksModal', () => {
   it('should render correctly', () => {
 
     const api = createAPI();
@@ -29,16 +29,20 @@ describe('Component: GuitarScreen', () => {
       PAGE: {pageCount: '', totalCount: ''},
     });
 
+    const cb = jest.fn();
+
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <GuitarScreen/>
+          <ThanksModal
+            onSetIsThanksModalHidden={cb}
+            id={1}
+          />
         </BrowserRouter>
       </Provider>,
     );
 
-    expect(screen.getByText(/Добавить в корзину/i)).toBeInTheDocument();
-    expect(screen.getByText(/Артикул/i)).toBeInTheDocument();
-    expect(screen.getByTestId('description')).toBeInTheDocument();
+    expect(screen.getByText(/Спасибо за ваш отзыв/i)).toBeInTheDocument();
+    expect(screen.getByText(/К покупкам/i)).toBeInTheDocument();
   });
 });

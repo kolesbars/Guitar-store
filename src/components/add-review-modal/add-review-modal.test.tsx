@@ -1,4 +1,4 @@
-import GuitarScreen from './guitar-screen';
+import AddReviewModal from './add-review-modal';
 import {BrowserRouter} from 'react-router-dom';
 import {render, screen} from '@testing-library/react';
 import { Provider } from 'react-redux';
@@ -29,16 +29,23 @@ describe('Component: GuitarScreen', () => {
       PAGE: {pageCount: '', totalCount: ''},
     });
 
+    const cb = jest.fn();
+
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <GuitarScreen/>
+          <AddReviewModal
+            onSetIsReviewModalHidden={cb}
+            onSetIsThanksModalHidden={cb}
+            name=''
+            id={1}
+          />
         </BrowserRouter>
       </Provider>,
     );
 
-    expect(screen.getByText(/Добавить в корзину/i)).toBeInTheDocument();
-    expect(screen.getByText(/Артикул/i)).toBeInTheDocument();
-    expect(screen.getByTestId('description')).toBeInTheDocument();
+    expect(screen.getByText(/Оставить отзыв/i)).toBeInTheDocument();
+    expect(screen.getByText(/Достоинства/i)).toBeInTheDocument();
+    expect(screen.getByText(/Отправить отзыв/i)).toBeInTheDocument();
   });
 });
