@@ -65,7 +65,6 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
     setFocusedElement(e.target);
   };
 
-
   const handleTabKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if(e.keyCode === KeyCode.Tab) {
       if (focusedElement === escButtonRef.current) {
@@ -231,6 +230,7 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
               autoComplete="off"
               onChange={handleChangeReviewData}
               onFocus={handleChangeFocus}
+              required
             >
             </textarea>
             <button

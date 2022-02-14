@@ -51,16 +51,17 @@ function SearchForm({guitars}: SearchFormProps): JSX.Element {
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLUListElement>) => {
+    e.preventDefault();
     if (currentItem !== undefined) {
       if(e.keyCode === KeyCode.Enter && searchValue !== '' && currentItem !== CURRENT_SEARCH_ITEM_COUNT) {
         navigate(`${AppRoute.Guitar}/${currentItem}`);
-      } else if (e.keyCode === KeyCode.ArrowDown) {
+      } else if (e.keyCode === KeyCode.ArrowUp || (e.keyCode === KeyCode.Tab && e.shiftKey)) {
         setCurrentItem(itemsId[itemsId.indexOf(currentItem)-1]);
       }
-      else if (e.keyCode === KeyCode.ArrowUp) {
+      else if (e.keyCode === KeyCode.ArrowDown || e.keyCode === KeyCode.Tab) {
         setCurrentItem(itemsId[itemsId.indexOf(currentItem)+1]);
       }
-    } else if (e.keyCode === KeyCode.ArrowUp) {
+    } else if (e.keyCode === KeyCode.ArrowDown || e.keyCode === KeyCode.Tab) {
       setCurrentItem(itemsId[0]);
     }
   };

@@ -30,7 +30,7 @@ function GuitarScreen(): JSX.Element {
 
   const dispatch = useDispatch();
 
-  const [currentTub, setCurrentTub] = useState(GuitarScreenTabs.Specifications);
+  const [currentTab, setCurrentTab] = useState(GuitarScreenTabs.Specifications);
   const [commentsRange, setCommentsRange] = useState(COMMENTS_RANGE);
   const [isReviewModalHidden, setIsReviewModalHidden] = useState(true);
   const [isThanksModalHidden, setIsThanksModalHidden] = useState(true);
@@ -61,7 +61,7 @@ function GuitarScreen(): JSX.Element {
   };
 
   const handleClickTab = (value: GuitarScreenTabs) => {
-    setCurrentTub(value);
+    setCurrentTab(value);
   };
 
   const handleClickShowMoreButton = () => {
@@ -153,7 +153,7 @@ function GuitarScreen(): JSX.Element {
                 <div className="tabs">
                   <Link
                     className={`button button--medium tabs__button
-                  ${currentTub !== GuitarScreenTabs.Specifications ? 'button--black-border' : ''}`}
+                  ${currentTab !== GuitarScreenTabs.Specifications ? 'button--black-border' : ''}`}
                     to="#"
                     data-testid='characteristics'
                     onClick={() => {
@@ -163,7 +163,7 @@ function GuitarScreen(): JSX.Element {
                   </Link>
                   <Link
                     className={`button button--medium tabs__button
-                  ${currentTub !== GuitarScreenTabs.Description ? 'button--black-border' : ''}`}
+                  ${currentTab !== GuitarScreenTabs.Description ? 'button--black-border' : ''}`}
                     to="#"
                     data-testid='description'
                     onClick={() => {
@@ -172,7 +172,7 @@ function GuitarScreen(): JSX.Element {
                   >Описание
                   </Link>
                   <div className="tabs__content" id="characteristics">
-                    {currentTub === GuitarScreenTabs.Specifications &&
+                    {currentTab === GuitarScreenTabs.Specifications &&
 
                     <table className="tabs__table">
                       <tbody>
@@ -190,7 +190,7 @@ function GuitarScreen(): JSX.Element {
                         </tr>
                       </tbody>
                     </table>}
-                    {currentTub === GuitarScreenTabs.Description &&
+                    {currentTab === GuitarScreenTabs.Description &&
                     <p className="tabs__product-description">{description}</p>}
                   </div>
                 </div>
@@ -217,6 +217,7 @@ function GuitarScreen(): JSX.Element {
                     data={comment}
                   />))
               : <Loading/>}
+            {sortedComments.length === 0 && <p>Отзывов пока нет</p>}
             {commentsRange < comments.length &&
               <button
                 className="button button--medium reviews__more-button"

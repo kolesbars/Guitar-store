@@ -22,8 +22,8 @@ export enum StringCount {
 }
 
 export enum KeyCode {
-  ArrowUp = 40,
-  ArrowDown = 38,
+  ArrowUp = 38,
+  ArrowDown = 40,
   Enter = 13,
   Escape = 27,
   Tab = 9,
