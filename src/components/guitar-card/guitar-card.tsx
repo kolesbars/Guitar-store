@@ -1,7 +1,7 @@
 import RatingStars from '../rating-stars/rating-stars';
-import { useState, useEffect } from 'react';
+import { useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getCommentsCounts } from '../../store/guitars-data/selectors';
+import { selectComentsCount } from '../../store/guitars-data/selectors';
 import { loadGuitarComments } from '../../store/api-actions';
 import { Link } from 'react-router-dom';
 import { AppRoute, RatingStarsLocation} from '../../const';
@@ -16,20 +16,20 @@ function GuitarCard({guitar}: GuitarCardProps):JSX.Element {
 
   const {previewImg, name, price, rating, id} = guitar;
 
-  const commentsCounts = useSelector(getCommentsCounts);
+  const commentsCount = useSelector(selectComentsCount(id));
 
-  const [count, setCount] = useState<number | undefined>();
+  // const [count, setCount] = useState<number | undefined>();
 
 
-  useEffect(() => {
-    if (commentsCounts) {
-      setCount(commentsCounts.find((item) => item.id === id)?.count);
-    }
-  }, [commentsCounts]);
+  // useEffect(() => {
+  //   if (commentsCounts) {
+  //     setCount(commentsCounts.find((item) => item.id === id)?.count);
+  //   }
+  // }, [commentsCounts]);
 
   useEffect(() => {
     dispatch(loadGuitarComments(id));
-  }, [count]);
+  }, [commentsCount]);
 
   return (
     <div className="product-card" data-testid='guitar-card'>
@@ -46,7 +46,7 @@ function GuitarCard({guitar}: GuitarCardProps):JSX.Element {
             rating={rating}
             location={RatingStarsLocation.GuitarCard}
           />
-          <span className="rate__count">{count}</span>
+          <span className="rate__count">{commentsCount}</span>
           <span className="rate__message"></span>
         </div>
         <p className="product-card__title">

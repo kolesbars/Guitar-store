@@ -60,15 +60,15 @@ function GuitarScreen(): JSX.Element {
     }
   };
 
-  const handleClickTab = (value: GuitarScreenTabs) => {
+  const handleTabClick = (value: GuitarScreenTabs) => {
     setCurrentTab(value);
   };
 
-  const handleClickShowMoreButton = () => {
+  const handleShowMoreButtonClick = () => {
     setCommentsRange(commentsRange + COMMENTS_RANGE);
   };
 
-  const handleClickToUp = () => {
+  const handleToUpButtonClick = () => {
     window.scroll(ZERO_COORDINATE, ZERO_COORDINATE);
   };
 
@@ -99,17 +99,17 @@ function GuitarScreen(): JSX.Element {
     }
   }
 
-  const handleScrollWindow = () => {
+  const handleWindowScroll = () => {
     checkPosition();
   };
 
   useEffect(() => {
-    document.addEventListener('scroll', handleScrollWindow);
+    document.addEventListener('scroll', handleWindowScroll);
 
     return function () {
-      document.removeEventListener('scroll', handleScrollWindow);
+      document.removeEventListener('scroll', handleWindowScroll);
     };
-  }, [handleScrollWindow]);
+  }, [handleWindowScroll]);
 
   useEffect(() => {
     window.scroll(ZERO_COORDINATE, ZERO_COORDINATE);
@@ -157,7 +157,7 @@ function GuitarScreen(): JSX.Element {
                     to="#"
                     data-testid='characteristics'
                     onClick={() => {
-                      handleClickTab(GuitarScreenTabs.Specifications);
+                      handleTabClick(GuitarScreenTabs.Specifications);
                     }}
                   >Характеристики
                   </Link>
@@ -167,7 +167,7 @@ function GuitarScreen(): JSX.Element {
                     to="#"
                     data-testid='description'
                     onClick={() => {
-                      handleClickTab(GuitarScreenTabs.Description);
+                      handleTabClick(GuitarScreenTabs.Description);
                     }}
                   >Описание
                   </Link>
@@ -221,13 +221,13 @@ function GuitarScreen(): JSX.Element {
             {commentsRange < comments.length &&
               <button
                 className="button button--medium reviews__more-button"
-                onClick={handleClickShowMoreButton}
+                onClick={handleShowMoreButtonClick}
               >Показать еще отзывы
               </button>}
             <Link
               className="button button--up button--red-border button--big reviews__up-button"
               to="#"
-              onClick={handleClickToUp}
+              onClick={handleToUpButtonClick}
             >Наверх
             </Link>
             {!isReviewModalHidden &&

@@ -7,7 +7,7 @@ export type GuitarsData = {
   similarGuitars: GuitarType[],
   isLoaded: boolean,
   prices: PricesType,
-  commentsCounts: GuitarComment[]
+  comments: GuitarComment[]
 }
 
 export type CurrentGuitarData = {

@@ -18,13 +18,13 @@ function ThanksModal({onSetIsThanksModalHidden, id}: ThanksModalProps): JSX.Elem
 
   const [focusedElement, setFocusedElement] = useState<HTMLButtonElement | null>(null);
 
-  const handlClickToShopping = () => {
+  const handleToShoppingButtonClick = () => {
     navigate(`${AppRoute.Guitar}/${id}`);
     onSetIsThanksModalHidden(true);
     window.scroll(ZERO_COORDINATE, ZERO_COORDINATE);
   };
 
-  const handleClickClose = () => {
+  const handleCloseButtonClick = () => {
     onSetIsThanksModalHidden(true);
   };
 
@@ -79,7 +79,7 @@ function ThanksModal({onSetIsThanksModalHidden, id}: ThanksModalProps): JSX.Elem
             <button
               ref={buttonToShoppingRef}
               className="button button--small modal__button modal__button--review"
-              onClick={handlClickToShopping}
+              onClick={handleToShoppingButtonClick}
               onFocus={handleChangeFocus}
             >К покупкам!
             </button>
@@ -89,7 +89,7 @@ function ThanksModal({onSetIsThanksModalHidden, id}: ThanksModalProps): JSX.Elem
             className="modal__close-btn button-cross"
             type="button"
             aria-label="Закрыть"
-            onClick={handleClickClose}
+            onClick={handleCloseButtonClick}
             onFocus={handleChangeFocus}
           >
             <span className="button-cross__icon">

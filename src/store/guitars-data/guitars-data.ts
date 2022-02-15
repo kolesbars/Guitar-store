@@ -12,7 +12,7 @@ const initialState: GuitarsData = {
   guitarsList: [],
   similarGuitars: [],
   isLoaded: false,
-  commentsCounts: [],
+  comments: [],
   prices: {
     min: '',
     max: '',
@@ -35,7 +35,7 @@ const guitarsData = createReducer(initialState, (builder) => {
       state.prices = action.payload;
     })
     .addCase(updateGuitarsComents, (state, action) => {
-      state.commentsCounts = [...state.commentsCounts, action.payload];
+      state.comments = [...state.comments, action.payload];
     });
 });
 

@@ -41,7 +41,7 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
   const nameFieldRef = useRef<HTMLInputElement | null>(null);
   const escButtonRef = useRef<HTMLButtonElement | null>(null);
 
-  const handleChangeReviewData = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleReviewDataChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setReviewData((value) => ({...value, [e.target.id]: e.target.value}));
   };
 
@@ -49,7 +49,7 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
     setReviewData({...reviewData, 'rating': +e.target.value});
   };
 
-  const handleCloseClick = () => {
+  const handleCloseButtonClick = () => {
     onSetIsReviewModalHidden(true);
   };
 
@@ -57,7 +57,7 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
     onSetIsReviewModalHidden(true);
   };
 
-  const handleChangeFocus = (e:FocusEvent<
+  const handleFocusChange = (e:FocusEvent<
     HTMLInputElement |
     HTMLButtonElement |
     HTMLDivElement |
@@ -80,7 +80,7 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
     }
   };
 
-  const handleSubmitForm = (e: SyntheticEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (reviewData.userName !== '' && reviewData.rating !== 0) {
       dispatch(addGuitarComment(reviewData));
@@ -123,7 +123,7 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
           <h3 className="modal__product-name title title--medium-20 title--uppercase">{name}</h3>
           <form
             className="form-review"
-            onSubmit={handleSubmitForm}
+            onSubmit={handleFormSubmit}
           >
             <div className="form-review__wrapper">
               <div className="form-review__name-wrapper">
@@ -135,8 +135,8 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
                   type="text"
                   autoComplete="off"
                   value={reviewData.userName}
-                  onChange={handleChangeReviewData}
-                  onFocus={handleChangeFocus}
+                  onChange={handleReviewDataChange}
+                  onFocus={handleFocusChange}
                 />
                 {isRequiredFieldsFilled.name && <span className="form-review__warning">Заполните поле</span>}
               </div>
@@ -144,7 +144,7 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
                 <div
                   dir='rtl'
                   className="rate rate--reverse"
-                  onFocus={handleChangeFocus}
+                  onFocus={handleFocusChange}
                 >
                   <input
                     className="visually-hidden"
@@ -207,9 +207,9 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
               type="text"
               autoComplete="off"
               value={reviewData.advantage}
-              onChange={handleChangeReviewData}
+              onChange={handleReviewDataChange}
               required
-              onFocus={handleChangeFocus}
+              onFocus={handleFocusChange}
             />
             <label className="form-review__label" htmlFor="disadvantage">Недостатки</label>
             <input
@@ -218,9 +218,9 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
               type="text"
               autoComplete="off"
               value={reviewData.disadvantage}
-              onChange={handleChangeReviewData}
+              onChange={handleReviewDataChange}
               required
-              onFocus={handleChangeFocus}
+              onFocus={handleFocusChange}
             />
             <label className="form-review__label" htmlFor="user-name">Комментарий</label>
             <textarea
@@ -228,8 +228,8 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
               id="comment"
               rows={10}
               autoComplete="off"
-              onChange={handleChangeReviewData}
-              onFocus={handleChangeFocus}
+              onChange={handleReviewDataChange}
+              onFocus={handleFocusChange}
               required
             >
             </textarea>
@@ -237,7 +237,7 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
               className="button button--medium-20 form-review__button"
               type="submit"
               ref={submitButtonRef}
-              onFocus={handleChangeFocus}
+              onFocus={handleFocusChange}
             >Отправить отзыв
             </button>
           </form>
@@ -246,8 +246,8 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
             className="modal__close-btn button-cross"
             type="button"
             aria-label="Закрыть"
-            onClick={handleCloseClick}
-            onFocus={handleChangeFocus}
+            onClick={handleCloseButtonClick}
+            onFocus={handleFocusChange}
           >
             <span className="button-cross__icon">
             </span>
