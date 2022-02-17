@@ -18,15 +18,6 @@ function GuitarCard({guitar}: GuitarCardProps):JSX.Element {
 
   const commentsCount = useSelector(selectComentsCount(id));
 
-  // const [count, setCount] = useState<number | undefined>();
-
-
-  // useEffect(() => {
-  //   if (commentsCounts) {
-  //     setCount(commentsCounts.find((item) => item.id === id)?.count);
-  //   }
-  // }, [commentsCounts]);
-
   useEffect(() => {
     dispatch(loadGuitarComments(id));
   }, [commentsCount]);

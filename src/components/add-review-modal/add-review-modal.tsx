@@ -102,7 +102,7 @@ function AddReviewModal(props: AddReviewModalProps): JSX.Element {
   };
 
   useEffect(() => {
-    setFocusedElement(escButtonRef.current);
+    setFocusedElement(nameFieldRef.current);
   }, []);
 
   useEffect(() => {

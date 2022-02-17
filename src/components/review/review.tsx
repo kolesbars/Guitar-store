@@ -1,7 +1,10 @@
 import RatingStars from '../rating-stars/rating-stars';
 import { RatingStarsLocation } from '../../const';
 import Dayjs from 'dayjs';
+import 'dayjs/locale/ru';
 import { CommentType } from '../../types/guitar';
+
+Dayjs.locale('ru');
 
 type ReviewProps = {
   data: CommentType
@@ -11,7 +14,7 @@ function Review({data}: ReviewProps): JSX.Element {
 
   const {userName, advantage, disadvantage, createAt, comment, rating} = data;
 
-  const commentDate = Dayjs(createAt).format('MMMM D');
+  const commentDate = Dayjs(createAt).format('D MMMM');
 
   return (
     <div className="review">
