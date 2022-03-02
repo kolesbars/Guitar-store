@@ -7,10 +7,14 @@ import Review from '../review/review';
 import { AppRoute, COMMENTS_RANGE } from '../../const';
 import AddReviewModal from '../add-review-modal/add-review-modal';
 import ThanksModal from '../thanks-modal/thanks-modal';
+import AddSuccessModal from '../add-success-modal/add-success-modal';
+import AddToCartModal from '../add-to-cart-modal/add-to-cart-modal';
 import Loading from '../loading/loading';
 import { Link } from 'react-router-dom';
 import {KeyCode} from '../../const';
 import {RemoveScroll} from 'react-remove-scroll';
+import FocusLock from 'react-focus-lock';
+import {getGuitarType} from '../../utils/common';
 import {
   getGuitarData,
   getComments,
@@ -20,7 +24,6 @@ import {
 } from '../../store/current-guitar-data/selectors';
 import {
   RatingStarsLocation,
-  GuitarType,
   GuitarScreenTabs,
   ZERO_COORDINATE,
   COMMENTS_START_COUNT,
@@ -34,6 +37,8 @@ function GuitarScreen(): JSX.Element {
   const [commentsRange, setCommentsRange] = useState(COMMENTS_RANGE);
   const [isReviewModalHidden, setIsReviewModalHidden] = useState(true);
   const [isThanksModalHidden, setIsThanksModalHidden] = useState(true);
+  const [isAddToCartModalHidden, setIsAddToCartModalHidden] = useState(true);
+  const [isAddSuccessModalHidden, setIsAddSuccessModalHidden] = useState(true);
 
   const guitarData = useSelector(getGuitarData);
   const comments = useSelector(getComments);
@@ -46,19 +51,6 @@ function GuitarScreen(): JSX.Element {
   const {name, vendorCode, description, price, stringCount, previewImg, rating, type} = guitarData;
 
   const {id} = useParams<{id: string}>();
-
-  const getGuitarType = (value: string) => {
-    switch (value) {
-      case GuitarType.Acoustic:
-        return 'Акустическая гитара';
-      case GuitarType.Electric:
-        return 'Электрогитара';
-      case GuitarType.Ukulele:
-        return 'Укулеле';
-      default:
-        break;
-    }
-  };
 
   const handleTabClick = (value: GuitarScreenTabs) => {
     setCurrentTab(value);
@@ -80,7 +72,13 @@ function GuitarScreen(): JSX.Element {
     if(e.keyCode === KeyCode.Escape) {
       setIsReviewModalHidden(true);
       setIsThanksModalHidden(true);
+      setIsAddToCartModalHidden(true);
+      setIsAddSuccessModalHidden(true);
     }
+  };
+
+  const handleAddToCartButtonClick = () => {
+    setIsAddToCartModalHidden(false);
   };
 
   function checkPosition() {
@@ -197,7 +195,12 @@ function GuitarScreen(): JSX.Element {
               </div>
               <div className="product-container__price-wrapper">
                 <p className="product-container__price-info product-container__price-info--title">Цена:</p>
-                <p className="product-container__price-info product-container__price-info--value">{price} ₽</p><Link className="button button--red button--big product-container__button" to="#">Добавить в корзину</Link>
+                <p className="product-container__price-info product-container__price-info--value">{price} ₽</p>
+                <button
+                  className="button button--red button--big product-container__button"
+                  onClick={handleAddToCartButtonClick}
+                >Добавить в корзину
+                </button>
               </div>
             </div> :
             <Loading/>}
@@ -245,6 +248,24 @@ function GuitarScreen(): JSX.Element {
                 onSetIsThanksModalHidden={setIsThanksModalHidden}
                 id={guitarData.id}
               />
+            </RemoveScroll>}
+            {!isAddToCartModalHidden &&
+            <RemoveScroll>
+              <FocusLock>
+                <AddToCartModal
+                  data={guitarData}
+                  onSetIsAddToCartModalHidden={setIsAddToCartModalHidden}
+                  onSetIsAddSuccessModalHidden={setIsAddSuccessModalHidden}
+                />
+              </FocusLock>
+            </RemoveScroll>}
+            {!isAddSuccessModalHidden &&
+            <RemoveScroll>
+              <FocusLock>
+                <AddSuccessModal
+                  onSetIsAddSuccessModalHidden={setIsAddSuccessModalHidden}
+                />
+              </FocusLock>
             </RemoveScroll>}
           </section>
         </div>

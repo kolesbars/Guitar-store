@@ -30,4 +30,8 @@ export type SearchParams = {
   paginationParams: PaginationParamsType,
 }
 
+export type CartData = {
+  guitarsID: number[],
+}
+
 export type State = RootState;

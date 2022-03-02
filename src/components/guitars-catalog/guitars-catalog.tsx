@@ -2,10 +2,14 @@ import GuitarCard from '../guitar-card/guitar-card';
 import {GuitarType} from '../../types/guitar';
 
 type GuitarCatalogProps = {
-  guitars: GuitarType[]
+  guitars: GuitarType[],
+  onSetIsAddToCartModalHidden: (value: boolean) => void,
+  onSetCurrentGuitarData: (value: GuitarType) => void,
 }
 
-function GuitarCatalog({guitars}:GuitarCatalogProps):JSX.Element {
+function GuitarCatalog(props:GuitarCatalogProps):JSX.Element {
+
+  const {guitars, onSetIsAddToCartModalHidden, onSetCurrentGuitarData} = props;
 
   return (
     <div className="cards catalog__cards" data-testid='guitars-catalog'>
@@ -13,6 +17,8 @@ function GuitarCatalog({guitars}:GuitarCatalogProps):JSX.Element {
         <GuitarCard
           key={guitar.id}
           guitar={guitar}
+          onSetIsAddToCartModalHidden={onSetIsAddToCartModalHidden}
+          onSetCurrentGuitarData={onSetCurrentGuitarData}
         />),
       )}
     </div>

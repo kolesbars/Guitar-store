@@ -1,5 +1,5 @@
 import { loadGuitarList} from '../../store/api-actions';
-import { useEffect, useCallback} from 'react';
+import { useEffect, useCallback, useState, KeyboardEvent} from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useSelector, useDispatch} from 'react-redux';
 import { getGuitars, getLoadedDataStatus } from '../../store/guitars-data/selectors';
@@ -10,11 +10,21 @@ import FiltersForm from '../filters-form/filters-form';
 import Sorting from '../sorting/sorting';
 import Pagination from '../pagination/pagination';
 import Loading from '../loading/loading';
+import AddToCartModal from '../add-to-cart-modal/add-to-cart-modal';
+import AddSuccessModal from '../add-success-modal/add-success-modal';
+import { GuitarType } from '../../types/guitar';
 import { debounce } from 'ts-debounce';
+import {RemoveScroll} from 'react-remove-scroll';
+import { KeyCode } from '../../const';
+import FocusLock from 'react-focus-lock';
 
 function Catalog(): JSX.Element {
 
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const [isAddToCartModalHidden, setIsAddToCartModalHidden] = useState(true);
+  const [isAddSuccessModalHidden, setIsAddSuccessModalHidden] = useState(true);
+  const [currentGuitarData, setCurrentGuitarData] = useState<GuitarType>();
 
   const guitars = useSelector(getGuitars);
   const isLoaded = useSelector(getLoadedDataStatus);
@@ -29,6 +39,13 @@ function Catalog(): JSX.Element {
     dispatch(loadGuitarList(params.toString()));
   }, 500), []);
 
+  const handleEscKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if(e.keyCode === KeyCode.Escape) {
+      setIsAddToCartModalHidden(true);
+      setIsAddSuccessModalHidden(true);
+    }
+  };
+
   useEffect(() => {
     setSearchParams({...sortParams, ...filterParams, ...paginationParams});
   }, [filterParams, sortParams, paginationParams]);
@@ -39,8 +56,10 @@ function Catalog(): JSX.Element {
 
   return (
     <>
-      <div className="visually-hidden"></div>
-      <div className="wrapper">
+      <div
+        className="wrapper"
+        onKeyDown={handleEscKeyDown}
+      >
         <main className="page-content">
           <div className="container">
             <h1 className="page-content__title title title--bigger">
@@ -62,6 +81,8 @@ function Catalog(): JSX.Element {
               {isLoaded ?
                 <GuitarCatalog
                   guitars={guitars}
+                  onSetIsAddToCartModalHidden={setIsAddToCartModalHidden}
+                  onSetCurrentGuitarData={setCurrentGuitarData}
                 /> :
                 <Loading/>}
               <Pagination/>
@@ -69,6 +90,24 @@ function Catalog(): JSX.Element {
           </div>
         </main>
       </div>
+      {!isAddToCartModalHidden &&
+      <RemoveScroll>
+        <FocusLock>
+          <AddToCartModal
+            data={currentGuitarData}
+            onSetIsAddToCartModalHidden={setIsAddToCartModalHidden}
+            onSetIsAddSuccessModalHidden={setIsAddSuccessModalHidden}
+          />
+        </FocusLock>
+      </RemoveScroll>}
+      {!isAddSuccessModalHidden &&
+      <RemoveScroll>
+        <FocusLock>
+          <AddSuccessModal
+            onSetIsAddSuccessModalHidden={setIsAddSuccessModalHidden}
+          />
+        </FocusLock>
+      </RemoveScroll>}
     </>
   );
 }

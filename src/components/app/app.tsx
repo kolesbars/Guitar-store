@@ -3,9 +3,15 @@ import { AppRoute } from '../../const';
 import Catalog from '../catalog/catalog';
 import GuitarScreen from '../guitar-screen/guitar-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
+import Cart from '../cart/cart';
+import { AxiosInstance } from 'axios';
 import Layout from '../layout/layout';
 
-function App(): JSX.Element {
+type AppProps = {
+  api: AxiosInstance,
+};
+
+function App({api}: AppProps): JSX.Element {
   return (
     <Routes>
       <Route path={AppRoute.Main} element={<Layout/>}>
@@ -22,6 +28,11 @@ function App(): JSX.Element {
         <Route
           path={`${AppRoute.Guitar}/:id`}
           element={<GuitarScreen/>}
+        >
+        </Route>
+        <Route
+          path={AppRoute.Cart}
+          element={<Cart api={api}/>}
         >
         </Route>
       </Route>

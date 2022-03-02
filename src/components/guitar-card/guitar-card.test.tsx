@@ -29,10 +29,16 @@ const store = mockStore({
 describe('Component: GuitarCard', () => {
   it('should render correctly', () => {
 
+    const cb = jest.fn();
+
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <GuitarCard guitar={emptyGuitar}/>
+          <GuitarCard
+            guitar={emptyGuitar}
+            onSetIsAddToCartModalHidden={cb}
+            onSetCurrentGuitarData={cb}
+          />
         </BrowserRouter>
       </Provider>,
     );

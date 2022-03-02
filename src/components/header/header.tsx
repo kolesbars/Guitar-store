@@ -47,7 +47,7 @@ function Header():JSX.Element {
         <SearchForm
           guitars={guitars}
         />
-        <Link className="header__cart-link" to="#" aria-label="Корзина">
+        <Link className="header__cart-link" to={AppRoute.Cart} aria-label="Корзина">
           <svg
             className="header__cart-icon"
             width="14"

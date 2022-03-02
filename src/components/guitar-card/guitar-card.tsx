@@ -2,21 +2,30 @@ import RatingStars from '../rating-stars/rating-stars';
 import { useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectComentsCount } from '../../store/guitars-data/selectors';
+import { getGuitarsIDInCart } from '../../store/cart-data/selectors';
 import { loadGuitarComments } from '../../store/api-actions';
 import { Link } from 'react-router-dom';
 import { AppRoute, RatingStarsLocation} from '../../const';
 import { GuitarType } from '../../types/guitar';
 
 type GuitarCardProps = {
-  guitar: GuitarType
+  guitar: GuitarType,
+  onSetIsAddToCartModalHidden: (value: boolean) => void,
+  onSetCurrentGuitarData: (value: GuitarType) => void,
 }
 
-function GuitarCard({guitar}: GuitarCardProps):JSX.Element {
+function GuitarCard({guitar, onSetIsAddToCartModalHidden, onSetCurrentGuitarData}: GuitarCardProps):JSX.Element {
   const dispatch = useDispatch();
 
   const {previewImg, name, price, rating, id} = guitar;
 
   const commentsCount = useSelector(selectComentsCount(id));
+  const guitarsIDInCart = useSelector(getGuitarsIDInCart);
+
+  const handleBuyButtonClick = () => {
+    onSetIsAddToCartModalHidden(false);
+    onSetCurrentGuitarData(guitar);
+  };
 
   useEffect(() => {
     dispatch(loadGuitarComments(id));
@@ -51,12 +60,20 @@ function GuitarCard({guitar}: GuitarCardProps):JSX.Element {
         <Link className="button button--mini" to={`${AppRoute.Guitar}/${id}`}>
                       Подробнее
         </Link>
-        <Link
-          className="button button--red button--mini button--add-to-cart"
-          to="#"
-        >
+        {!guitarsIDInCart.includes(id) ?
+          <button
+            className="button button--red button--mini button--add-to-cart"
+            onClick={handleBuyButtonClick}
+          >
                       Купить
-        </Link>
+          </button> :
+          <div>
+            <Link
+              className="button button--red-border button--mini button--in-cart"
+              to={AppRoute.Cart}
+            >В Корзине
+            </Link>
+          </div>}
       </div>
     </div>
   );

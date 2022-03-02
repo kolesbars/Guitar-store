@@ -102,3 +102,17 @@ export const updatePaginationParams = createAction(
     payload: params,
   }),
 );
+
+export const addGuitarToCart = createAction(
+  ActionType.AddGuitarToCart,
+  (id: number) => ({
+    payload: id,
+  }),
+);
+
+export const deleteGuitarFromCart = createAction(
+  ActionType.DeleteGuitarFromCart,
+  (id: number) => ({
+    payload: id,
+  }),
+);

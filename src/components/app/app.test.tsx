@@ -31,7 +31,7 @@ const history = createMemoryHistory();
 const fakeApp = (
   <Provider store={store}>
     <BrowserRouter>
-      <App/>
+      <App api={api}/>
     </BrowserRouter>
   </Provider>
 );

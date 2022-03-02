@@ -6,7 +6,8 @@ export enum APIRoute {
 export enum AppRoute {
   Main = '/',
   Catalog = '/catalog',
-  Guitar = '/guitar'
+  Guitar = '/guitar',
+  Cart = '/cart'
 }
 
 export enum ErrorMessage {
