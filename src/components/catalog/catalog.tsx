@@ -29,6 +29,7 @@ function Catalog(): JSX.Element {
   const guitars = useSelector(getGuitars);
   const isLoaded = useSelector(getLoadedDataStatus);
 
+
   const sortParams = useSelector(getSortParams);
   const filterParams = useSelector(getFilterParams);
   const paginationParams = useSelector(getPaginationParams);

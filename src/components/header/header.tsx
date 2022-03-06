@@ -1,15 +1,25 @@
 import { useSelector } from 'react-redux';
+import {useEffect, useState} from 'react';
 import { getGuitars } from '../../store/guitars-data/selectors';
 import SearchForm from '../search-form/search-form';
 import { AppRoute } from '../../const';
 import { useLocation } from 'react-router';
+import { getGuitarsQuantity } from '../../store/cart-data/selectors';
 import { Link} from 'react-router-dom';
 
 function Header():JSX.Element {
 
   const guitars = useSelector(getGuitars);
+  const guitarsQuantity = useSelector(getGuitarsQuantity);
+
+  const [totalQuantity, setTotalQuantity] = useState(0);
 
   const location = useLocation();
+
+  useEffect(() => {
+    setTotalQuantity(guitarsQuantity?.reduce((prev, current) => prev + current.quantity, 0));
+  }, [guitarsQuantity]);
+
 
   return(
     <header className="header" id="header">
@@ -57,7 +67,7 @@ function Header():JSX.Element {
             <use xlinkHref="#icon-basket"></use>
           </svg>
           <span className="visually-hidden">Перейти в корзину</span>
-          <span className="header__cart-count">2</span>
+          {totalQuantity !== 0 && <span className="header__cart-count">{totalQuantity}</span>}
         </Link>
       </div>
     </header>

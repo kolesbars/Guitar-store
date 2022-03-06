@@ -1,5 +1,6 @@
 import { GuitarType, CommentType, PricesType, GuitarComment } from './guitar';
 import { SearchFormParamsType, SortParamsType, FilterParamsType, PaginationParamsType } from './search-params';
+import { GuitarPricesType, QuantityType } from './cart';
 import { RootState } from '../store/root-reducer';
 
 export type GuitarsData = {
@@ -32,6 +33,8 @@ export type SearchParams = {
 
 export type CartData = {
   guitarsID: number[],
+  totalPrices: GuitarPricesType[],
+  guitarsQuantity: QuantityType[],
 }
 
 export type State = RootState;

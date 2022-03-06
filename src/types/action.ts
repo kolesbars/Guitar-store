@@ -20,7 +20,10 @@ export enum ActionType {
   UpdateSearchFormParams = 'params/updateSearchFormParams',
   UpdatePaginationParams = 'params/updatePaginationParams',
   AddGuitarToCart = 'cart/addGuitarInCart',
+  UpdateGuitarsIDInCart= 'cart/updateGuitarsIDInCart',
   DeleteGuitarFromCart = 'cart/deleteGuitarFromCart',
+  UpdateTotalPrices = 'cart/updateTotalPrices',
+  UpdateTotalQuantity = 'cart/updateTotalQuantity'
 }
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Action>;

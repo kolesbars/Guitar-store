@@ -1,7 +1,8 @@
 import { addGuitarToCart } from '../../store/action';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {getGuitarType} from '../../utils/common';
 import { GuitarType } from '../../types/guitar';
+import { getGuitarsIDInCart } from '../../store/cart-data/selectors';
 
 type AddToCartModalProps = {
   data: GuitarType | undefined,
@@ -15,10 +16,13 @@ function AddToCartModal(props: AddToCartModalProps):JSX.Element {
 
   const dispatch = useDispatch();
 
+  const guitarsIDInCart = useSelector(getGuitarsIDInCart);
+
   const handleAddToCartClick = () => {
     dispatch(addGuitarToCart(data?.id || 0));
     onSetIsAddToCartModalHidden(true);
     onSetIsAddSuccessModalHidden(false);
+    localStorage.setItem('guitarsIDInCart', JSON.stringify(guitarsIDInCart));
   };
 
   const handleCloseClick = () => {

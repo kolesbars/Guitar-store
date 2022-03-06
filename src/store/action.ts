@@ -1,5 +1,6 @@
 import { ActionType } from '../types/action';
 import { GuitarType, CommentType, PricesType, GuitarComment } from '../types/guitar';
+import { GuitarPricesType, QuantityType } from '../types/cart';
 import { createAction } from '@reduxjs/toolkit';
 import {
   SortParamsType,
@@ -110,9 +111,30 @@ export const addGuitarToCart = createAction(
   }),
 );
 
+export const updateGuitarsIDInCart = createAction(
+  ActionType.UpdateGuitarsIDInCart,
+  (id: number[]) => ({
+    payload: id,
+  }),
+);
+
 export const deleteGuitarFromCart = createAction(
   ActionType.DeleteGuitarFromCart,
   (id: number) => ({
     payload: id,
+  }),
+);
+
+export const updateTotalPrices = createAction(
+  ActionType.UpdateTotalPrices,
+  (totalPrice: GuitarPricesType) => ({
+    payload: totalPrice,
+  }),
+);
+
+export const updateTotalQuantity = createAction(
+  ActionType.UpdateTotalQuantity,
+  (quantity: QuantityType) => ({
+    payload: quantity,
   }),
 );

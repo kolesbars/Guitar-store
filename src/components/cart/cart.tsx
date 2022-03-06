@@ -1,13 +1,14 @@
 import { AppRoute, KeyCode } from '../../const';
 import { useSelector } from 'react-redux';
-import { useState, KeyboardEvent } from 'react';
-import { getGuitarsIDInCart } from '../../store/cart-data/selectors';
+import { useState, useEffect, KeyboardEvent } from 'react';
+import { getGuitarsIDInCart} from '../../store/cart-data/selectors';
 import CartItem from '../cart-item/cart-item';
 import { AxiosInstance } from 'axios';
 import DeleteFromCartModal from '../delete-from-cert-modal/delete-from-cart-modal';
 import {Link} from 'react-router-dom';
 import { GuitarType } from '../../types/guitar';
 import {RemoveScroll} from 'react-remove-scroll';
+import { getTotalPrices } from '../../store/cart-data/selectors';
 import FocusLock from 'react-focus-lock';
 
 type CartProps = {
@@ -18,14 +19,24 @@ function Cart({api}:CartProps):JSX.Element {
 
   const guitarsIDInCart = useSelector(getGuitarsIDInCart);
 
+  const guitarPrices = useSelector(getTotalPrices);
+
   const [isDeleteFromCartModalHidden, setIsDeleteFromCartModalHidden] = useState(true);
   const [removableGuitar, setRemovableGuitar] = useState<GuitarType>();
+  //const [guitarPrices, setGuitarPrices] = useState<GuitarPricesType[]>([]);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const handleEscKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if(e.keyCode === KeyCode.Escape) {
       setIsDeleteFromCartModalHidden(true);
     }
   };
+
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log(guitarPrices);
+    setTotalPrice(guitarPrices?.reduce((prev, current) => prev + current.price, 0));
+  }, [guitarPrices]);
 
   return (
     <main className="page-content">
@@ -66,9 +77,9 @@ function Cart({api}:CartProps):JSX.Element {
               </form>
             </div>
             <div className="cart__total-info">
-              <p className="cart__total-item"><span className="cart__total-value-name">Всего:</span><span className="cart__total-value">52 000 ₽</span></p>
+              <p className="cart__total-item"><span className="cart__total-value-name">Всего:</span><span className="cart__total-value">{`${totalPrice} ₽`}</span></p>
               <p className="cart__total-item"><span className="cart__total-value-name">Скидка:</span><span className="cart__total-value cart__total-value--bonus">- 3000 ₽</span></p>
-              <p className="cart__total-item"><span className="cart__total-value-name">К оплате:</span><span className="cart__total-value cart__total-value--payment">49 000 ₽</span></p>
+              <p className="cart__total-item"><span className="cart__total-value-name">К оплате:</span><span className="cart__total-value cart__total-value--payment">{`${totalPrice} ₽`}</span></p>
               <button className="button button--red button--big cart__order-button">Оформить заказ</button>
             </div>
           </div>

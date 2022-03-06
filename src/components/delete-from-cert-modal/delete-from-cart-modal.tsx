@@ -1,6 +1,7 @@
 import { deleteGuitarFromCart } from '../../store/action';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { getGuitarType } from '../../utils/common';
+import { getGuitarsIDInCart } from '../../store/cart-data/selectors';
 import { GuitarType } from '../../types/guitar';
 
 type DeleteFromCartModalProps = {
@@ -12,10 +13,13 @@ function DeleteFromCartModal({data, onSetIsDeleteFromCartModalHidden}:DeleteFrom
 
   const dispatch = useDispatch();
 
+  const guitarsIDInCart = useSelector(getGuitarsIDInCart);
+
   const handleDeleteButtonClick = () => {
     if(data?.id) {
       dispatch(deleteGuitarFromCart(data.id));
       onSetIsDeleteFromCartModalHidden(true);
+      localStorage.setItem('guitarsIDInCart', JSON.stringify(guitarsIDInCart));
     }
   };
 
