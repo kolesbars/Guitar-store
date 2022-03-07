@@ -1,6 +1,8 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import { GuitarType } from '../../types/guitar';
 import { updateTotalPrices, updateTotalQuantity } from '../../store/action';
+import { getGuitarsIDInCart } from '../../store/cart-data/selectors';
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { APIRoute } from '../../const';
 import { emptyGuitar } from '../../const';
@@ -22,6 +24,8 @@ function CartItem(props: CartItemProps): JSX.Element {
     onSetRemovableGuitar} = props;
 
   const dispatch = useDispatch();
+
+  const guitarsIDInCart = useSelector(getGuitarsIDInCart);
 
   const [guitarData, setGuitarData] = useState<GuitarType>(emptyGuitar);
   const [quantity, setQuantity] = useState(1);
@@ -50,17 +54,20 @@ function CartItem(props: CartItemProps): JSX.Element {
     if (quantity === 1) {
       onSetIsDeleteFromCartModalHidden(false);
       onSetRemovableGuitar(guitarData);
+      localStorage.removeItem(`${id}`);
+      localStorage.setItem('guitarsIDInCart', JSON.stringify([]));
     } else {
       setQuantity(quantity-1);
+      localStorage[`${id}`] = JSON.stringify(quantity-1);
+      localStorage.setItem('guitarsIDInCart', JSON.stringify(guitarsIDInCart));
     }
-    localStorage.setItem(`${id}`, JSON.stringify(quantity));
   };
 
   const handlePlusClick = () => {
     if (quantity < 99) {
       setQuantity(quantity+1);
     }
-    localStorage.setItem(`${id}`, JSON.stringify(quantity));
+    localStorage[`${id}`] = JSON.stringify(quantity+1);
   };
 
   useEffect(() => {

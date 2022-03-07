@@ -26,14 +26,14 @@ const cartData = createReducer(initialState, (builder) => {
     })
     .addCase(updateTotalPrices, (state, action) => {
       if (state.totalPrices.some((item) => item.id === action.payload.id)) {
-        state.totalPrices = [...state.totalPrices.filter((item) => item.id !== action.payload.id, action.payload)];
+        state.totalPrices = [...state.totalPrices.filter((item) => item.id !== action.payload.id), action.payload];
       } else {
         state.totalPrices = [...state.totalPrices, action.payload];
       }
     })
     .addCase(updateTotalQuantity, (state, action) => {
       if (state.guitarsQuantity.some((item) => item.id === action.payload.id)) {
-        state.guitarsQuantity = [...state.guitarsQuantity.filter((item) => item.id !== action.payload.id, action.payload)];
+        state.guitarsQuantity = [...state.guitarsQuantity.filter((item) => item.id !== action.payload.id), action.payload];
       } else {
         state.guitarsQuantity = [...state.guitarsQuantity, action.payload];
       }

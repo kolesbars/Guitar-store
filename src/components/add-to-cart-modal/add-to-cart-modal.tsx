@@ -22,7 +22,7 @@ function AddToCartModal(props: AddToCartModalProps):JSX.Element {
     dispatch(addGuitarToCart(data?.id || 0));
     onSetIsAddToCartModalHidden(true);
     onSetIsAddSuccessModalHidden(false);
-    localStorage.setItem('guitarsIDInCart', JSON.stringify(guitarsIDInCart));
+    localStorage.guitarsIDInCart = JSON.stringify(guitarsIDInCart);
   };
 
   const handleCloseClick = () => {

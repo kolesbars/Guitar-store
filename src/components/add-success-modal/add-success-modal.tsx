@@ -1,5 +1,5 @@
 import { AppRoute } from '../../const';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import {Link} from 'react-router-dom';
 
 type AddSuccessModalProps = {
@@ -9,6 +9,7 @@ type AddSuccessModalProps = {
 function AddSuccessModal({onSetIsAddSuccessModalHidden}: AddSuccessModalProps):JSX.Element {
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleCloseClick = () => {
     onSetIsAddSuccessModalHidden(true);
@@ -16,7 +17,9 @@ function AddSuccessModal({onSetIsAddSuccessModalHidden}: AddSuccessModalProps):J
 
   const handleToShoppingButtonClick = () => {
     onSetIsAddSuccessModalHidden(true);
-    navigate(AppRoute.Catalog);
+    if (location.pathname !== AppRoute.Catalog) {
+      navigate(AppRoute.Catalog);
+    }
   };
 
   const handleOverlayClick = () => {

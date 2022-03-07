@@ -16,10 +16,16 @@ function DeleteFromCartModal({data, onSetIsDeleteFromCartModalHidden}:DeleteFrom
   const guitarsIDInCart = useSelector(getGuitarsIDInCart);
 
   const handleDeleteButtonClick = () => {
-    if(data?.id) {
+    const guitarsID = localStorage.getItem('guitarsIDInCart');
+    if(data?.id)  {
       dispatch(deleteGuitarFromCart(data.id));
       onSetIsDeleteFromCartModalHidden(true);
-      localStorage.setItem('guitarsIDInCart', JSON.stringify(guitarsIDInCart));
+      if (guitarsID !== null && JSON.parse(guitarsID).length === 1) {
+        localStorage.setItem('guitarsIDInCart', JSON.stringify([]));
+      } else {
+        localStorage.setItem('guitarsIDInCart', JSON.stringify(guitarsIDInCart));
+      }
+      localStorage.removeItem(`${data.id}`);
     }
   };
 
