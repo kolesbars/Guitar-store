@@ -2,6 +2,7 @@ import { toast } from 'react-toastify';
 import { APIRoute, ErrorMessage } from '../const';
 import { GuitarType, CommentType, CommentPostType } from '../types/guitar';
 import {ThunkActionResult} from '../types/action';
+import { CouponPostType } from '../types/cart';
 import {
   updateGuitarsList,
   updateGuitarData,
@@ -12,7 +13,9 @@ import {
   setLoadedStatusFalse,
   updateSimilarGuitarsList,
   updateGuitarsPrices,
-  updateGuitarsComents
+  updateGuitarsComents,
+  updateDiscount,
+  setIsSuccessValue
 } from './action';
 
 export const loadGuitarList = (searchParams: string): ThunkActionResult =>
@@ -92,3 +95,16 @@ export const loadGuitarComments = (id: number):ThunkActionResult =>
       Error(ErrorMessage.FailLoading);
     }
   };
+
+export const applyCoupon = (coupon: CouponPostType):ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    dispatch(setIsSuccessValue(null));
+    try{
+      const {data} = await api.post<number>(APIRoute.Coupons, coupon);
+      dispatch(updateDiscount(data));
+      dispatch(setIsSuccessValue(true));
+    } catch {
+      dispatch(setIsSuccessValue(false));
+    }
+  };
+

@@ -19,9 +19,9 @@ function App({api}: AppProps): JSX.Element {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const ids = localStorage.getItem('guitarsIDInCart');
-    if (ids !== null) {
-      dispatch(updateGuitarsIDInCart(JSON.parse(ids)));
+    const guitarsIDList = localStorage.getItem('guitarsIDInCart');
+    if (guitarsIDList !== null) {
+      dispatch(updateGuitarsIDInCart(JSON.parse(guitarsIDList)));
     }
   }, []);
 

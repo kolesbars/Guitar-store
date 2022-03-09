@@ -1,5 +1,7 @@
 import { GuitarType } from '../const';
 
+const PERCENTS = 100;
+
 export const getGuitarType = (value: string | undefined) => {
   switch (value) {
     case GuitarType.Acoustic:
@@ -12,3 +14,5 @@ export const getGuitarType = (value: string | undefined) => {
       break;
   }
 };
+
+export const calculateDiscount = (price: number, discount: number) => price*discount/PERCENTS;

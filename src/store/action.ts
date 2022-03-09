@@ -138,3 +138,17 @@ export const updateTotalQuantity = createAction(
     payload: quantity,
   }),
 );
+
+export const updateDiscount = createAction(
+  ActionType.UpdateDiscount,
+  (discount: number) => ({
+    payload: discount,
+  }),
+);
+
+export const setIsSuccessValue = createAction(
+  ActionType.SetIsSuccessValue,
+  (value: boolean | null) => ({
+    payload: value,
+  }),
+);

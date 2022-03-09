@@ -19,10 +19,16 @@ function AddToCartModal(props: AddToCartModalProps):JSX.Element {
   const guitarsIDInCart = useSelector(getGuitarsIDInCart);
 
   const handleAddToCartClick = () => {
-    dispatch(addGuitarToCart(data?.id || 0));
+    const storageQuantity = localStorage.getItem(`${data?.id}`);
+
+    if (data && storageQuantity !== null && +storageQuantity > 0) {
+      localStorage.setItem(`${data.id}`, (+storageQuantity+1).toString());
+    } else {
+      dispatch(addGuitarToCart(data?.id || 0));
+      localStorage.guitarsIDInCart = JSON.stringify(guitarsIDInCart);
+    }
     onSetIsAddToCartModalHidden(true);
     onSetIsAddSuccessModalHidden(false);
-    localStorage.guitarsIDInCart = JSON.stringify(guitarsIDInCart);
   };
 
   const handleCloseClick = () => {

@@ -5,12 +5,16 @@ import {
   updateGuitarsIDInCart,
   deleteGuitarFromCart,
   updateTotalPrices,
-  updateTotalQuantity} from '../action';
+  updateTotalQuantity,
+  updateDiscount,
+  setIsSuccessValue} from '../action';
 
 const initialState: CartData = {
   guitarsID: [],
   totalPrices: [],
   guitarsQuantity: [],
+  discount: 0,
+  isSuccess: null,
 };
 
 const cartData = createReducer(initialState, (builder) => {
@@ -37,6 +41,12 @@ const cartData = createReducer(initialState, (builder) => {
       } else {
         state.guitarsQuantity = [...state.guitarsQuantity, action.payload];
       }
+    })
+    .addCase(updateDiscount, (state, action) => {
+      state.discount = action.payload;
+    })
+    .addCase(setIsSuccessValue, (state, action) => {
+      state.isSuccess = action.payload;
     });
 });
 

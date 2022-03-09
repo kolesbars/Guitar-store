@@ -35,6 +35,8 @@ export type CartData = {
   guitarsID: number[],
   totalPrices: GuitarPricesType[],
   guitarsQuantity: QuantityType[],
+  discount: number,
+  isSuccess: boolean | null,
 }
 
 export type State = RootState;

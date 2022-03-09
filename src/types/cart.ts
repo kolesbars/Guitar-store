@@ -1,3 +1,4 @@
+
 export type GuitarPricesType = {
   id: number,
   price: number,
@@ -6,4 +7,8 @@ export type GuitarPricesType = {
 export type QuantityType = {
   id: number,
   quantity: number,
+};
+
+export type CouponPostType = {
+  coupon: string
 };

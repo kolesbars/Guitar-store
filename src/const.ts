@@ -1,6 +1,7 @@
 export enum APIRoute {
   Guitars = '/guitars',
   Comments = '/comments',
+  Coupons = '/coupons'
 }
 
 export enum AppRoute {
@@ -60,6 +61,12 @@ export enum RatingStarsSizes {
   inGuitarScreenHeight = '14',
   inCommentWidth = '16',
   inCommentHeight ='16',
+}
+
+export enum Coupon {
+  light = 'light-333',
+  medium = 'medium-444',
+  height = 'height-555',
 }
 
 export const emptyGuitar = {
