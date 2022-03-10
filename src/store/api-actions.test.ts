@@ -13,7 +13,8 @@ import {
   loadGuitarList,
   loadSimilarGuitars,
   loadMaxMinPrices,
-  loadGuitarComments
+  loadGuitarComments,
+  applyCoupon
 } from './api-actions';
 import {
   updateGuitarsList,
@@ -24,7 +25,9 @@ import {
   setLoadedStatusFalse,
   updateSimilarGuitarsList,
   updateGuitarsPrices,
-  updateGuitarsComents
+  updateGuitarsComents,
+  updateDiscount,
+  setIsSuccessValue
 } from '../store/action';
 
 describe('Async action', () => {
@@ -159,6 +162,26 @@ describe('Async action', () => {
     expect(store.getActions()).toEqual([
       setCommentSendigStatusFalse(),
       addNewGuitarComment(mockGuitarComment),
+    ]);
+  });
+
+  it('should applay coupon', async () => {
+    const store = mockStore();
+    const mockDiscount = 15;
+    const mockCouponPost = {
+      coupon: 'middle-444',
+    };
+
+    mockAPI
+      .onPost(APIRoute.Coupons)
+      .reply(200, mockDiscount);
+
+    await store.dispatch(applyCoupon(mockCouponPost));
+
+    expect(store.getActions()).toEqual([
+      setIsSuccessValue(null),
+      updateDiscount(mockDiscount),
+      setIsSuccessValue(true),
     ]);
   });
 });

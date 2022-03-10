@@ -1,48 +1,53 @@
-import { deleteGuitarFromCart } from '../../store/action';
-import {useDispatch, useSelector} from 'react-redux';
+import { deleteGuitarFromCart, setIsDeleteFromCartModalHidden } from '../../store/action';
+import {useDispatch} from 'react-redux';
+import { updateDiscount } from '../../store/action';
 import { getGuitarType } from '../../utils/common';
-import { getGuitarsIDInCart } from '../../store/cart-data/selectors';
 import { GuitarType } from '../../types/guitar';
+import { KeyboardEvent } from 'react';
+import { KeyCode, STORAGE_GUITARS_LIST_DEFAULT_LENGTH, DEFAULT_DISCOUNT} from '../../const';
 
 type DeleteFromCartModalProps = {
   data?: GuitarType,
-  onSetIsDeleteFromCartModalHidden: (value: boolean) => void,
 }
 
-function DeleteFromCartModal({data, onSetIsDeleteFromCartModalHidden}:DeleteFromCartModalProps):JSX.Element {
+function DeleteFromCartModal({data}:DeleteFromCartModalProps):JSX.Element {
 
   const dispatch = useDispatch();
-
-  const guitarsIDInCart = useSelector(getGuitarsIDInCart);
 
   const handleDeleteButtonClick = () => {
     const guitarsID = localStorage.getItem('guitarsIDInCart');
     if(data?.id)  {
       dispatch(deleteGuitarFromCart(data.id));
-      onSetIsDeleteFromCartModalHidden(true);
-      if (guitarsID !== null && JSON.parse(guitarsID).length === 1) {
+      dispatch(setIsDeleteFromCartModalHidden(true));
+      if (guitarsID !== null && JSON.parse(guitarsID).length === STORAGE_GUITARS_LIST_DEFAULT_LENGTH) {
         localStorage.setItem('guitarsIDInCart', JSON.stringify([]));
-      } else {
-        localStorage.setItem('guitarsIDInCart', JSON.stringify(guitarsIDInCart));
+        localStorage.removeItem('discount');
+        dispatch(updateDiscount(DEFAULT_DISCOUNT));
       }
       localStorage.removeItem(`${data.id}`);
     }
   };
 
+  const handleEscKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if(e.keyCode === KeyCode.Escape) {
+      dispatch(setIsDeleteFromCartModalHidden(true));
+    }
+  };
+
   const handleCloseClick = () => {
-    onSetIsDeleteFromCartModalHidden(true);
+    dispatch(setIsDeleteFromCartModalHidden(true));
   };
 
   const handleToShoppingButtonClick = () => {
-    onSetIsDeleteFromCartModalHidden(true);
+    dispatch(setIsDeleteFromCartModalHidden(true));
   };
 
   const handleOverlayClick = () => {
-    onSetIsDeleteFromCartModalHidden(true);
+    dispatch(setIsDeleteFromCartModalHidden(true));
   };
 
   return (
-    <div className="modal is-active modal-for-ui-kit">
+    <div className="modal is-active modal-for-ui-kit" onKeyDown={handleEscKeyDown}>
       <div className="modal__wrapper">
         <div
           className="modal__overlay"

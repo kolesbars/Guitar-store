@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import {useEffect, useState} from 'react';
 import { getGuitars } from '../../store/guitars-data/selectors';
 import SearchForm from '../search-form/search-form';
-import { AppRoute } from '../../const';
+import { AppRoute, DEFAULT_QUANTITY } from '../../const';
 import { useLocation } from 'react-router';
 import { getGuitarsQuantity } from '../../store/cart-data/selectors';
 import { Link} from 'react-router-dom';
@@ -12,14 +12,13 @@ function Header():JSX.Element {
   const guitars = useSelector(getGuitars);
   const guitarsQuantity = useSelector(getGuitarsQuantity);
 
-  const [totalQuantity, setTotalQuantity] = useState(0);
+  const [totalQuantity, setTotalQuantity] = useState(DEFAULT_QUANTITY);
 
   const location = useLocation();
 
   useEffect(() => {
-    setTotalQuantity(guitarsQuantity?.reduce((prev, current) => prev + current.quantity, 0));
+    setTotalQuantity(guitarsQuantity?.reduce((prev, current) => prev + current.quantity, DEFAULT_QUANTITY));
   }, [guitarsQuantity]);
-
 
   return(
     <header className="header" id="header">
@@ -43,12 +42,12 @@ function Header():JSX.Element {
               </Link>
             </li>
             <li>
-              <Link className="link main-nav__link" to="#">
+              <Link className="link main-nav__link" to='/whereBuy'>
                     Где купить?
               </Link>
             </li>
             <li>
-              <Link className="link main-nav__link" to="#">
+              <Link className="link main-nav__link" to='/aboutCompany'>
                     О компании
               </Link>
             </li>

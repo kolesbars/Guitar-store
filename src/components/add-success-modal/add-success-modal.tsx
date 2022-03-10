@@ -1,5 +1,6 @@
-import { AppRoute } from '../../const';
+import { AppRoute, KeyCode } from '../../const';
 import { useNavigate, useLocation } from 'react-router';
+import { KeyboardEvent } from 'react';
 import {Link} from 'react-router-dom';
 
 type AddSuccessModalProps = {
@@ -26,8 +27,17 @@ function AddSuccessModal({onSetIsAddSuccessModalHidden}: AddSuccessModalProps):J
     onSetIsAddSuccessModalHidden(true);
   };
 
+  const handleEscKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if(e.keyCode === KeyCode.Escape) {
+      onSetIsAddSuccessModalHidden(true);
+    }
+  };
+
   return (
-    <div className="modal is-active modal--success modal-for-ui-kit">
+    <div
+      className="modal is-active modal--success modal-for-ui-kit"
+      onKeyDown={handleEscKeyDown}
+    >
       <div className="modal__wrapper">
         <div
           className="modal__overlay"

@@ -1,4 +1,4 @@
-import AddReviewModal from './add-review-modal';
+import Cart from './cart';
 import {BrowserRouter} from 'react-router-dom';
 import {render, screen} from '@testing-library/react';
 import { Provider } from 'react-redux';
@@ -9,7 +9,7 @@ import { createAPI } from '../../services/api';
 import { emptyGuitar } from '../../const';
 import thunk, {ThunkDispatch} from 'redux-thunk';
 
-describe('Component: AddReviewModal', () => {
+describe('Component: Cart', () => {
   it('should render correctly', () => {
 
     const api = createAPI();
@@ -27,25 +27,25 @@ describe('Component: AddReviewModal', () => {
       GUITARS: {guitarsList: []},
       PARAMS: {sortParams: {}, filterParams: {}, searchFormParams: {}, paginationParams: {}},
       PAGE: {pageCount: '', totalCount: ''},
+      CART: {guitarsID: [], totalPrices: [],
+        guitarsQuantity: [],
+        discount: 0,
+        isSuccess: null,
+        isDeleteFromCartModalHidden: true},
     });
-
-    const cb = jest.fn();
 
     render(
       <Provider store={store}>
         <BrowserRouter>
-          <AddReviewModal
-            onSetIsReviewModalHidden={cb}
-            onSetIsThanksModalHidden={cb}
-            name=''
-            id={1}
+          <Cart
+            api={api}
           />
         </BrowserRouter>
       </Provider>,
     );
 
-    expect(screen.getByText(/Оставить отзыв/i)).toBeInTheDocument();
-    expect(screen.getByText(/Достоинства/i)).toBeInTheDocument();
-    expect(screen.getByText(/Отправить отзыв/i)).toBeInTheDocument();
+    expect(screen.getByText(/Применить/i)).toBeInTheDocument();
+    expect(screen.getByText(/Промокод на скидку/i)).toBeInTheDocument();
+    expect(screen.getByText(/Оформить заказ/i)).toBeInTheDocument();
   });
 });

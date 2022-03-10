@@ -1,10 +1,9 @@
 import { loadGuitarList} from '../../store/api-actions';
-import { useEffect, useCallback, useState, KeyboardEvent} from 'react';
+import { useEffect, useCallback, useState} from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useSelector, useDispatch} from 'react-redux';
 import { getGuitars, getLoadedDataStatus } from '../../store/guitars-data/selectors';
-import { getSortParams, getFilterParams, getPaginationParams } from '../../store/search-params/selectors';
-import {AppRoute} from '../../const';
+import {AppRoute, CALLBACK_DELAY} from '../../const';
 import GuitarCatalog from '../guitars-catalog/guitars-catalog';
 import FiltersForm from '../filters-form/filters-form';
 import Sorting from '../sorting/sorting';
@@ -15,8 +14,11 @@ import AddSuccessModal from '../add-success-modal/add-success-modal';
 import { GuitarType } from '../../types/guitar';
 import { debounce } from 'ts-debounce';
 import {RemoveScroll} from 'react-remove-scroll';
-import { KeyCode } from '../../const';
 import FocusLock from 'react-focus-lock';
+import {
+  getSortParams,
+  getFilterParams,
+  getPaginationParams } from '../../store/search-params/selectors';
 
 function Catalog(): JSX.Element {
 
@@ -38,14 +40,7 @@ function Catalog(): JSX.Element {
 
   const loadGuitars = useCallback(debounce((params) => {
     dispatch(loadGuitarList(params.toString()));
-  }, 500), []);
-
-  const handleEscKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if(e.keyCode === KeyCode.Escape) {
-      setIsAddToCartModalHidden(true);
-      setIsAddSuccessModalHidden(true);
-    }
-  };
+  }, CALLBACK_DELAY), []);
 
   useEffect(() => {
     setSearchParams({...sortParams, ...filterParams, ...paginationParams});
@@ -59,7 +54,6 @@ function Catalog(): JSX.Element {
     <>
       <div
         className="wrapper"
-        onKeyDown={handleEscKeyDown}
       >
         <main className="page-content">
           <div className="container">

@@ -37,6 +37,7 @@ export type CartData = {
   guitarsQuantity: QuantityType[],
   discount: number,
   isSuccess: boolean | null,
+  isDeleteFromCartModalHidden: boolean,
 }
 
 export type State = RootState;

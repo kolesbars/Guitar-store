@@ -1,8 +1,9 @@
 import { addGuitarToCart } from '../../store/action';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import {getGuitarType} from '../../utils/common';
+import { KeyboardEvent } from 'react';
+import { KeyCode, DEFAULT_QUANTITY, DEFAULT_GUITARS_IN_CART } from '../../const';
 import { GuitarType } from '../../types/guitar';
-import { getGuitarsIDInCart } from '../../store/cart-data/selectors';
 
 type AddToCartModalProps = {
   data: GuitarType | undefined,
@@ -16,16 +17,13 @@ function AddToCartModal(props: AddToCartModalProps):JSX.Element {
 
   const dispatch = useDispatch();
 
-  const guitarsIDInCart = useSelector(getGuitarsIDInCart);
-
   const handleAddToCartClick = () => {
     const storageQuantity = localStorage.getItem(`${data?.id}`);
 
-    if (data && storageQuantity !== null && +storageQuantity > 0) {
+    if (data && storageQuantity !== null && +storageQuantity > DEFAULT_QUANTITY) {
       localStorage.setItem(`${data.id}`, (+storageQuantity+1).toString());
     } else {
-      dispatch(addGuitarToCart(data?.id || 0));
-      localStorage.guitarsIDInCart = JSON.stringify(guitarsIDInCart);
+      dispatch(addGuitarToCart(data?.id || DEFAULT_GUITARS_IN_CART));
     }
     onSetIsAddToCartModalHidden(true);
     onSetIsAddSuccessModalHidden(false);
@@ -39,8 +37,14 @@ function AddToCartModal(props: AddToCartModalProps):JSX.Element {
     onSetIsAddToCartModalHidden(true);
   };
 
+  const handleEscKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if(e.keyCode === KeyCode.Escape) {
+      onSetIsAddToCartModalHidden(true);
+    }
+  };
+
   return(
-    <div className="modal is-active modal-for-ui-kit">
+    <div className="modal is-active modal-for-ui-kit" onKeyDown={handleEscKeyDown}>
       <div className="modal__wrapper">
         <div
           className="modal__overlay"

@@ -1,17 +1,22 @@
-import { AppRoute, KeyCode } from '../../const';
+import { AppRoute, DEFAULT_TOTAL_PRICE, DEFAULT_DISCOUNT_VALUE} from '../../const';
 import { useSelector, useDispatch } from 'react-redux';
-import { useState, useEffect, KeyboardEvent, ChangeEvent, SyntheticEvent } from 'react';
-import { getGuitarsIDInCart, getDiscount, getIsSuccess} from '../../store/cart-data/selectors';
+import { useState, useEffect, ChangeEvent, SyntheticEvent } from 'react';
 import CartItem from '../cart-item/cart-item';
 import { AxiosInstance } from 'axios';
-import DeleteFromCartModal from '../delete-from-cert-modal/delete-from-cart-modal';
+import DeleteFromCartModal from '../delete-from-cart-modal/delete-from-cart-modal';
 import {Link} from 'react-router-dom';
 import { GuitarType } from '../../types/guitar';
 import {RemoveScroll} from 'react-remove-scroll';
 import { getTotalPrices } from '../../store/cart-data/selectors';
 import { applyCoupon } from '../../store/api-actions';
+import { updateDiscount, setIsSuccessValue} from '../../store/action';
 import { calculateDiscount } from '../../utils/common';
 import FocusLock from 'react-focus-lock';
+import {
+  getGuitarsIDInCart,
+  getDiscount,
+  getIsSuccess,
+  getIsDeleteFromCartModalHidden} from '../../store/cart-data/selectors';
 
 type CartProps = {
   api: AxiosInstance
@@ -24,22 +29,16 @@ function Cart({api}:CartProps):JSX.Element {
   const guitarsIDInCart = useSelector(getGuitarsIDInCart);
   const discount = useSelector(getDiscount);
   const isSuccess = useSelector(getIsSuccess);
+  const isDeleteFromCartModalHidden = useSelector(getIsDeleteFromCartModalHidden);
 
   const guitarPrices = useSelector(getTotalPrices);
 
-  const [isDeleteFromCartModalHidden, setIsDeleteFromCartModalHidden] = useState(true);
   const [removableGuitar, setRemovableGuitar] = useState<GuitarType>();
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [discountValue, setDiscountValue] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(DEFAULT_TOTAL_PRICE);
+  const [discountValue, setDiscountValue] = useState(DEFAULT_DISCOUNT_VALUE);
   const [coupon, setCoupon] = useState({
     coupon: '',
   });
-
-  const handleEscKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if(e.keyCode === KeyCode.Escape) {
-      setIsDeleteFromCartModalHidden(true);
-    }
-  };
 
   const handleCouponChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCoupon({ coupon : e.target.value});
@@ -48,34 +47,33 @@ function Cart({api}:CartProps):JSX.Element {
   const handleFormSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(applyCoupon(coupon));
+    setCoupon({coupon: ''});
   };
-
-  useEffect(() => {
-    const storageDiscountValue = localStorage.getItem('discountValue');
-    if (storageDiscountValue !== null) {
-      setDiscountValue(+storageDiscountValue);
-    }
-  }, []);
 
   useEffect(() => {
     setDiscountValue(calculateDiscount(totalPrice, discount));
   }, [discount, totalPrice]);
 
   useEffect(() => {
-    if (discountValue) {
-      localStorage.setItem('discountValue', discountValue.toString());
+    dispatch(setIsSuccessValue(null));
+    const storageDiscount = localStorage.getItem('discount');
+    if (storageDiscount) {
+      dispatch(updateDiscount(+storageDiscount));
     }
-  }, [discountValue]);
+  }, []);
 
   useEffect(() => {
-    setTotalPrice(guitarPrices?.reduce((prev, current) => prev + current.price, 0));
+    if (guitarPrices) {
+      setTotalPrice(guitarPrices.reduce((prev, current) => prev + current.price, DEFAULT_TOTAL_PRICE));
+    } else {
+      setTotalPrice(DEFAULT_TOTAL_PRICE);
+    }
   }, [guitarPrices]);
 
   return (
     <main className="page-content">
       <div
         className="container"
-        onKeyDown={handleEscKeyDown}
       >
         <h1 className="title title--bigger page-content__title">Корзина</h1>
         <ul className="breadcrumbs page-content__breadcrumbs page-content__breadcrumbs--on-cart-page">
@@ -93,7 +91,6 @@ function Cart({api}:CartProps):JSX.Element {
                 key={id}
                 id={id}
                 api={api}
-                onSetIsDeleteFromCartModalHidden={setIsDeleteFromCartModalHidden}
                 onSetRemovableGuitar={setRemovableGuitar}
               />))}
           <div className="cart__footer">
@@ -115,6 +112,7 @@ function Cart({api}:CartProps):JSX.Element {
                     id="coupon"
                     name="coupon"
                     value={coupon.coupon}
+                    pattern='^\S+$'
                     onChange={handleCouponChange}
                   />
                   { isSuccess === true &&
@@ -128,8 +126,10 @@ function Cart({api}:CartProps):JSX.Element {
             <div className="cart__total-info">
               <p className="cart__total-item"><span className="cart__total-value-name">Всего:</span><span className="cart__total-value">{`${totalPrice} ₽`}</span></p>
               <p className="cart__total-item"><span className="cart__total-value-name">Скидка:</span>
-                <span className="cart__total-value cart__total-value--bonus">
-                  {discount === 0 ? '0 ₽' : `-${discountValue} ₽`}
+                <span
+                  className={`cart__total-value ${discountValue !== 0 &&'cart__total-value--bonus'}`}
+                >
+                  {discountValue === 0 ? '0 ₽' : `-${discountValue} ₽`}
                 </span>
               </p>
               <p className="cart__total-item"><span className="cart__total-value-name">К оплате:</span><span className="cart__total-value cart__total-value--payment">{`${totalPrice-discountValue} ₽`}</span></p>
@@ -143,7 +143,6 @@ function Cart({api}:CartProps):JSX.Element {
         <FocusLock>
           <DeleteFromCartModal
             data={removableGuitar}
-            onSetIsDeleteFromCartModalHidden={setIsDeleteFromCartModalHidden}
           />
         </FocusLock>
       </RemoveScroll>}

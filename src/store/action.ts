@@ -152,3 +152,10 @@ export const setIsSuccessValue = createAction(
     payload: value,
   }),
 );
+
+export const setIsDeleteFromCartModalHidden = createAction(
+  ActionType.SetIsDeleteFromCartModalHidden,
+  (value: boolean) => ({
+    payload: value,
+  }),
+);

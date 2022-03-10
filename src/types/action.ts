@@ -25,7 +25,8 @@ export enum ActionType {
   UpdateTotalPrices = 'cart/updateTotalPrices',
   UpdateTotalQuantity = 'cart/updateTotalQuantity',
   UpdateDiscount = 'cart/updateDiscount',
-  SetIsSuccessValue= 'cart/setIsSuccessValue'
+  SetIsSuccessValue = 'cart/setIsSuccessValue',
+  SetIsDeleteFromCartModalHidden = 'cart/setIsDeleteFromCartModalHidden'
 }
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Action>;

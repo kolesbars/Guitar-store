@@ -1,10 +1,11 @@
+import { AppRoute } from '../../const';
 import {Link} from 'react-router-dom';
 
 function Footer(): JSX.Element {
   return (
     <footer className="footer">
       <div className="footer__container container">
-        <Link className="footer__logo logo" to='#'>
+        <Link className="footer__logo logo" to={AppRoute.Main}>
           <img
             className="logo__img"
             width="70"
@@ -80,27 +81,27 @@ function Footer(): JSX.Element {
           <h2 className="footer__nav-title">Информация</h2>
           <ul className="footer__nav-list">
             <li className="footer__nav-list-item">
-              <Link className="link" to="#top">
+              <Link className="link" to="/whereBuy">
                     Где купить?
               </Link>
             </li>
             <li className="footer__nav-list-item">
-              <Link className="link" to="#top">
+              <Link className="link" to="/blog">
                     Блог
               </Link>
             </li>
             <li className="footer__nav-list-item">
-              <Link className="link" to="#top">
+              <Link className="link" to="/answers">
                     Вопрос - ответ
               </Link>
             </li>
             <li className="footer__nav-list-item">
-              <Link className="link" to="#top">
+              <Link className="link" to="/return">
                     Возврат
               </Link>
             </li>
             <li className="footer__nav-list-item">
-              <Link className="link" to="#top">
+              <Link className="link" to="/service">
                     Сервис-центры
               </Link>
             </li>

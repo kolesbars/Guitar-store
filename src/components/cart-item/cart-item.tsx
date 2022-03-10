@@ -1,17 +1,19 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import { GuitarType } from '../../types/guitar';
-import { updateTotalPrices, updateTotalQuantity } from '../../store/action';
 import { getGuitarsIDInCart } from '../../store/cart-data/selectors';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { APIRoute } from '../../const';
-import { emptyGuitar } from '../../const';
+import { emptyGuitar, ItemQuantity } from '../../const';
 import {AxiosInstance} from 'axios';
+import {
+  updateTotalPrices,
+  updateTotalQuantity,
+  setIsDeleteFromCartModalHidden } from '../../store/action';
 
 type CartItemProps = {
   id: number,
   api: AxiosInstance,
-  onSetIsDeleteFromCartModalHidden: (value: boolean) => void,
   onSetRemovableGuitar: (value: GuitarType) => void,
 }
 
@@ -20,7 +22,6 @@ function CartItem(props: CartItemProps): JSX.Element {
   const {
     id,
     api,
-    onSetIsDeleteFromCartModalHidden,
     onSetRemovableGuitar} = props;
 
   const dispatch = useDispatch();
@@ -35,15 +36,15 @@ function CartItem(props: CartItemProps): JSX.Element {
   const [totalGuitarsPrice, setTotalGuitarPrice] = useState(price);
 
   const handleDeleteClick = () => {
-    onSetIsDeleteFromCartModalHidden(false);
+    dispatch(setIsDeleteFromCartModalHidden(false));
     onSetRemovableGuitar(guitarData);
   };
 
   const handleQuantityChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if(+e.target.value <= 0) {
-      setQuantity(1);
-    } else if (+e.target.value > 99) {
-      setQuantity(99);
+    if(+e.target.value <= ItemQuantity.zero) {
+      setQuantity(ItemQuantity.min);
+    } else if (+e.target.value > ItemQuantity.max) {
+      setQuantity(ItemQuantity.max);
     } else{
       setQuantity(+e.target.value);
     }
@@ -51,23 +52,22 @@ function CartItem(props: CartItemProps): JSX.Element {
   };
 
   const handleMinusClick = () => {
-    if (quantity === 1) {
-      onSetIsDeleteFromCartModalHidden(false);
+    if (quantity === ItemQuantity.min) {
+      dispatch(setIsDeleteFromCartModalHidden(false));
       onSetRemovableGuitar(guitarData);
       localStorage.removeItem(`${id}`);
-      localStorage.setItem('guitarsIDInCart', JSON.stringify([]));
     } else {
-      setQuantity(quantity-1);
-      localStorage[`${id}`] = JSON.stringify(quantity-1);
+      setQuantity(quantity-ItemQuantity.step);
+      localStorage.setItem(`${id}`, JSON.stringify(quantity-ItemQuantity.step));
       localStorage.setItem('guitarsIDInCart', JSON.stringify(guitarsIDInCart));
     }
   };
 
   const handlePlusClick = () => {
-    if (quantity < 99) {
-      setQuantity(quantity+1);
+    if (quantity < ItemQuantity.max) {
+      setQuantity(quantity+ItemQuantity.step);
     }
-    localStorage[`${id}`] = JSON.stringify(quantity+1);
+    localStorage.setItem(`${id}`, JSON.stringify(quantity+ItemQuantity.step));
   };
 
   useEffect(() => {
@@ -78,7 +78,7 @@ function CartItem(props: CartItemProps): JSX.Element {
   }, []);
 
   useEffect(() => {
-    if (quantity !== 0) {
+    if (quantity !== ItemQuantity.zero) {
       setTotalGuitarPrice(price*quantity);
     }
   }, [quantity, price]);

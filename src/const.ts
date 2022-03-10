@@ -69,6 +69,13 @@ export enum Coupon {
   height = 'height-555',
 }
 
+export enum ItemQuantity {
+  zero = 0,
+  min = 1,
+  max = 99,
+  step = 1,
+}
+
 export const emptyGuitar = {
   'id': 0,
   'name': '',
@@ -101,6 +108,7 @@ export const emptyCommentPost = {
   'rating': 0,
 };
 
+export const CALLBACK_DELAY = 500;
 export const DEFAULT_PAGE_COUNT = '1';
 export const RANGE_STEP = 9;
 export const DEFAULT_START_VALUE = '1';
@@ -110,6 +118,12 @@ export const ZERO_COORDINATE = 0;
 export const COMMENTS_START_COUNT = 0;
 export const PAGE_DIVIDER_COUNT = 4;
 export const CURRENT_SEARCH_ITEM_COUNT = 0;
+export const DEFAULT_QUANTITY = 0;
+export const DEFAULT_GUITARS_IN_CART = 0;
+export const DEFAULT_TOTAL_PRICE = 0;
+export const DEFAULT_DISCOUNT_VALUE = 0;
+export const STORAGE_GUITARS_LIST_DEFAULT_LENGTH = 1;
+export const DEFAULT_DISCOUNT = 0;
 
 export const BACKEND_URL = 'https://accelerator-guitar-shop-api-v1.glitch.me';
 export const REQUEST_TIMEOUT = 5000;

@@ -22,6 +22,7 @@ const store = mockStore({
   GUITARS: {guitarsList: []},
   PARAMS: {sortParams: {}, filterParams: {}, searchFormParams: {}, paginationParams: {}},
   PAGE: {pageCount: '', totalCount: ''},
+  CART: {guitarsID: [], guitarsQuantity: []},
 });
 
 describe('Component: Layout', () => {
