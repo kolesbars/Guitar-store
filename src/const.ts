@@ -70,10 +70,10 @@ export enum Coupon {
 }
 
 export enum ItemQuantity {
-  zero = 0,
-  min = 1,
-  max = 99,
-  step = 1,
+  zero = '0',
+  min = '1',
+  max = '99',
+  step = '1',
 }
 
 export const emptyGuitar = {
